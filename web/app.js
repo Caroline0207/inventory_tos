@@ -220,7 +220,7 @@ $("saveBtn").addEventListener("click", saveToday);
    Order text (copy and paste to the supplier)
    ========================================================= */
 function buildOrderText(dateKey, entries) {
-  const lines = entries.filter(e => e.qty > 0).map(e => `${e.name} - ${fmt(e.qty)} ${e.unit || ""}`.trim());
+  const lines = entries.filter(e => e.qty > 0).map((e, i) => `${i + 1}. ${e.name} - ${fmt(e.qty)} ${e.unit || ""}`.trim());
   if (!lines.length) return { text: "", count: 0 };
   const d = parseKey(dateKey).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   const total = `Total: ${lines.length} item${lines.length > 1 ? "s" : ""}`;
