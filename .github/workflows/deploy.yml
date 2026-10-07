@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build site and write config.js from repository secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Add the SUPABASE_URL and SUPABASE_ANON_KEY repository secrets (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          case "$SUPABASE_ANON_KEY" in
+            sb_secret_*) echo "::error::SUPABASE_ANON_KEY is a SECRET key. Use the publishable key instead."; exit 1;;
+          esac
+          mkdir -p dist
+          cp -r web/. dist/
+          rm -f dist/config.example.js
+          node -e 'const c={supabaseUrl:process.env.SUPABASE_URL.trim(),supabaseAnonKey:process.env.SUPABASE_ANON_KEY.trim()};require("fs").writeFileSync("dist/config.js","window.APP_CONFIG = "+JSON.stringify(c)+";\n")'
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daily Inventory</title>
+<meta name="theme-color" content="#1d5c46">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inventory">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- PIN screen -->
+<section id="pinScreen" class="pin-screen" hidden>
+  <form id="pinForm" class="pin-card" novalidate>
+    <h1>Daily Inventory</h1>
+    <p>Enter the shop PIN</p>
+    <input id="pinInput" type="password" inputmode="numeric" autocomplete="current-password" aria-label="Shop PIN">
+    <p class="err-msg" id="pinErr" hidden></p>
+    <button class="big" type="submit" id="pinBtn">Open</button>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="wrap">
+      <div>
+        <h1 id="viewTitle">Daily Inventory</h1>
+        <div class="date" id="dateLine"></div>
+      </div>
+      <div class="status" id="statusPills"></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="banner" id="banner" hidden></div>
+
+    <section id="view-today">
+      <div class="colhead"><span>Product · Target</span><span>Short by</span></div>
+      <ul class="list" id="todayList"><li class="empty">Loading products…</li></ul>
+      <p class="hint">Enter how much is missing compared to the target. Leave 0 if it's full.</p>
+    </section>
+
+    <section id="view-history" hidden>
+      <div class="seg" role="group" aria-label="History view">
+        <button id="segDate" type="button" aria-pressed="true">By date</button>
+        <button id="segProduct" type="button" aria-pressed="false">By product</button>
+      </div>
+      <div id="historyBody"></div>
+    </section>
+
+    <section id="view-products" hidden>
+      <div id="productsBody"></div>
+    </section>
+  </main>
+
+  <div class="savebar" id="savebar"><button id="saveBtn" type="button">Save Today's Inventory</button></div>
+
+  <nav class="tabs" aria-label="Pages">
+    <button type="button" data-view="today" aria-current="page">Daily Inventory</button>
+    <button type="button" data-view="history">History</button>
+    <button type="button" data-view="products">Products</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
