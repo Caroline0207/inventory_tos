@@ -217,6 +217,49 @@ async function saveToday() {
 $("saveBtn").addEventListener("click", saveToday);
 
 /* =========================================================
+   Order text (copy and paste to the supplier)
+   ========================================================= */
+function buildOrderText(dateKey, entries) {
+  const lines = entries.filter(e => e.qty > 0).map(e => `${e.name} - ${fmt(e.qty)} ${e.unit || ""}`.trim());
+  if (!lines.length) return { text: "", count: 0 };
+  const d = parseKey(dateKey).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return { text: `Order - ${d}\n\n${lines.join("\n")}\n\nThank you!`, count: lines.length };
+}
+let sheetReturnFocus = null;
+function openOrderSheet(dateKey, entries, note) {
+  const { text, count } = buildOrderText(dateKey, entries);
+  if (!count) { toast(dateKey === current ? "Nothing is short. Enter shortages first." : "Nothing was short on this day.", true); return; }
+  clearTimeout(toastT); $("toast").hidden = true;
+  $("orderText").value = text;
+  $("orderMeta").textContent = `${count} item${count > 1 ? "s" : ""} · ${longDate(dateKey)}${note ? " · " + note : ""}. You can edit the text before copying.`;
+  sheetReturnFocus = document.activeElement;
+  $("orderSheet").hidden = false;
+  $("orderCopy").focus();
+}
+function closeOrderSheet() {
+  $("orderSheet").hidden = true;
+  if (sheetReturnFocus && sheetReturnFocus.focus) sheetReturnFocus.focus();
+}
+async function copyOrderText() {
+  const ta = $("orderText"), text = ta.value;
+  let ok = false;
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch (e) {}
+  if (!ok) {
+    try { ta.focus(); ta.select(); ta.setSelectionRange(0, text.length); ok = document.execCommand("copy"); } catch (e) {}
+  }
+  if (ok) toast("Copied. Paste it into your message to the supplier.");
+  else { ta.focus(); ta.select(); toast("Couldn't copy automatically. The text is selected: tap and hold, then Copy.", true); }
+}
+$("orderBtn").addEventListener("click", () => {
+  const entries = activeProducts().map(p => ({ name: p.name, unit: p.unit, qty: toNum(valueFor(p.id)) }));
+  openOrderSheet(current, entries, isDirty() ? "not saved yet" : "");
+});
+$("orderCopy").addEventListener("click", copyOrderText);
+$("orderClose").addEventListener("click", closeOrderSheet);
+$("orderSheet").addEventListener("click", e => { if (e.target.id === "orderSheet") closeOrderSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("orderSheet").hidden) closeOrderSheet(); });
+
+/* =========================================================
    History
    ========================================================= */
 async function ensureDays() {
@@ -258,7 +301,8 @@ async function renderHistoryByDate(el) {
         return `<li class="hrow ${q > 0 ? "pos" : "zero"}">
           <button class="link" type="button" data-prod="${esc(r.product_id)}">${esc(p.name)}</button>
           <span class="q num">${fmt(q)} <small>${esc(p.unit)}</small></span></li>`;
-      }).join("")}</ul>`;
+      }).join("")}</ul>
+      ${short ? `<button class="btn order-day" type="button" data-order-day>Order text for this day</button>` : ""}`;
     return;
   }
   if (!S.daysLoaded) { el.innerHTML = `<div class="empty">Loading records…</div>`; await ensureDays(); if (S.view !== "history" || S.histMode !== "date" || S.histDay) return; }
@@ -317,6 +361,12 @@ $("segProduct").addEventListener("click", () => { S.histMode = "product"; render
 $("historyBody").addEventListener("click", e => {
   const d = e.target.closest("[data-day]"); if (d) { S.histDay = d.dataset.day; renderHistory(); window.scrollTo(0, 0); return; }
   if (e.target.closest("[data-back]")) { S.histDay = null; renderHistory(); return; }
+  if (e.target.closest("[data-order-day]")) {
+    const ord = new Map(S.products.map((p, i) => [p.id, i]));
+    const rows = (S.dayCache.get(S.histDay) || []).slice().sort((a, b) => (ord.get(a.product_id) ?? 999) - (ord.get(b.product_id) ?? 999));
+    openOrderSheet(S.histDay, rows.map(r => { const p = productById(r.product_id) || { name: "Unknown product", unit: "" }; return { name: p.name, unit: p.unit, qty: Number(r.shortage_quantity) }; }));
+    return;
+  }
   const pr = e.target.closest("[data-prod]"); if (pr) { S.histMode = "product"; S.histProduct = pr.dataset.prod; renderHistory(); window.scrollTo(0, 0); }
 });
 $("historyBody").addEventListener("change", e => { if (e.target.id === "prodPick") { S.histProduct = e.target.value; renderHistory(); } });

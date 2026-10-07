@@ -62,13 +62,31 @@
     </section>
   </main>
 
-  <div class="savebar" id="savebar"><button id="saveBtn" type="button">Save Today's Inventory</button></div>
+  <div class="savebar" id="savebar">
+    <div class="savebar-in">
+      <button id="orderBtn" type="button" class="order-btn">Order</button>
+      <button id="saveBtn" type="button">Save Today's Inventory</button>
+    </div>
+  </div>
 
   <nav class="tabs" aria-label="Pages">
     <button type="button" data-view="today" aria-current="page">Daily Inventory</button>
     <button type="button" data-view="history">History</button>
     <button type="button" data-view="products">Products</button>
   </nav>
+</div>
+
+<!-- Order text sheet -->
+<div class="sheet" id="orderSheet" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+    <div class="sheet-head">
+      <h2 id="orderTitle">Order text</h2>
+      <button type="button" class="btn" id="orderClose">Close</button>
+    </div>
+    <p class="sheet-meta" id="orderMeta"></p>
+    <textarea id="orderText" rows="12" spellcheck="false" aria-label="Order text"></textarea>
+    <button type="button" class="big" id="orderCopy">Copy</button>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" hidden></div>
