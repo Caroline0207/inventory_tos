@@ -223,7 +223,8 @@ function buildOrderText(dateKey, entries) {
   const lines = entries.filter(e => e.qty > 0).map(e => `${e.name} - ${fmt(e.qty)} ${e.unit || ""}`.trim());
   if (!lines.length) return { text: "", count: 0 };
   const d = parseKey(dateKey).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  return { text: `Order - ${d}\n\n${lines.join("\n")}\n\nThank you!`, count: lines.length };
+  const total = `Total: ${lines.length} item${lines.length > 1 ? "s" : ""}`;
+  return { text: `Order - ${d}\n\n${lines.join("\n")}\n\n${total}\n\nThank you!`, count: lines.length };
 }
 let sheetReturnFocus = null;
 function openOrderSheet(dateKey, entries, note) {
