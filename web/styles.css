@@ -162,3 +162,11 @@ li:first-child > .prow{border-top:0}
 .foot{display:flex;justify-content:center;margin-top:24px}
 .foot button{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.88rem}
 @media (prefers-reduced-motion:no-preference){.row{transition:background-color .15s}}
+.delete-day{margin-top:24px;width:100%;color:var(--short);border-color:var(--short-bg);background:transparent}
+.danger-box{margin-top:24px;padding:14px;border-radius:12px;border:2px solid var(--short);background:var(--short-bg);display:grid;gap:10px}
+.danger-box p{margin:0}
+.danger-box label{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.danger-box input{height:48px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;padding:0 12px}
+.btn.danger{background:var(--short);border-color:var(--short);color:#fff}
+.btn.danger:disabled{opacity:.6}
+body.no-save .toast{bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom,0px))}

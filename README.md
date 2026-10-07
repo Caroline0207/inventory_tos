@@ -78,6 +78,7 @@ supabase/schema.sql  ← 데이터베이스 구조 + 초기 상품 34개 + PIN �
 
 - **상품 추가/수정/숨기기**: Products 탭 → 사장님용 PIN으로 Unlock → Edit 또는 + Add product.
   상품은 삭제하지 않고 **Active 체크를 해제**해서 숨깁니다. 과거 기록은 그대로 남습니다.
+- **하루 기록 지우기**: History → 날짜 → 맨 아래 **Delete this day** → 사장님용 PIN 입력 → Delete. 되돌릴 수 없습니다. (2026년 10월 7일 이전에 설치했다면 `supabase/002_delete_day.sql`을 SQL Editor에서 한 번 실행해야 이 버튼이 작동합니다.)
 - **PIN 바꾸기** (직원이 그만뒀을 때 등): Supabase SQL Editor에서 1단계 4번 쿼리를 새 PIN으로 다시 실행합니다. 모든 기기에서 다음에 열 때 새 PIN을 묻습니다.
 - **기록을 엑셀로 받기**: Supabase → Table Editor → `inventory_records` → Export to CSV.
 - **화면 수정 후 반영**: GitHub에서 `web/` 파일을 수정하고 Commit 하면 1~2분 뒤 자동으로 반영됩니다.

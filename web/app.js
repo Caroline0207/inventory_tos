@@ -302,7 +302,15 @@ async function renderHistoryByDate(el) {
           <button class="link" type="button" data-prod="${esc(r.product_id)}">${esc(p.name)}</button>
           <span class="q num">${fmt(q)} <small>${esc(p.unit)}</small></span></li>`;
       }).join("")}</ul>
-      ${short ? `<button class="btn order-day" type="button" data-order-day>Order text for this day</button>` : ""}`;
+      ${short ? `<button class="btn order-day" type="button" data-order-day>Order text for this day</button>` : ""}
+      ${S.confirmDelete === day ? `<form class="danger-box" id="deleteForm" novalidate>
+          <p><b>Delete all records for ${esc(longDate(day))}?</b><br>This can't be undone. Products are not affected.</p>
+          ${S.adminPin ? "" : `<label for="delPin">Manager PIN</label><input id="delPin" type="password" inputmode="numeric" autocomplete="off">`}
+          ${S.deleteErr ? `<p class="err-msg">${esc(S.deleteErr)}</p>` : ""}
+          <div class="actions"><button class="btn danger" type="submit">Delete</button><button class="btn" type="button" data-del-cancel>Cancel</button></div>
+        </form>`
+        : `<button class="btn delete-day" type="button" data-del-day>Delete this day</button>`}`;
+    if (S.confirmDelete === day) { const f = $("delPin") || document.querySelector("#deleteForm .danger"); if (f) f.focus(); }
     return;
   }
   if (!S.daysLoaded) { el.innerHTML = `<div class="empty">Loading records…</div>`; await ensureDays(); if (S.view !== "history" || S.histMode !== "date" || S.histDay) return; }
@@ -360,7 +368,9 @@ $("segDate").addEventListener("click", () => { S.histMode = "date"; renderHistor
 $("segProduct").addEventListener("click", () => { S.histMode = "product"; renderHistory(); });
 $("historyBody").addEventListener("click", e => {
   const d = e.target.closest("[data-day]"); if (d) { S.histDay = d.dataset.day; renderHistory(); window.scrollTo(0, 0); return; }
-  if (e.target.closest("[data-back]")) { S.histDay = null; renderHistory(); return; }
+  if (e.target.closest("[data-back]")) { S.histDay = null; S.confirmDelete = null; renderHistory(); return; }
+  if (e.target.closest("[data-del-day]")) { S.confirmDelete = S.histDay; S.deleteErr = ""; renderHistory(); return; }
+  if (e.target.closest("[data-del-cancel]")) { S.confirmDelete = null; S.deleteErr = ""; renderHistory(); return; }
   if (e.target.closest("[data-order-day]")) {
     const ord = new Map(S.products.map((p, i) => [p.id, i]));
     const rows = (S.dayCache.get(S.histDay) || []).slice().sort((a, b) => (ord.get(a.product_id) ?? 999) - (ord.get(b.product_id) ?? 999));
@@ -368,6 +378,30 @@ $("historyBody").addEventListener("click", e => {
     return;
   }
   const pr = e.target.closest("[data-prod]"); if (pr) { S.histMode = "product"; S.histProduct = pr.dataset.prod; renderHistory(); window.scrollTo(0, 0); }
+});
+$("historyBody").addEventListener("submit", async e => {
+  if (e.target.id !== "deleteForm") return;
+  e.preventDefault();
+  const day = S.confirmDelete; if (!day) return;
+  const pin = S.adminPin || ($("delPin") ? $("delPin").value.trim() : "");
+  if (!pin) { S.deleteErr = "Enter the manager PIN."; return renderHistory(); }
+  const btn = e.target.querySelector(".danger"); btn.disabled = true; btn.textContent = "Deleting…";
+  try {
+    await rpc("delete_day", { p_pin: pin, p_date: day });
+    if (!S.adminPin) { S.adminPin = pin; store.set("inv-admin-pin", pin, true); }
+    S.days = S.days.filter(d => String(d.inventory_date).slice(0, 10) !== day);
+    S.dayCache.delete(day); S.histRows = null; S.histDay = null; S.confirmDelete = null; S.deleteErr = "";
+    if (day === current) { S.saved = {}; S.savedAt = null; syncTodayValues(); renderHeader(); }
+    toast("Records for " + longDate(day) + " deleted.");
+  } catch (err) {
+    if (err.code === "invalid_pin") {
+      if (S.adminPin) { S.adminPin = ""; store.del("inv-admin-pin", true); }
+      S.deleteErr = "Wrong manager PIN. Only the manager can delete records.";
+    } else if (/delete_day/.test(err.message) && /(find|schema cache|does not exist)/i.test(err.message)) {
+      S.deleteErr = "Deleting isn't set up yet. Run supabase/002_delete_day.sql in Supabase once (see README).";
+    } else S.deleteErr = errorText(err, "delete this day");
+  }
+  renderHistory();
 });
 $("historyBody").addEventListener("change", e => { if (e.target.id === "prodPick") { S.histProduct = e.target.value; renderHistory(); } });
 
