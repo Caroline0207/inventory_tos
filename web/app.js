@@ -61,6 +61,10 @@ const S = {
   editing: null, editErr: ""
 };
 let current = todayKey();
+S.name = store.get("inv-name") || "";
+S.savedBy = "";
+S.saveLog = new Map();
+const missingFn = (e, fn) => e && e.message && e.message.includes(fn) && /(find|schema cache|does not exist)/i.test(e.message);
 
 /* draft = values typed but not yet saved; kept on this device */
 const DKEY = () => "inv-draft-" + current;
@@ -132,7 +136,7 @@ function renderHeader() {
     const short = activeProducts().filter(p => toNum(valueFor(p.id)) > 0).length;
     pills.push(short ? `<span class="pill warn num">${short} short</span>` : `<span class="pill num">All full</span>`);
     if (isDirty()) pills.push(`<span class="pill rev">Not saved yet</span>`);
-    else if (S.savedAt) pills.push(`<span class="pill mute">Saved ${esc(timeOf(S.savedAt))}</span>`);
+    else if (S.savedAt) pills.push(`<span class="pill mute">Saved ${esc(timeOf(S.savedAt))}${S.savedBy ? " · " + esc(S.savedBy) : ""}</span>`);
   }
   $("statusPills").innerHTML = pills.join("");
 }
@@ -197,13 +201,20 @@ todayList.addEventListener("keydown", e => {
 async function saveToday() {
   const act = activeProducts();
   if (!act.length) { toast("Add products first on the Products page.", true); return; }
+  const name = $("whoName").value.trim();
+  if (!name) {
+    $("whoName").closest(".who").classList.add("need");
+    window.scrollTo({ top: 0, behavior: "smooth" }); $("whoName").focus();
+    toast("Enter your name in “Checked by” first.", true); return;
+  }
   const btn = $("saveBtn");
   const items = act.map(p => ({ product_id: p.id, qty: toNum(valueFor(p.id)) }));
   btn.disabled = true; btn.textContent = "Saving…";
   try {
-    await rpc("save_day", { p_pin: S.pin, p_date: current, p_items: items });
+    try { await rpc("save_day", { p_pin: S.pin, p_date: current, p_items: items, p_name: name }); }
+    catch (e) { if (missingFn(e, "save_day")) await rpc("save_day", { p_pin: S.pin, p_date: current, p_items: items }); else throw e; }
     S.saved = Object.fromEntries(items.map(it => [it.product_id, it.qty]));
-    S.savedAt = new Date().toISOString();
+    S.savedAt = new Date().toISOString(); S.savedBy = name; S.saveLog.delete(current);
     draft = {}; clearDraft();
     S.daysLoaded = false; S.dayCache.delete(current); S.histRows = null;
     syncTodayValues();
@@ -288,6 +299,10 @@ async function renderHistoryByDate(el) {
       el.innerHTML = `<button class="back" data-back type="button">← All dates</button><div class="empty">Loading…</div>`;
       rows = await rpc("get_day", { p_pin: S.pin, p_date: day }) || [];
       S.dayCache.set(day, rows);
+      if (!S.saveLog.has(day)) {
+        try { S.saveLog.set(day, await rpc("get_day_saves", { p_pin: S.pin, p_date: day }) || []); }
+        catch (e2) { if (e2.code === "invalid_pin") throw e2; S.saveLog.set(day, []); }
+      }
       if (S.histDay !== day || S.view !== "history" || S.histMode !== "date") return;
     }
     const ord = new Map(S.products.map((p, i) => [p.id, i]));
@@ -296,6 +311,7 @@ async function renderHistoryByDate(el) {
     const last = rows.reduce((m, r) => (!m || r.updated_at > m) ? r.updated_at : m, null);
     el.innerHTML = `<button class="back" data-back type="button">← All dates</button>
       <div class="sectitle"><h2>${esc(longDate(day))}</h2><span class="num">${short} short · saved ${esc(timeOf(last))}</span></div>
+      ${(S.saveLog.get(day) || []).length ? `<p class="savelog">Checked by ${(S.saveLog.get(day)).map(x => `<b>${esc(x.saved_by)}</b> <span class="num">${esc(timeOf(x.saved_at))}</span>`).join(", ")}</p>` : ""}
       <ul class="list">${rows.map(r => {
         const p = productById(r.product_id) || { name: "Unknown product", unit: "" };
         const q = Number(r.shortage_quantity);
@@ -319,7 +335,7 @@ async function renderHistoryByDate(el) {
   el.innerHTML = `<div class="sectitle"><h2>All dates</h2><span class="num">${S.days.length} records</span></div>
     <ul class="list">${S.days.map(d => {
       const k = String(d.inventory_date).slice(0, 10), n = Number(d.short_count);
-      return `<li><button class="daybtn" type="button" data-day="${esc(k)}"><span><span class="d">${esc(longDate(k))}</span><br><span class="s">${esc(weekday(k))}</span></span>
+      return `<li><button class="daybtn" type="button" data-day="${esc(k)}"><span><span class="d">${esc(longDate(k))}</span><br><span class="s">${esc(weekday(k))}</span>${d.checked_by ? `<span class="by">by ${esc(d.checked_by)}</span>` : ""}</span>
         <span class="pill ${n ? "warn" : ""} num">${n ? n + " short" : "All full"}</span></button></li>`;
     }).join("")}</ul>`;
 }
@@ -391,8 +407,8 @@ $("historyBody").addEventListener("submit", async e => {
     await rpc("delete_day", { p_pin: pin, p_date: day });
     if (!S.adminPin) { S.adminPin = pin; store.set("inv-admin-pin", pin, true); }
     S.days = S.days.filter(d => String(d.inventory_date).slice(0, 10) !== day);
-    S.dayCache.delete(day); S.histRows = null; S.histDay = null; S.confirmDelete = null; S.deleteErr = "";
-    if (day === current) { S.saved = {}; S.savedAt = null; syncTodayValues(); renderHeader(); }
+    S.dayCache.delete(day); S.saveLog.delete(day); S.histRows = null; S.histDay = null; S.confirmDelete = null; S.deleteErr = "";
+    if (day === current) { S.saved = {}; S.savedAt = null; S.savedBy = ""; syncTodayValues(); renderHeader(); }
     toast("Records for " + longDate(day) + " deleted.");
   } catch (err) {
     if (err.code === "invalid_pin") {
@@ -526,6 +542,12 @@ async function loadAll() {
     S.saved = {}; S.savedAt = null;
     (day || []).forEach(r => { S.saved[r.product_id] = Number(r.shortage_quantity); if (!S.savedAt || r.updated_at > S.savedAt) S.savedAt = r.updated_at; });
     S.savedLoaded = true;
+    S.savedBy = "";
+    try {
+      const saves = await rpc("get_day_saves", { p_pin: S.pin, p_date: current }) || [];
+      S.saveLog.set(current, saves);
+      if (saves.length) S.savedBy = saves[saves.length - 1].saved_by;
+    } catch (e2) { if (e2.code === "invalid_pin") throw e2; }
   } catch (e) {
     if (handlePinError(e)) return;
     setBanner(errorText(e, "load the product list") + " Pull down or reopen the page to retry.");
@@ -542,6 +564,14 @@ document.addEventListener("visibilitychange", () => {
   if (k !== current) { current = k; draft = loadDraft(); }
   loadAll();
 });
+
+/* "Checked by" name: remembered on this device */
+$("whoName").value = S.name;
+$("whoName").addEventListener("input", e => {
+  S.name = e.target.value; store.set("inv-name", S.name.trim());
+  if (S.name.trim()) e.target.closest(".who").classList.remove("need");
+});
+$("whoName").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
 
 /* boot */
 if (!API || !KEY) {

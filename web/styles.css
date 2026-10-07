@@ -170,3 +170,14 @@ li:first-child > .prow{border-top:0}
 .btn.danger{background:var(--short);border-color:var(--short);color:#fff}
 .btn.danger:disabled{opacity:.6}
 body.no-save .toast{bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom,0px))}
+.who{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;margin-top:14px;padding:8px 8px 8px 14px;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.who label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.who input{min-width:0;height:44px;border:2px solid transparent;border-radius:8px;background:var(--bg);color:var(--ink);
+  font:600 1.1rem var(--f-display);padding:0 10px}
+.who input:focus{border-color:var(--accent);outline:none}
+.who.need{border-color:var(--short);background:var(--short-bg)}
+.who.need input{border-color:var(--short)}
+.daybtn .by{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+.savelog{margin:-2px 4px 10px;color:var(--muted);font-size:.92rem}
+.savelog b{color:var(--ink);font-weight:600}

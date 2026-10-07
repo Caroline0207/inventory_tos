@@ -69,15 +69,17 @@ supabase/schema.sql  ← 데이터베이스 구조 + 초기 상품 34개 + PIN �
 ## 매일 사용
 
 1. 링크를 엽니다. 오늘 날짜가 자동으로 나옵니다.
-2. 각 상품의 **부족한 수량**만 입력합니다. 다 있으면 0 그대로 둡니다.
-3. **Save Today's Inventory**를 누릅니다.
-4. 같은 날 다시 저장하면 그날 기록이 수정됩니다. 중복 기록은 생기지 않습니다.
-5. **Order** 버튼을 누르면 부족한 상품만 모은 주문 문자가 나옵니다. 필요하면 고친 뒤 **Copy**를 눌러 거래처 문자/카톡에 붙여넣으세요. 지난 날짜는 History → 날짜 → **Order text for this day**.
+2. 맨 위 **Checked by**에 이름을 적습니다. 그 기기에서는 다음에도 기억합니다. 다른 사람이 같은 기기를 쓰면 이름만 바꾸면 됩니다.
+3. 각 상품의 **부족한 수량**만 입력합니다. 다 있으면 0 그대로 둡니다.
+4. **Save Today's Inventory**를 누릅니다.
+5. 같은 날 다시 저장하면 그날 기록이 수정됩니다. 중복 기록은 생기지 않습니다.
+6. **Order** 버튼을 누르면 부족한 상품만 모은 주문 문자가 나옵니다. 필요하면 고친 뒤 **Copy**를 눌러 거래처 문자/카톡에 붙여넣으세요. 지난 날짜는 History → 날짜 → **Order text for this day**.
 
 ## 자주 하는 일
 
 - **상품 추가/수정/숨기기**: Products 탭 → 사장님용 PIN으로 Unlock → Edit 또는 + Add product.
   상품은 삭제하지 않고 **Active 체크를 해제**해서 숨깁니다. 과거 기록은 그대로 남습니다.
+- **누가 확인했는지 보기**: History 날짜 목록에 `by 이름`이, 날짜를 열면 저장한 사람과 시간이 모두 나옵니다. (2026년 10월 7일 이전에 설치했다면 `supabase/003_checked_by.sql`을 SQL Editor에서 한 번 실행하세요.)
 - **하루 기록 지우기**: History → 날짜 → 맨 아래 **Delete this day** → 사장님용 PIN 입력 → Delete. 되돌릴 수 없습니다. (2026년 10월 7일 이전에 설치했다면 `supabase/002_delete_day.sql`을 SQL Editor에서 한 번 실행해야 이 버튼이 작동합니다.)
 - **PIN 바꾸기** (직원이 그만뒀을 때 등): Supabase SQL Editor에서 1단계 4번 쿼리를 새 PIN으로 다시 실행합니다. 모든 기기에서 다음에 열 때 새 PIN을 묻습니다.
 - **기록을 엑셀로 받기**: Supabase → Table Editor → `inventory_records` → Export to CSV.

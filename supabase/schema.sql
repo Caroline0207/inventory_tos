@@ -43,6 +43,17 @@ create table if not exists public.inventory_records (
 create index if not exists inventory_records_product_date_idx
   on public.inventory_records (product_id, inventory_date desc);
 
+-- Who saved each day (one row per save, so morning + afternoon edits both show)
+create table if not exists public.inventory_saves (
+  id              bigint generated always as identity primary key,
+  inventory_date  date not null,
+  saved_by        text not null,
+  saved_at        timestamptz not null default now()
+);
+create index if not exists inventory_saves_date_idx on public.inventory_saves (inventory_date, saved_at);
+alter table public.inventory_saves enable row level security;
+revoke all on table public.inventory_saves from anon, authenticated;
+
 create table if not exists private.settings (
   key   text primary key,
   value text not null
@@ -120,7 +131,9 @@ end $$;
 
 -- Save (or overwrite) one day. p_items = [{"product_id": "...", "qty": 2}, ...]
 -- One row per product per day thanks to the unique constraint.
-create or replace function public.save_day(p_pin text, p_date date, p_items jsonb)
+-- p_name = who checked the stock; every save is logged in inventory_saves.
+drop function if exists public.save_day(text, date, jsonb);
+create or replace function public.save_day(p_pin text, p_date date, p_items jsonb, p_name text default null)
 returns integer language plpgsql security definer set search_path = '' as $$
 declare n integer;
 begin
@@ -137,14 +150,17 @@ begin
   order by p.id
   on conflict (inventory_date, product_id)
   do update set shortage_quantity = excluded.shortage_quantity, updated_at = now();
-
   get diagnostics n = row_count;
+
+  insert into public.inventory_saves (inventory_date, saved_by)
+  values (p_date, left(coalesce(nullif(trim(p_name), ''), '(no name)'), 40));
   return n;
 end $$;
 
--- List of saved days, newest first.
+-- List of saved days, newest first, with who checked.
+drop function if exists public.list_days(text, integer);
 create or replace function public.list_days(p_pin text, p_limit integer default 120)
-returns table (inventory_date date, short_count bigint, item_count bigint, updated_at timestamptz)
+returns table (inventory_date date, short_count bigint, item_count bigint, updated_at timestamptz, checked_by text)
 language plpgsql stable security definer set search_path = '' as $$
 begin
   perform private.require_pin(p_pin, 'staff');
@@ -152,11 +168,27 @@ begin
     select r.inventory_date,
            count(*) filter (where r.shortage_quantity > 0),
            count(*),
-           max(r.updated_at)
+           max(r.updated_at),
+           (select string_agg(x.saved_by, ', ' order by x.first_at)
+              from (select s.saved_by, min(s.saved_at) as first_at
+                      from public.inventory_saves s
+                     where s.inventory_date = r.inventory_date
+                     group by s.saved_by) x)
     from public.inventory_records r
     group by r.inventory_date
     order by r.inventory_date desc
     limit greatest(1, least(coalesce(p_limit, 120), 1000));
+end $$;
+
+-- Every save for one day, oldest first.
+create or replace function public.get_day_saves(p_pin text, p_date date)
+returns table (saved_by text, saved_at timestamptz)
+language plpgsql stable security definer set search_path = '' as $$
+begin
+  perform private.require_pin(p_pin, 'staff');
+  return query
+    select s.saved_by, s.saved_at from public.inventory_saves s
+    where s.inventory_date = p_date order by s.saved_at;
 end $$;
 
 -- One product's history, newest first.
@@ -210,6 +242,7 @@ begin
   if p_date is null then raise exception 'invalid_date'; end if;
   delete from public.inventory_records r where r.inventory_date = p_date;
   get diagnostics n = row_count;
+  delete from public.inventory_saves s where s.inventory_date = p_date;
   return n;
 end $$;
 
@@ -220,8 +253,9 @@ grant execute on function
   public.check_pin(text),
   public.get_products(text),
   public.get_day(text, date),
-  public.save_day(text, date, jsonb),
+  public.save_day(text, date, jsonb, text),
   public.list_days(text, integer),
+  public.get_day_saves(text, date),
   public.get_product_history(text, uuid, integer),
   public.upsert_product(text, uuid, text, text, numeric, text, boolean),
   public.delete_day(text, date)
