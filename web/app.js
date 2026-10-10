@@ -849,12 +849,22 @@ $("whoName").addEventListener("keydown", e => { if (e.key === "Enter") { e.preve
 
 /* boot */
 if (!API || !KEY) {
-  $("pinScreen").hidden = false;
-  $("pinErr").textContent = "The app isn't connected to its database yet (config.js is missing). See the setup guide.";
-  $("pinErr").hidden = false; $("pinBtn").disabled = true;
+  /* config.js didn't load (often a stale cached copy): fetch it fresh once, then reload */
+  let tries = 0; try { tries = Number(sessionStorage.getItem("cfg-retry") || 0); } catch (e) {}
+  if (tries < 1) {
+    try { sessionStorage.setItem("cfg-retry", "1"); } catch (e) {}
+    fetch("config.js?t=" + Date.now(), { cache: "reload" }).finally(() => location.reload());
+  } else {
+    try { sessionStorage.removeItem("cfg-retry"); } catch (e) {}
+    $("pinScreen").hidden = false;
+    $("pinErr").textContent = "Couldn't connect to the database. Check your internet, then close this tab and open the link again.";
+    $("pinErr").hidden = false; $("pinBtn").disabled = true;
+  }
 } else if (!S.pin) {
+  try { sessionStorage.removeItem("cfg-retry"); } catch (e) {}
   lock("");
 } else {
+  try { sessionStorage.removeItem("cfg-retry"); } catch (e) {}
   $("app").hidden = false;
   renderToday(); route(); loadAll();
 }

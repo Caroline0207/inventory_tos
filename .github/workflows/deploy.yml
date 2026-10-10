@@ -38,6 +38,7 @@ jobs:
           mkdir -p dist
           cp -r web/. dist/
           rm -f dist/config.example.js
+          sed -i "s/__BUILD__/${GITHUB_SHA::7}/g" dist/index.html
           node -e 'const c={supabaseUrl:process.env.SUPABASE_URL.trim(),supabaseAnonKey:process.env.SUPABASE_ANON_KEY.trim()};require("fs").writeFileSync("dist/config.js","window.APP_CONFIG = "+JSON.stringify(c)+";\n")'
 
       - uses: actions/configure-pages@v5
