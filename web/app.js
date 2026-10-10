@@ -117,7 +117,7 @@ $("pinForm").addEventListener("submit", async e => {
     S.pin = pin; store.set("inv-pin", pin);
     if (role === "admin") { S.adminPin = pin; store.set("inv-admin-pin", pin, true); }
     $("pinScreen").hidden = true; $("app").hidden = false;
-    show("today"); renderToday(); loadAll();
+    renderToday(); route(); loadAll();
   } catch (err) {
     $("pinErr").textContent = err.code === "invalid_pin" ? "Wrong PIN. Try again." : errorText(err, "check the PIN");
     $("pinErr").hidden = false;
@@ -128,6 +128,8 @@ $("pinForm").addEventListener("submit", async e => {
    Header
    ========================================================= */
 function renderHeader() {
+  if (S.mode && S.mode !== "stock") return renderModeHeader();
+  $("homeBtn").hidden = false; $("homeBtn").textContent = "‹ Home";
   const titles = { today: "Daily Inventory", history: "History", products: "Products" };
   $("viewTitle").textContent = titles[S.view];
   $("dateLine").textContent = S.view === "today" ? longDate(current) : (S.view === "history" ? "Past inventory records" : "Products and target stock");
@@ -517,7 +519,9 @@ productsBody.addEventListener("submit", async e => {
    Navigation + loading
    ========================================================= */
 function show(view) {
-  S.view = view;
+  S.view = view; S.mode = "stock";
+  $("view-home").hidden = true; $("view-closing").hidden = true; $("closebar").hidden = true;
+  document.querySelector(".tabs").hidden = false; document.body.classList.remove("no-bar", "close-bar");
   ["today", "history", "products"].forEach(v => { $("view-" + v).hidden = v !== view; });
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.view === view ? "page" : "false"));
   $("savebar").hidden = view !== "today"; document.body.classList.toggle("no-save", view !== "today");
@@ -556,6 +560,7 @@ async function loadAll() {
   if (!focused) renderToday(); else syncTodayValues();
   if (S.view === "products" && !$("prodForm")) renderProducts();
   renderHeader();
+  if (S.mode === "home") renderHome();
 }
 
 document.addEventListener("visibilitychange", () => {
@@ -563,7 +568,276 @@ document.addEventListener("visibilitychange", () => {
   const k = todayKey();
   if (k !== current) { current = k; draft = loadDraft(); }
   loadAll();
+  if (S.mode === "closing" || S.mode === "home") loadClosingDay(true);
 });
+
+
+/* =========================================================
+   Home + Closing checklist
+   ========================================================= */
+const ROLES = window.CLOSING_ROLES || [];
+const roleById = id => ROLES.find(r => r.id === id);
+const WORK_ROLES = ROLES.filter(r => !r.leader);
+/* a closing done after midnight (before 4 AM) still counts for the previous day */
+const closeKey = () => keyOf(new Date(Date.now() - 4 * 3600 * 1000));
+const C = { date: closeKey(), rows: new Map(), loaded: false, notSetUp: false, view: "roles", role: null,
+            checks: {}, confirm: false, days: null, histDay: null, histRows: null, confirmDelete: false, deleteErr: "" };
+const CDKEY = () => "close-draft-" + C.date + "-" + C.role;
+function loadChecks() {
+  try { const d = JSON.parse(store.get(CDKEY()) || "null"); if (d) return d; } catch (e) {}
+  const row = C.rows.get(C.role); const out = {};
+  if (row && Array.isArray(row.items)) row.items.forEach(it => { if (it.done) out[it.id] = true; });
+  return out;
+}
+const hasDraft = () => store.get(CDKEY()) !== null;
+
+function notSetUpMsg() { return `<div class="banner">Closing isn't set up yet. Run <b>supabase/004_closing.sql</b> in Supabase once (see README).</div>`; }
+
+async function loadClosingDay(rerender) {
+  const k = closeKey();
+  if (k !== C.date) { C.date = k; C.rows = new Map(); C.loaded = false; }
+  try {
+    const rows = await rpc("get_closing_day", { p_pin: S.pin, p_date: C.date }) || [];
+    C.rows = new Map(rows.map(r => [r.role, r])); C.loaded = true; C.notSetUp = false;
+  } catch (e) {
+    if (handlePinError(e)) return;
+    if (missingFn(e, "get_closing_day")) C.notSetUp = true;
+    C.loaded = true;
+  }
+  if (rerender) { if (S.mode === "closing") renderClosing(); if (S.mode === "home") renderHome(); }
+}
+
+function roleStatus(r) {
+  const row = C.rows.get(r.id);
+  if (!row) return { cls: "", pill: `<span class="pill mute">Not yet</span>`, text: "Not yet" };
+  const full = row.done_count === row.total_count;
+  return { cls: full ? "done" : "part", row,
+    pill: `<span class="pill ${full ? "" : "warn"} num">${full ? "✓ " : row.done_count + "/" + row.total_count + " · "}${esc(row.checked_by)}</span>`,
+    text: `${row.checked_by} · ${row.done_count}/${row.total_count} · ${timeOf(row.updated_at)}` };
+}
+
+function setMode(mode) {
+  S.mode = mode;
+  ["today", "history", "products"].forEach(v => { $("view-" + v).hidden = true; });
+  $("view-home").hidden = mode !== "home"; $("view-closing").hidden = mode !== "closing";
+  $("savebar").hidden = true; document.querySelector(".tabs").hidden = true;
+  const bar = mode === "closing" && C.view === "role";
+  $("closebar").hidden = !bar;
+  document.body.classList.remove("no-save");
+  document.body.classList.toggle("close-bar", bar); document.body.classList.toggle("no-bar", !bar);
+}
+
+function renderModeHeader() {
+  const hb = $("homeBtn"); let title = "", line = "";
+  if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
+  else if (C.view === "roles") { hb.hidden = false; hb.textContent = "‹ Home"; title = "Closing"; line = longDate(C.date); }
+  else if (C.view === "role") { hb.hidden = false; hb.textContent = "‹ Closing"; const r = roleById(C.role); title = r ? r.name : "Closing"; line = (r ? r.ko + " · " : "") + longDate(C.date); }
+  else { hb.hidden = false; hb.textContent = "‹ Closing"; title = "Closing History"; line = "Past closing checklists"; }
+  $("viewTitle").textContent = title; $("dateLine").textContent = line; $("statusPills").innerHTML = "";
+}
+
+function renderHome() {
+  $("homeStockSub").textContent = S.savedAt ? `Saved today ${timeOf(S.savedAt)}${S.savedBy ? " · " + S.savedBy : ""}` : "Enter today's shortages";
+  if (C.notSetUp) $("homeCloseSub").textContent = "Closing checklist";
+  else if (C.loaded) {
+    const n = WORK_ROLES.filter(r => C.rows.has(r.id)).length;
+    const lead = C.rows.get("leader");
+    $("homeCloseSub").textContent = lead ? `Final check done · ${lead.checked_by}` : `${n} of ${WORK_ROLES.length} parts submitted tonight`;
+  }
+  renderModeHeader();
+}
+
+function renderClosing() {
+  const el = $("closingBody");
+  setMode("closing"); renderModeHeader();
+  if (C.notSetUp) { el.innerHTML = notSetUpMsg(); $("closebar").hidden = true; return; }
+  if (C.view === "roles") return renderRoles(el);
+  if (C.view === "role") return renderRole(el);
+  return renderClosingHistory(el);
+}
+
+function renderRoles(el) {
+  el.innerHTML = `<p class="hint" style="margin-top:14px">Pick your part. 내 파트를 누르세요.</p>
+    <div class="role-grid">${ROLES.map(r => { const st = roleStatus(r);
+      return `<button type="button" class="role-btn ${r.leader ? "leader" : ""} ${st.cls}" data-role="${esc(r.id)}">
+        <span class="rn">${esc(r.name)}</span><span class="rk">${esc(r.ko)} · ${r.tasks.length} tasks</span>
+        <span class="rs">${C.loaded ? st.pill : ""}</span></button>`; }).join("")}</div>
+    <div class="linkrow"><button type="button" class="btn" data-go-hist>Closing history</button></div>`;
+}
+
+function renderRole(el) {
+  const r = roleById(C.role); if (!r) { location.hash = "closing"; return; }
+  const done = r.tasks.filter(t => C.checks[t.id]).length, total = r.tasks.length;
+  const row = C.rows.get(r.id);
+  let team = "";
+  if (r.leader) {
+    team = `<div class="sectitle"><h2>Team</h2><span class="num">${WORK_ROLES.filter(x => C.rows.has(x.id)).length}/${WORK_ROLES.length} submitted</span></div>
+      <ul class="team">${WORK_ROLES.map(x => { const st = roleStatus(x); const xr = st.row;
+        const miss = xr && Array.isArray(xr.items) ? xr.items.filter(i => !i.done) : [];
+        return `<li><div><div class="tn">${esc(x.name)} <span class="tm">${esc(x.ko)}</span></div>
+          <div class="tm">${xr ? esc(st.text) : "Not submitted yet"}</div>
+          ${miss.length ? `<ul class="missing">${miss.map(i => `<li>${esc(i.ko ? i.ko + " · " + i.label : i.label)}</li>`).join("")}</ul>` : ""}</div>
+          ${xr ? (xr.done_count === xr.total_count ? `<span class="pill">Done</span>` : `<span class="pill warn">${miss.length} left</span>`) : `<span class="pill mute">Not yet</span>`}</li>`; }).join("")}</ul>`;
+  }
+  el.innerHTML = `<div class="who"><label for="closeName">${r.leader ? "Leader" : "Checked by"}</label>
+      <input id="closeName" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(S.name)}" enterkeyhint="done"></div>
+    ${team}
+    <div class="sectitle"><h2>${r.leader ? "Final check" : "Checklist"}</h2><span class="num" id="cCount">${done}/${total}</span></div>
+    <div class="progress"><span id="cBar" style="width:${Math.round(done / total * 100)}%"></span></div>
+    <ul class="task-list">${r.tasks.map(t => `<li><button type="button" class="task" role="checkbox" aria-checked="${C.checks[t.id] ? "true" : "false"}" data-task="${esc(t.id)}">
+        <span class="box" aria-hidden="true">✓</span><span><span class="tk">${esc(t.ko)}</span><span class="te">${esc(t.en)}</span></span></button></li>`).join("")}</ul>
+    ${row ? `<p class="hint">Submitted by <b>${esc(row.checked_by)}</b> at ${esc(timeOf(row.updated_at))} (${row.done_count}/${row.total_count}).${hasDraft() ? " You have changes that aren't submitted." : " You can change it and submit again."}</p>` : ""}`;
+  updateSubmit();
+}
+
+function updateSubmit() {
+  const r = roleById(C.role); if (!r) return;
+  const done = r.tasks.filter(t => C.checks[t.id]).length, total = r.tasks.length;
+  const cnt = $("cCount"), bar = $("cBar");
+  if (cnt) cnt.textContent = `${done}/${total}`; if (bar) bar.style.width = Math.round(done / total * 100) + "%";
+  const missingParts = r.leader ? WORK_ROLES.filter(x => !C.rows.has(x.id)).length : 0;
+  const btn = $("closeSubmit");
+  btn.classList.toggle("warn", C.confirm);
+  if (C.confirm) {
+    const bits = [];
+    if (total - done) bits.push(`${total - done} unchecked`);
+    if (missingParts) bits.push(`${missingParts} part${missingParts > 1 ? "s" : ""} missing`);
+    btn.textContent = `Submit anyway? (${bits.join(", ")})`;
+  } else btn.textContent = `${r.leader ? "Final check" : "Submit " + r.name} (${done}/${total})`;
+}
+
+$("closingBody").addEventListener("click", e => {
+  const rb = e.target.closest("[data-role]"); if (rb) { location.hash = "closing-" + rb.dataset.role; return; }
+  if (e.target.closest("[data-go-hist]")) { location.hash = "closing-history"; return; }
+  const tb = e.target.closest("[data-task]");
+  if (tb) {
+    const id = tb.dataset.task; C.checks[id] = !C.checks[id]; if (!C.checks[id]) delete C.checks[id];
+    tb.setAttribute("aria-checked", C.checks[id] ? "true" : "false");
+    store.set(CDKEY(), JSON.stringify(C.checks)); C.confirm = false; updateSubmit(); return;
+  }
+  const d = e.target.closest("[data-cday]"); if (d) { C.histDay = d.dataset.cday; C.histRows = null; C.confirmDelete = false; renderClosing(); window.scrollTo(0, 0); return; }
+  if (e.target.closest("[data-cback]")) { C.histDay = null; C.confirmDelete = false; renderClosing(); return; }
+  if (e.target.closest("[data-cdel]")) { C.confirmDelete = true; C.deleteErr = ""; renderClosing(); return; }
+  if (e.target.closest("[data-cdel-cancel]")) { C.confirmDelete = false; renderClosing(); }
+});
+$("closingBody").addEventListener("input", e => {
+  if (e.target.id !== "closeName") return;
+  S.name = e.target.value; store.set("inv-name", S.name.trim()); $("whoName").value = S.name;
+  if (S.name.trim()) e.target.closest(".who").classList.remove("need");
+});
+$("closingBody").addEventListener("keydown", e => { if (e.target.id === "closeName" && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+
+$("closeSubmit").addEventListener("click", async () => {
+  const r = roleById(C.role); if (!r) return;
+  const nameEl = $("closeName"); const name = (nameEl ? nameEl.value : S.name).trim();
+  if (!name) { nameEl.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); nameEl.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
+  const done = r.tasks.filter(t => C.checks[t.id]).length;
+  const missingParts = r.leader ? WORK_ROLES.filter(x => !C.rows.has(x.id)).length : 0;
+  if ((done < r.tasks.length || missingParts) && !C.confirm) { C.confirm = true; updateSubmit(); return; }
+  const btn = $("closeSubmit"); btn.disabled = true; btn.textContent = "Submitting…";
+  const items = r.tasks.map(t => ({ id: t.id, label: t.en, ko: t.ko, done: !!C.checks[t.id] }));
+  try {
+    await rpc("save_closing", { p_pin: S.pin, p_date: C.date, p_role: r.id, p_name: name, p_items: items });
+    store.del(CDKEY()); C.confirm = false; C.days = null;
+    await loadClosingDay(false);
+    toast(`${r.leader ? "Final check" : r.name} submitted. 제출 완료!`);
+    location.hash = "closing";
+  } catch (e) {
+    if (handlePinError(e)) return;
+    if (missingFn(e, "save_closing")) toast("Closing isn't set up yet. Ask the manager to run 004_closing.sql.", true);
+    else if (e.code === "invalid_date") toast("This device's date looks wrong. Check the date and time.", true);
+    else toast(e.code === "network" ? "No internet. Your checks are kept on this device. Try again when online." : "Couldn't submit. Your checks are kept. Try again.", true);
+  } finally { btn.disabled = false; updateSubmit(); }
+});
+
+async function renderClosingHistory(el) {
+  try {
+    if (C.histDay) {
+      const day = C.histDay;
+      if (!C.histRows) {
+        el.innerHTML = `<button class="back" type="button" data-cback>← All dates</button><div class="empty">Loading…</div>`;
+        C.histRows = await rpc("get_closing_day", { p_pin: S.pin, p_date: day }) || [];
+        if (C.histDay !== day || C.view !== "history") return;
+      }
+      const byRole = new Map(C.histRows.map(x => [x.role, x]));
+      el.innerHTML = `<button class="back" type="button" data-cback>← All dates</button>
+        <div class="sectitle"><h2>${esc(longDate(day))}</h2><span>${esc(weekday(day))}</span></div>
+        <ul class="team">${ROLES.map(x => { const xr = byRole.get(x.id);
+          const miss = xr && Array.isArray(xr.items) ? xr.items.filter(i => !i.done) : [];
+          return `<li><div><div class="tn">${esc(x.name)} <span class="tm">${esc(x.ko)}</span></div>
+            <div class="tm">${xr ? `${esc(xr.checked_by)} · ${xr.done_count}/${xr.total_count} · ${esc(timeOf(xr.updated_at))}` : "Not submitted"}</div>
+            ${miss.length ? `<ul class="missing">${miss.map(i => `<li>${esc(i.ko ? i.ko + " · " + i.label : i.label)}</li>`).join("")}</ul>` : ""}</div>
+            ${xr ? (miss.length ? `<span class="pill warn">${miss.length} missed</span>` : `<span class="pill">Done</span>`) : `<span class="pill mute">—</span>`}</li>`; }).join("")}</ul>
+        ${C.confirmDelete ? `<form class="danger-box" id="cDeleteForm" novalidate>
+            <p><b>Delete the closing checklist for ${esc(longDate(day))}?</b><br>This can't be undone.</p>
+            ${S.adminPin ? "" : `<label for="cDelPin">Manager PIN</label><input id="cDelPin" type="password" inputmode="numeric" autocomplete="off">`}
+            ${C.deleteErr ? `<p class="err-msg">${esc(C.deleteErr)}</p>` : ""}
+            <div class="actions"><button class="btn danger" type="submit">Delete</button><button class="btn" type="button" data-cdel-cancel>Cancel</button></div></form>`
+          : `<button class="btn delete-day" type="button" data-cdel>Delete this day</button>`}`;
+      return;
+    }
+    if (!C.days) {
+      el.innerHTML = `<div class="empty">Loading…</div>`;
+      C.days = await rpc("list_closing_days", { p_pin: S.pin, p_limit: 400 }) || [];
+      if (C.view !== "history" || C.histDay) return;
+    }
+    if (!C.days.length) { el.innerHTML = `<div class="empty"><b>No closings yet</b>Submitted closing checklists will show up here.</div>`; return; }
+    el.innerHTML = `<div class="sectitle"><h2>All dates</h2><span class="num">${C.days.length}</span></div>
+      <ul class="list">${C.days.map(d => { const k = String(d.check_date).slice(0, 10);
+        const sub = Number(d.roles_submitted), comp = Number(d.roles_complete);
+        return `<li><button class="daybtn" type="button" data-cday="${esc(k)}"><span><span class="d">${esc(longDate(k))}</span><br><span class="s">${esc(weekday(k))}</span>
+          <span class="by">${d.leader ? "Final: " + esc(d.leader) : "No final check"}</span></span>
+          <span class="pill ${comp === WORK_ROLES.length && d.leader ? "" : "warn"} num">${sub}/${WORK_ROLES.length} parts</span></button></li>`; }).join("")}</ul>`;
+  } catch (e) {
+    if (handlePinError(e)) return;
+    el.innerHTML = missingFn(e, "closing") ? notSetUpMsg() : `<div class="empty"><b>Couldn't load</b>${esc(errorText(e, "load closing records"))}</div>`;
+  }
+}
+$("closingBody").addEventListener("submit", async e => {
+  if (e.target.id !== "cDeleteForm") return;
+  e.preventDefault();
+  const pin = S.adminPin || ($("cDelPin") ? $("cDelPin").value.trim() : "");
+  if (!pin) { C.deleteErr = "Enter the manager PIN."; return renderClosing(); }
+  try {
+    await rpc("delete_closing_day", { p_pin: pin, p_date: C.histDay });
+    if (!S.adminPin) { S.adminPin = pin; store.set("inv-admin-pin", pin, true); }
+    toast("Closing for " + longDate(C.histDay) + " deleted.");
+    if (C.histDay === C.date) await loadClosingDay(false);
+    C.histDay = null; C.days = null; C.confirmDelete = false;
+  } catch (err) {
+    if (err.code === "invalid_pin") { if (S.adminPin) { S.adminPin = ""; store.del("inv-admin-pin", true); } C.deleteErr = "Wrong manager PIN."; }
+    else C.deleteErr = errorText(err, "delete this day");
+  }
+  renderClosing();
+});
+
+/* ---------- routing (#home, #stock, #closing, #closing-server, #closing-history) ---------- */
+function route() {
+  const h = (location.hash || "").replace("#", "");
+  if (h === "stock" || h === "today" || h === "history" || h === "products") {
+    show(h === "stock" ? (S.mode === "stock" ? S.view : "today") : h); return;
+  }
+  if (h.startsWith("closing")) {
+    const sub = h.slice(8);
+    C.date = closeKey();
+    if (sub === "history") { C.view = "history"; C.histDay = null; C.days = null; }
+    else if (roleById(sub)) { C.view = "role"; C.role = sub; C.checks = loadChecks(); C.confirm = false; }
+    else C.view = "roles";
+    renderClosing(); window.scrollTo(0, 0);
+    if (!C.loaded || C.view === "roles") loadClosingDay(true).then(() => {
+      if (C.view === "role" && !hasDraft()) { C.checks = loadChecks(); if (S.mode === "closing") renderClosing(); }
+    });
+    return;
+  }
+  setMode("home"); renderHome(); window.scrollTo(0, 0);
+  loadClosingDay(true);
+}
+window.addEventListener("hashchange", route);
+$("homeBtn").addEventListener("click", () => {
+  if (S.mode === "closing" && C.view !== "roles") location.hash = "closing"; else location.hash = "home";
+});
+$("view-home").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) location.hash = b.dataset.go; });
+$("signOutHome").addEventListener("click", () => { S.adminPin = ""; store.del("inv-admin-pin", true); lock(""); });
 
 /* "Checked by" name: remembered on this device */
 $("whoName").value = S.name;
@@ -582,6 +856,6 @@ if (!API || !KEY) {
   lock("");
 } else {
   $("app").hidden = false;
-  show("today"); renderToday(); loadAll();
+  renderToday(); route(); loadAll();
 }
 })();

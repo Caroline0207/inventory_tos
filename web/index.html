@@ -33,6 +33,7 @@
   <header class="top">
     <div class="wrap">
       <div>
+        <button type="button" class="home-btn" id="homeBtn" hidden>‹ Home</button>
         <h1 id="viewTitle">Daily Inventory</h1>
         <div class="date" id="dateLine"></div>
       </div>
@@ -42,6 +43,24 @@
 
   <main class="wrap">
     <div class="banner" id="banner" hidden></div>
+
+    <section id="view-home" hidden>
+      <div class="home-grid">
+        <button type="button" class="home-card" data-go="stock">
+          <span class="hc-ko">재고</span><span class="hc-en">Stock</span>
+          <span class="hc-sub" id="homeStockSub">Enter today's shortages</span>
+        </button>
+        <button type="button" class="home-card" data-go="closing">
+          <span class="hc-ko">마감</span><span class="hc-en">Closing</span>
+          <span class="hc-sub" id="homeCloseSub">Closing checklist</span>
+        </button>
+      </div>
+      <div class="foot"><button type="button" id="signOutHome">Sign out of this device</button></div>
+    </section>
+
+    <section id="view-closing" hidden>
+      <div id="closingBody"></div>
+    </section>
 
     <section id="view-today">
       <div class="who">
@@ -73,6 +92,10 @@
     </div>
   </div>
 
+  <div class="savebar" id="closebar" hidden>
+    <div class="savebar-in one"><button id="closeSubmit" type="button" class="primary-wide">Submit</button></div>
+  </div>
+
   <nav class="tabs" aria-label="Pages">
     <button type="button" data-view="today" aria-current="page">Daily Inventory</button>
     <button type="button" data-view="history">History</button>
@@ -96,6 +119,7 @@
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script src="config.js"></script>
+<script src="closing-tasks.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
