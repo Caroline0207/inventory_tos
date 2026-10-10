@@ -641,7 +641,7 @@ function renderModeHeader() {
   const hb = $("homeBtn"); let title = "", line = "";
   if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
   else if (C.view === "roles") { hb.hidden = false; hb.textContent = "‹ Home"; title = "Closing"; line = longDate(C.date); }
-  else if (C.view === "role") { hb.hidden = false; hb.textContent = "‹ Closing"; const r = roleById(C.role); title = r ? r.name : "Closing"; line = longDate(C.date); }
+  else if (C.view === "role") { hb.hidden = false; hb.textContent = "‹ Closing"; const r = roleById(C.role); title = r ? r.name : "Closing"; line = (r ? r.ko + " · " : "") + longDate(C.date); }
   else { hb.hidden = false; hb.textContent = "‹ Closing"; title = "Closing History"; line = "Past closing checklists"; }
   $("viewTitle").textContent = title; $("dateLine").textContent = line; $("statusPills").innerHTML = "";
 }
@@ -667,13 +667,13 @@ function renderClosing() {
 }
 
 function renderRoles(el) {
-  el.innerHTML = `<p class="hint" style="margin-top:14px">Pick your part.</p>
+  el.innerHTML = `<p class="hint" style="margin-top:14px">Pick your part. 내 파트를 누르세요.</p>
     <div class="role-grid">${ROLES.map(r => { const st = roleStatus(r); const row = st.row;
       const pct = row ? Math.round(row.done_count / row.total_count * 100) : 0;
       const label = !C.loaded ? "&nbsp;" : !row ? "Not started" : row.done_count === row.total_count ? `✓ Done · ${esc(row.checked_by)}` : `${row.done_count}/${row.total_count} · ${esc(row.checked_by)}`;
       return `<button type="button" class="tile role-btn ${esc(r.id)} ${r.leader ? "leader" : ""} ${st.cls}" data-role="${esc(r.id)}">
         <span class="ic" aria-hidden="true">${svg(ICONS[r.id] || ICONS.leader)}</span>
-        <span class="tt">${esc(r.name)}</span><span class="ts">${r.tasks.length} tasks</span>
+        <span class="tt">${esc(r.name)}</span><span class="ts">${esc(r.ko)} · ${r.tasks.length} tasks</span>
         <span class="meter"><span class="bar"><span style="width:${pct}%"></span></span><span class="st">${label}</span></span>
         <span class="go" aria-hidden="true">${GO_ICON}</span></button>`; }).join("")}</div>
     <div class="linkrow"><button type="button" class="hist-btn" data-go-hist>${svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>')}Closing history</button></div>`;
@@ -688,9 +688,9 @@ function renderRole(el) {
     team = `<div class="sectitle"><h2>Team</h2><span class="num">${WORK_ROLES.filter(x => C.rows.has(x.id)).length}/${WORK_ROLES.length} submitted</span></div>
       <ul class="team">${WORK_ROLES.map(x => { const st = roleStatus(x); const xr = st.row;
         const miss = xr && Array.isArray(xr.items) ? xr.items.filter(i => !i.done) : [];
-        return `<li><div><div class="tn">${esc(x.name)}</div>
+        return `<li><div><div class="tn">${esc(x.name)} <span class="tm">${esc(x.ko)}</span></div>
           <div class="tm">${xr ? esc(st.text) : "Not submitted yet"}</div>
-          ${miss.length ? `<ul class="missing">${miss.map(i => `<li>${esc(i.label)}</li>`).join("")}</ul>` : ""}</div>
+          ${miss.length ? `<ul class="missing">${miss.map(i => `<li>${esc(i.ko ? i.ko + " · " + i.label : i.label)}</li>`).join("")}</ul>` : ""}</div>
           ${xr ? (xr.done_count === xr.total_count ? `<span class="pill">Done</span>` : `<span class="pill warn">${miss.length} left</span>`) : `<span class="pill mute">Not yet</span>`}</li>`; }).join("")}</ul>`;
   }
   el.innerHTML = `<div class="who"><label for="closeName">${r.leader ? "Leader" : "Checked by"}</label>
@@ -744,7 +744,7 @@ $("closingBody").addEventListener("keydown", e => { if (e.target.id === "closeNa
 $("closeSubmit").addEventListener("click", async () => {
   const r = roleById(C.role); if (!r) return;
   const nameEl = $("closeName"); const name = (nameEl ? nameEl.value : S.name).trim();
-  if (!name) { nameEl.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); nameEl.focus(); toast("Enter your name first.", true); return; }
+  if (!name) { nameEl.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); nameEl.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
   const done = r.tasks.filter(t => C.checks[t.id]).length;
   const missingParts = r.leader ? WORK_ROLES.filter(x => !C.rows.has(x.id)).length : 0;
   if ((done < r.tasks.length || missingParts) && !C.confirm) { C.confirm = true; updateSubmit(); return; }
@@ -754,7 +754,7 @@ $("closeSubmit").addEventListener("click", async () => {
     await rpc("save_closing", { p_pin: S.pin, p_date: C.date, p_role: r.id, p_name: name, p_items: items });
     store.del(CDKEY()); C.confirm = false; C.days = null;
     await loadClosingDay(false);
-    toast(`${r.leader ? "Final check" : r.name} submitted.`);
+    toast(`${r.leader ? "Final check" : r.name} submitted. 제출 완료!`);
     location.hash = "closing";
   } catch (e) {
     if (handlePinError(e)) return;
@@ -778,9 +778,9 @@ async function renderClosingHistory(el) {
         <div class="sectitle"><h2>${esc(longDate(day))}</h2><span>${esc(weekday(day))}</span></div>
         <ul class="team">${ROLES.map(x => { const xr = byRole.get(x.id);
           const miss = xr && Array.isArray(xr.items) ? xr.items.filter(i => !i.done) : [];
-          return `<li><div><div class="tn">${esc(x.name)}</div>
+          return `<li><div><div class="tn">${esc(x.name)} <span class="tm">${esc(x.ko)}</span></div>
             <div class="tm">${xr ? `${esc(xr.checked_by)} · ${xr.done_count}/${xr.total_count} · ${esc(timeOf(xr.updated_at))}` : "Not submitted"}</div>
-            ${miss.length ? `<ul class="missing">${miss.map(i => `<li>${esc(i.label)}</li>`).join("")}</ul>` : ""}</div>
+            ${miss.length ? `<ul class="missing">${miss.map(i => `<li>${esc(i.ko ? i.ko + " · " + i.label : i.label)}</li>`).join("")}</ul>` : ""}</div>
             ${xr ? (miss.length ? `<span class="pill warn">${miss.length} missed</span>` : `<span class="pill">Done</span>`) : `<span class="pill mute">—</span>`}</li>`; }).join("")}</ul>
         ${C.confirmDelete ? `<form class="danger-box" id="cDeleteForm" novalidate>
             <p><b>Delete the closing checklist for ${esc(longDate(day))}?</b><br>This can't be undone.</p>
