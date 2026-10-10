@@ -600,6 +600,14 @@ function loadChecks() {
   return out;
 }
 const hasDraft = () => store.get(CDKEY()) !== null;
+/* each part keeps its own name for tonight; nothing is copied between parts */
+const CNKEY = () => "close-name-" + C.date + "-" + C.role;
+function roleName() {
+  const typed = store.get(CNKEY());
+  if (typed !== null) return typed;
+  const row = C.rows.get(C.role);
+  return row ? row.checked_by : "";
+}
 
 function notSetUpMsg() { return `<div class="banner">Closing isn't set up yet. Run <b>supabase/004_closing.sql</b> in Supabase once (see README).</div>`; }
 
@@ -694,7 +702,7 @@ function renderRole(el) {
           ${xr ? (xr.done_count === xr.total_count ? `<span class="pill">Done</span>` : `<span class="pill warn">${miss.length} left</span>`) : `<span class="pill mute">Not yet</span>`}</li>`; }).join("")}</ul>`;
   }
   el.innerHTML = `<div class="who"><label for="closeName">${r.leader ? "Leader" : "Checked by"}</label>
-      <input id="closeName" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(S.name)}" enterkeyhint="done"></div>
+      <input id="closeName" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(roleName())}" enterkeyhint="done"></div>
     ${team}
     <div class="sectitle"><h2>${r.leader ? "Final check" : "Checklist"}</h2><span class="num" id="cCount">${done}/${total}</span></div>
     <div class="progress"><span id="cBar" style="width:${Math.round(done / total * 100)}%"></span></div>
@@ -736,14 +744,14 @@ $("closingBody").addEventListener("click", e => {
 });
 $("closingBody").addEventListener("input", e => {
   if (e.target.id !== "closeName") return;
-  S.name = e.target.value; store.set("inv-name", S.name.trim()); $("whoName").value = S.name;
-  if (S.name.trim()) e.target.closest(".who").classList.remove("need");
+  store.set(CNKEY(), e.target.value);
+  if (e.target.value.trim()) e.target.closest(".who").classList.remove("need");
 });
 $("closingBody").addEventListener("keydown", e => { if (e.target.id === "closeName" && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
 
 $("closeSubmit").addEventListener("click", async () => {
   const r = roleById(C.role); if (!r) return;
-  const nameEl = $("closeName"); const name = (nameEl ? nameEl.value : S.name).trim();
+  const nameEl = $("closeName"); const name = (nameEl ? nameEl.value : "").trim();
   if (!name) { nameEl.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); nameEl.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
   const done = r.tasks.filter(t => C.checks[t.id]).length;
   const missingParts = r.leader ? WORK_ROLES.filter(x => !C.rows.has(x.id)).length : 0;
