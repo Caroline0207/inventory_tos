@@ -46,13 +46,17 @@
 
     <section id="view-home" hidden>
       <div class="home-grid">
-        <button type="button" class="home-card" data-go="stock">
-          <span class="hc-ko">재고</span><span class="hc-en">Stock</span>
-          <span class="hc-sub" id="homeStockSub">Enter today's shortages</span>
+        <button type="button" class="tile home-card stock" data-go="stock">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 7.5v9L12 21l9-4.5v-9"/><path d="M12 12v9"/></svg></span>
+          <span class="tt">Stock</span>
+          <span class="ts" id="homeStockSub">Enter today's shortages</span>
+          <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
         </button>
-        <button type="button" class="home-card" data-go="closing">
-          <span class="hc-ko">마감</span><span class="hc-en">Closing</span>
-          <span class="hc-sub" id="homeCloseSub">Closing checklist</span>
+        <button type="button" class="tile home-card closing" data-go="closing">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></span>
+          <span class="tt">Closing</span>
+          <span class="ts" id="homeCloseSub">Closing checklist</span>
+          <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
         </button>
       </div>
       <div class="foot"><button type="button" id="signOutHome">Sign out of this device</button></div>

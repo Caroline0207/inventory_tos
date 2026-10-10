@@ -182,27 +182,53 @@ body.no-save .toast{bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom
 .savelog{margin:-2px 4px 10px;color:var(--muted);font-size:.92rem}
 .savelog b{color:var(--ink);font-weight:600}
 
-/* ---------- Home ---------- */
+/* ---------- Home + role tiles ---------- */
 .home-btn{display:block;border:0;background:none;padding:0 0 4px;margin:0;color:var(--accent);font-weight:600;font-size:.95rem}
+:root{--tile-green:#1f8a5b;--tile-indigo:#4f5bd5;--tile-amber:#c27a0e;--tile-rose:#cf4a5d;--tile-teal:#0f8a8a;--tile-plum:#8a4fbf}
+@media (prefers-color-scheme: dark){:root{--tile-green:#4cc790;--tile-indigo:#8f98ff;--tile-amber:#f0b04a;--tile-rose:#ff8496;--tile-teal:#4fd1cf;--tile-plum:#c79bff}}
 .home-grid{display:grid;gap:14px;margin-top:18px}
-.home-card{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"ko en" "ko sub";column-gap:16px;align-items:center;text-align:left;
-  padding:22px 20px;border-radius:16px;border:1px solid var(--line);background:var(--surface);min-height:120px}
-.home-card:active{background:var(--accent-soft)}
-.home-card .hc-ko{grid-area:ko;font-family:var(--f-display);font-weight:700;font-size:2.6rem;line-height:1;color:var(--accent);
-  width:2.6em;height:2.6em;border-radius:14px;background:var(--accent-soft);display:grid;place-items:center;font-size:1.35rem}
-.home-card .hc-en{grid-area:en;font-family:var(--f-display);font-weight:700;font-size:1.9rem;line-height:1.05}
-.home-card .hc-sub{grid-area:sub;color:var(--muted);font-size:.95rem}
+.tile{--tint:var(--tile-green);position:relative;display:grid;text-align:left;border:0;cursor:pointer;color:var(--ink);
+  border-radius:24px;padding:20px;overflow:hidden;
+  background:linear-gradient(145deg, color-mix(in srgb, var(--tint) 16%, var(--surface)) 0%, var(--surface) 70%);
+  box-shadow:0 1px 0 color-mix(in srgb, var(--tint) 18%, transparent) inset, 0 0 0 1px color-mix(in srgb, var(--tint) 22%, var(--line)), 0 10px 24px -14px color-mix(in srgb, var(--tint) 60%, transparent);
+  transition:transform .12s ease, box-shadow .12s ease}
+.tile:active{transform:scale(.98)}
+.tile::after{content:"";position:absolute;right:-40px;bottom:-40px;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle, color-mix(in srgb, var(--tint) 22%, transparent), transparent 70%);pointer-events:none}
+.tile .ic{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(140deg, var(--tint), color-mix(in srgb, var(--tint) 70%, #000));box-shadow:0 6px 14px -6px var(--tint)}
+.tile .ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tile .go{position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:color-mix(in srgb, var(--tint) 14%, var(--surface));color:var(--tint)}
+.tile .go svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tile .tt{font-family:var(--f-display);font-weight:700;font-size:1.7rem;line-height:1.05;letter-spacing:-.01em}
+.tile .ts{color:var(--muted);font-size:.95rem}
+.home-card{grid-template-columns:auto 1fr;column-gap:16px;row-gap:4px;align-items:center;min-height:128px;padding-right:64px}
+.home-card .ic{grid-row:1 / span 2;width:60px;height:60px;border-radius:20px}
+.home-card .ic svg{width:30px;height:30px}
+.home-card .go{top:50%;transform:translateY(-50%)}
+.home-card .tt{font-size:2rem;align-self:end}
+.home-card .ts{align-self:start}
+.home-card.stock{--tint:var(--tile-green)} .home-card.closing{--tint:var(--tile-indigo)}
 
-/* ---------- Closing ---------- */
-.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-.role-btn{display:grid;gap:4px;text-align:left;padding:16px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);min-height:104px;align-content:start}
-.role-btn.leader{grid-column:1/-1;min-height:0}
-.role-btn .rn{font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.05}
-.role-btn .rk{color:var(--muted);font-size:.85rem}
-.role-btn .rs{margin-top:6px}
-.role-btn.done{border-color:var(--accent);background:var(--accent-soft)}
-.role-btn.part{border-color:var(--short)}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.role-btn{gap:2px;align-content:start;min-height:168px;padding:16px}
+.role-btn .ic{margin-bottom:12px;width:44px;height:44px;border-radius:14px}
+.role-btn .go{top:16px;right:16px;width:30px;height:30px}
+.role-btn .tt{font-size:1.45rem}
+.role-btn .meter{margin-top:auto;padding-top:12px;display:grid;gap:6px}
+.role-btn .bar{height:6px;border-radius:99px;background:color-mix(in srgb, var(--tint) 14%, var(--line));overflow:hidden}
+.role-btn .bar span{display:block;height:100%;border-radius:99px;background:var(--tint)}
+.role-btn .st{font-size:.82rem;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.role-btn.done .st{color:var(--tile-green)} .role-btn.done .bar span{background:var(--tile-green)} .role-btn.part .st{color:var(--short)}
+.role-btn.server{--tint:var(--tile-teal)} .role-btn.cook{--tint:var(--tile-rose)} .role-btn.rice{--tint:var(--tile-amber)} .role-btn.sushi{--tint:var(--tile-plum)}
+.role-btn.leader{--tint:var(--tile-indigo);grid-column:1/-1;min-height:0;grid-template-columns:auto 1fr;column-gap:14px;align-items:center;padding-right:60px}
+.role-btn.leader .ic{grid-row:1 / span 3;margin:0}
+.role-btn.leader .meter{grid-column:2;padding-top:6px}
+.role-btn.leader .go{top:50%;transform:translateY(-50%)}
 .linkrow{display:flex;justify-content:center;margin-top:18px}
+.hist-btn{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600}
+.hist-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .task-list{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .task{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;width:100%;text-align:left;padding:14px;border:0;border-top:1px solid var(--line);background:none}
 li:first-child > .task{border-top:0}
