@@ -25,7 +25,7 @@ window.CLOSING_ROLES = [
       { id: "c3", ko: "스토브 청소",                    en: "Clean the stove" },
       { id: "c4", ko: "튀김기 전원 끄고 콘센트 뽑기",      en: "Turn off fryer & unplug" },
       { id: "c5", ko: "쿡용 소스 냉장고에 넣기 (물 채우기)", en: "Put cooking sauces back in fridge (fill water)" },
-      { id: "c6", ko: "우동 그릇 닦고 물채우기",          en: "Wash the udon bowls and fill with water" }
+      { id: "c6", ko: "우동 그릇 닦고 물채우기",          en: "Wash the udon pot and fill with water" }
     ]
   },
   {
