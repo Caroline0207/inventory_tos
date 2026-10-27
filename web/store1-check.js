@@ -2557,6 +2557,198 @@ window.STORE1_STATIONS = {
                 "level": "urgent"
               }
             ]
+          },
+          {
+            "id": "s1179",
+            "name": "Vincenzo & Market Bibimbap container",
+            "ko": "Vincenzo&market 비빔밥 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1180",
+            "name": "Vincenzo & Market Dupbap container",
+            "ko": "Vincenzo&market 덮밥 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1181",
+            "name": "Vincenzo & Market Japchae container",
+            "ko": "Vincenzo&market 잡채 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1182",
+            "name": "Sauce container 0.75oz",
+            "ko": "소스 컨테이너 0.75oz",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1183",
+            "name": "Sauce container 1oz",
+            "ko": "소스 컨테이너 1oz",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1184",
+            "name": "Sauce container 1.5oz",
+            "ko": "소스 컨테이너 1.5oz",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1185",
+            "name": "Sauce container 2oz",
+            "ko": "소스 컨테이너 2oz",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1186",
+            "name": "Sauce container 4oz",
+            "ko": "소스 컨테이너 4oz",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       }
@@ -3316,6 +3508,61 @@ window.STORE1_STATIONS = {
                 "label": "Less than ½ Container / 반 통 미만",
                 "status": "PREP",
                 "level": "order"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "en": "Packaging",
+        "ko": "포장용기",
+        "note": "",
+        "items": [
+          {
+            "id": "s1187",
+            "name": "500ml container",
+            "ko": "500ml 컨테이너",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1188",
+            "name": "1000ml container",
+            "ko": "1000ml 컨테이너",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
               }
             ]
           }
