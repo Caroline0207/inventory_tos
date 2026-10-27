@@ -94,6 +94,13 @@ supabase/schema.sql  ← 데이터베이스 구조 + 초기 상품 34개 + PIN �
 4. 토요일인데 그 주 체크가 아직 없으면 첫 화면 Store #2 카드와 Saturday 버튼에 **Due today**가 표시됩니다.
 5. 품목이나 기준량(`target`, `unit`)을 바꾸려면 `web/store2-weekly.js`를 수정하세요. (2026년 10월 27일 이전에 설치했다면 `supabase/006_store2_weekly.sql`을 SQL Editor에서 한 번 실행해야 작동합니다.)
 
+### 1호점 파트별 인벤토리 (Store #1 Inventory)
+1. 홈에서 **Store #1 Inventory** → 오늘 담당 파트(Server / Sushi / Middle / Cook)를 고릅니다.
+2. 이름을 쓰고, 개수 항목은 현재 수량을 입력합니다(없으면 0). 상태 항목은 칩을 탭해서 고릅니다(기본값은 첫 번째 = 충분).
+3. 마지막 질문에서 교체·추가 구매가 필요하면 Yes → 물품, 수량, 사유를 적습니다.
+4. **Order** 버튼은 0개인 품목, 부족 상태로 고른 품목, 추가 요청을 복사용 목록으로 만들어 줍니다.
+5. 품목을 바꾸려면 `web/store1-check.js`를 수정하세요. 기존 **Store #1 Sushi Stock**은 그대로입니다. (처음 쓰기 전에 `supabase/007_store1_checks.sql`을 SQL Editor에서 한 번 실행해야 합니다.)
+
 ### 재고 (Stock)
 
 1. 링크를 엽니다. 오늘 날짜가 자동으로 나옵니다.

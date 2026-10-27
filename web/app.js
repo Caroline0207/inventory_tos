@@ -654,10 +654,10 @@ function renderModeHeader() {
   if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
   else if (S.mode === "store2" && S.s2pick) {
     hb.hidden = false; hb.textContent = "‹ Home";
-    $("viewTitle").textContent = "Store #2"; $("dateLine").textContent = longDate(current); $("statusPills").innerHTML = ""; return;
+    $("viewTitle").textContent = GROUPS[S.s2pick].title; $("dateLine").textContent = longDate(current); $("statusPills").innerHTML = ""; return;
   }
   else if (S.mode === "store2") {
-    hb.hidden = false; hb.textContent = T.view === "detail" && !T.justSubmitted ? "‹ Past checks" : T.justSubmitted ? "‹ Home" : "‹ Store #2";
+    hb.hidden = false; hb.textContent = T.view === "detail" && !T.justSubmitted ? "‹ Past checks" : T.justSubmitted ? "‹ Home" : `‹ ${KINDS[K].group === "store1" ? "Stations" : "Store #2"}`;
     title = T.view === "history" || T.view === "detail" ? KINDS[K].hist : KINDS[K].title;
     line = T.view === "form" ? longDate(current) : T.view === "history" ? "Past inventory checks" : (T.detail ? longDate(String(T.detail.check_date).slice(0, 10)) + " · " + timeOf(T.detail.created_at) : "");
     $("viewTitle").textContent = title; $("dateLine").textContent = line;
@@ -679,8 +679,10 @@ function renderHome() {
     $("homeCloseSub").textContent = lead ? `Final check done · ${lead.checked_by}` : `${n} of ${WORK_ROLES.length} parts submitted tonight`;
   }
   const due = weeklyDue(); $("homeS2wDue").hidden = !due;
-  const lasts = Object.values(TS).map(t => t.last).filter(Boolean).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at)));
-  $("homeS2Sub").textContent = due ? "Saturday check due today" : lasts[0] ? `Last check ${shortDate(String(lasts[0].check_date).slice(0, 10))} · ${lasts[0].checked_by}` : "Weekday & Saturday checks";
+  const lastOf = g => Object.keys(KINDS).filter(k => KINDS[k].group === g).map(k => TS[k].last && { ...TS[k].last, kind: k }).filter(Boolean).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at)))[0];
+  const L2 = lastOf("store2"), L1 = lastOf("store1");
+  $("homeS2Sub").textContent = due ? "Saturday check due today" : L2 ? `Last check ${shortDate(String(L2.check_date).slice(0, 10))} · ${L2.checked_by}` : "Weekday & Saturday checks";
+  $("homeS1Sub").textContent = L1 ? `Last: ${KINDS[L1.kind].pick} ${shortDate(String(L1.check_date).slice(0, 10))} · ${L1.checked_by}` : "Server · Sushi · Middle · Cook";
   renderModeHeader();
 }
 
@@ -864,6 +866,20 @@ const KINDS = {
              hist: "Store #2 Saturday Checks", order: "Store #2 Saturday Order", sql: "006_store2_weekly.sql", key: "s2w-draft" }
 };
 const TS = {};
+KINDS.store2.group = KINDS.store2w.group = "store2";
+const S1 = window.STORE1_STATIONS || {};
+const S1_ICONS = {
+  server: '<path d="M3 17h18"/><path d="M5 17a7 7 0 0 1 14 0"/><path d="M12 8V6"/><path d="M10 6h4"/>',
+  sushi:  '<path d="M3.5 12c2.6-3.6 6.3-5.5 10-5.5 3.5 0 6.2 2.2 7.5 5.5-1.3 3.3-4 5.5-7.5 5.5-3.7 0-7.4-1.9-10-5.5z"/><path d="M3.5 12 1.5 8.5M3.5 12l-2 3.5"/><circle cx="16.5" cy="11" r=".9"/>',
+  middle: '<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8.5 7.5c0-1.2.8-2 1.8-2.3M13.5 6.5c0-1.2.8-2 1.8-2.3"/>',
+  cook:   '<path d="M12 3c.8 2.6 4.5 4.6 4.5 9a4.5 4.5 0 0 1-9 0c0-2 1-3.4 2.2-4.3.1 1.8.9 2.8 2 3.1-.5-2.6-.6-5 .3-7.8z"/>'
+};
+for (const sid of ["server", "sushi", "middle", "cook"]) {
+  const st = S1[sid]; if (!st) continue;
+  KINDS["s1" + sid] = { cfg: st, group: "store1", title: `Store #1 ${st.name}`, pick: st.name, pko: `${st.ko} 파트`, icon: S1_ICONS[sid],
+    hist: `Store #1 ${st.name} Checks`, order: `Store #1 ${st.name} Order`, sql: "007_store1_checks.sql", key: `s1${sid}-draft` };
+}
+const GROUPS = { store1: { title: "Store #1 Inventory", hint: "Pick your station. 오늘 담당 파트를 고르세요." }, store2: { title: "Store #2", hint: "Pick the check. 체크 종류를 고르세요." } };
 for (const k in KINDS) TS[k] = { view: "form", draft: null, list: null, detail: null, detailId: null, last: null, notSetUp: false, confirmDelete: false, deleteErr: "" };
 let K = "store2", S2, S2_ITEMS, T;
 function useKind(k) { K = k; S2 = KINDS[k].cfg || { sections: [], extra: null }; S2_ITEMS = S2.sections.flatMap(s => s.items); T = TS[k]; }
@@ -872,16 +888,24 @@ const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", n
 function s2Draft() {
   if (!T.draft) { try { T.draft = JSON.parse(store.get(KINDS[K].key) || "null"); } catch (e) {} }
   if (!T.draft || T.draft.v !== 2) T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: (T.draft && T.draft.name) || "" };
+  for (const f of ["counts", "choice", "det"]) if (!T.draft[f]) T.draft[f] = {};
   return T.draft;
 }
 const s2Save = () => store.set(KINDS[K].key, JSON.stringify(T.draft));
 const isText = it => it.input === "text";
 const isFlag = it => it.input === "flag";
+const isCount = it => it.input === "count";
+const isChoice = it => it.input === "choice";
+const choiceIdx = (d, it) => d.choice[it.id] !== undefined ? d.choice[it.id] : 0;
 const unitLabel = it => it.unit ? `${it.unit}${it.unitKo ? " (" + it.unitKo + ")" : ""}` : "";
 const s2Step = it => { const t = Number(it.target); return t > 0 && t < 1 ? t : (t % 1 ? 0.5 : 1); };
 const s2Short = (d, it) => Math.min(toNum(d.short[it.id] || 0), Number(it.target) || Infinity);
-const s2Missing = d => S2_ITEMS.filter(it => isText(it) && !(d.texts[it.id] || "").trim());
-const s2ShortCount = d => S2_ITEMS.filter(it => (isFlag(it) && d.flags[it.id]) || (!isText(it) && !isFlag(it) && s2Short(d, it) > 0)).length;
+const s2Missing = d => S2_ITEMS.filter(it => (isText(it) && !(d.texts[it.id] || "").trim()) || (isCount(it) && String(d.counts[it.id] ?? "").trim() === ""));
+const s2ShortCount = d => S2_ITEMS.filter(it =>
+  isFlag(it) ? !!d.flags[it.id] :
+  isCount(it) ? (String(d.counts[it.id] ?? "").trim() !== "" && toNum(d.counts[it.id]) <= 0) :
+  isChoice(it) ? ((it.options[choiceIdx(d, it)] || {}).level || "ok") !== "ok" :
+  isText(it) ? false : s2Short(d, it) > 0).length;
 const statusText = o => (o.status || "").split(" / ")[0] || LEVEL_NAME[o.level] || "";
 const isNone = s => /^(none|no|nothing|n\/a|없음|없어요|없습니다|x|-)[.!]?$/i.test(String(s).trim());
 /* show 0.33 as 1/3, 0.75 as 3/4 … halves stay as 0.5 / 1.5 */
@@ -899,6 +923,9 @@ function s2Answers(d) {
   return S2_ITEMS.map(it => {
     const base = { id: it.id, name: it.name, ko: it.ko };
     if (isText(it)) { const t = (d.texts[it.id] || "").trim(); return { ...base, choice: t, level: !t ? "none" : isNone(t) ? "ok" : "request", text: true }; }
+    if (isCount(it)) { const raw = String(d.counts[it.id] ?? "").trim(), c = raw === "" ? null : Math.round(parseFloat(raw.replace(",", ".")) * 100) / 100;
+      return { ...base, count: c, unit: it.unit, unitKo: it.unitKo, choice: c == null ? "" : `${fmtFrac(c)} ${it.unit}${it.unitKo ? " (" + it.unitKo + ")" : ""}`, level: c == null ? "none" : c <= 0 ? "urgent" : "ok" }; }
+    if (isChoice(it)) { const o = it.options[choiceIdx(d, it)] || {}; return { ...base, choice: o.label || "", status: o.status || "", level: o.level || "ok" }; }
     if (isFlag(it)) { const on = !!d.flags[it.id]; return { ...base, choice: on ? "Need to order / 주문 필요" : "Enough / 충분함", level: on ? "order" : "ok", flag: true }; }
     const s = s2Short(d, it), t = Number(it.target);
     const level = s <= 0 ? "ok" : s >= t ? "urgent" : "order";
@@ -920,7 +947,7 @@ function renderS2Form(el) {
   const d = s2Draft();
   el.innerHTML = `<div class="who"><label for="s2Name">Checked by</label>
       <input id="s2Name" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(d.name)}" enterkeyhint="done"></div>
-    <p class="hint">Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요.</p>
+    <p class="hint">${KINDS[K].group === "store1" ? "Count what you have and tap the stock level. Enter 0 if there is none. 현재 수량을 입력하고 재고 상태를 선택하세요." : "Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요."}</p>
     ${S2.sections.map(sec => `<section class="s2sec"><h2>${esc(sec.en)} <small>${esc(sec.ko)}</small></h2>
       ${sec.note ? `<p class="secnote">${esc(sec.note)}</p>` : ""}
       <ul class="list s2list">${sec.items.map(it => s2Row(it, d)).join("")}</ul></section>`).join("")}
@@ -929,14 +956,36 @@ function renderS2Form(el) {
       <div class="s2item" id="s2-extra-q"><div class="iname">${esc(S2.extra.question)}</div>
         <div class="yn"><button type="button" class="opt lv-ok" role="radio" aria-checked="${d.extra === "no"}" data-extra="no"><span class="dot"></span><span>No</span><span></span></button>
         <button type="button" class="opt lv-order" role="radio" aria-checked="${d.extra === "yes"}" data-extra="yes"><span class="dot"></span><span>Yes</span><span></span></button></div>
-        ${d.extra === "yes" ? `<textarea id="s2ExtraText" placeholder="What needs to be bought or replaced? 예: 마커 2개, 테이프">${esc(d.extraText)}</textarea>` : ""}
+        ${d.extra === "yes" ? (S2.extra.details ? s2DetailsHtml(d) : `<textarea id="s2ExtraText" placeholder="What needs to be bought or replaced? 예: 마커 2개, 테이프">${esc(d.extraText)}</textarea>`) : ""}
       </div></section>` : ""}
     <div class="linkrow"><button type="button" class="hist-btn" data-s2hist>${svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>')}Past checks</button></div>`;
   s2UpdateBar();
 }
+const REASONS = [["Broken", "파손"], ["Lost", "분실"], ["Low quantity", "수량부족"], ["Other", "기타"]];
+function s2DetailsHtml(d) {
+  const t = d.det || {};
+  return `<div class="det">
+    <div class="field"><label for="detItem">Item needed / 필요한 물품</label><input id="detItem" data-det="item" value="${esc(t.item || "")}" autocomplete="off"></div>
+    <div class="field"><label for="detQty">Quantity needed / 필요 수량</label><input id="detQty" data-det="qty" value="${esc(t.qty || "")}" autocomplete="off"></div>
+    <div class="field"><label>Reason / 사유</label><div class="chips2">${REASONS.map(([en, ko]) => `<button type="button" class="chip2 lv-order" role="radio" aria-checked="${t.reason === en}" data-reason="${en}"><span class="dot"></span><span>${en} / ${ko}</span></button>`).join("")}</div></div>
+    <div class="field"><label for="detDesc">Description (optional) / 설명</label><input id="detDesc" data-det="desc" value="${esc(t.desc || "")}" autocomplete="off"></div>
+  </div>`;
+}
+const detText = t => [t.item && `Item: ${t.item}`, t.qty && `Quantity: ${t.qty}`, t.reason && `Reason: ${t.reason}`, t.desc && `Note: ${t.desc}`].filter(Boolean).join("\n");
 function s2Row(it, d) {
   const name = `<div class="name">${esc(it.name)}${it.ko ? `<small>${esc(it.ko)}</small>` : ""}</div>`;
   const note = it.note ? `<div class="s2note">${isText(it) ? "" : "※ "}${esc(it.note).replace(/\n/g, "<br>")}</div>` : "";
+  if (isChoice(it)) { const sel = choiceIdx(d, it), lv = (it.options[sel] || {}).level || "ok";
+    return `<li class="row s2row s2choicerow${lv !== "ok" ? " short" : ""}" id="s2-${esc(it.id)}">${name}${note}
+      <div class="chips2" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `<button type="button" class="chip2 lv-${esc(o.level)}" role="radio" aria-checked="${k === sel}" data-ch="${esc(it.id)}" data-k="${k}"><span class="dot"></span><span>${esc(o.label)}</span></button>`).join("")}</div></li>`; }
+  if (isCount(it)) { const v = d.counts[it.id] ?? "";
+    return `<li class="row s2row${String(v).trim() !== "" && toNum(v) <= 0 ? " short" : ""}" id="s2-${esc(it.id)}" data-cid="${esc(it.id)}">${name}
+      <div class="tgt num"><span>Count in <b>${esc(it.unit)}</b>${it.unitKo ? " (" + esc(it.unitKo) + ")" : ""}</span></div>${note}
+      <div class="step">
+        <button type="button" data-cnt="minus" aria-label="Less ${esc(it.name)}">−</button>
+        <input type="number" inputmode="decimal" step="any" min="0" value="${esc(v)}" placeholder="–" data-count="${esc(it.id)}" aria-label="${esc(it.name)} on hand (${esc(it.unit)})">
+        <button type="button" data-cnt="plus" aria-label="More ${esc(it.name)}">+</button>
+      </div></li>`; }
   if (isText(it)) return `<li class="row s2row s2textrow" id="s2-${esc(it.id)}">${name}${note}
       <textarea class="s2text" data-text="${esc(it.id)}" rows="2" placeholder="Write here, or “None / 없음”" aria-label="${esc(it.name)}">${esc(d.texts[it.id] || "")}</textarea></li>`;
   if (isFlag(it)) { const on = !!d.flags[it.id];
@@ -965,6 +1014,22 @@ function s2SetShort(row, val) {
 }
 
 $("s2Body").addEventListener("click", e => {
+  const cb = e.target.closest("[data-cnt]");
+  if (cb) {
+    const row = cb.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.cid); if (!it) return;
+    const inp = row.querySelector("input"), st = Number(it.step) || 1;
+    const cur = inp.value.trim() === "" ? (cb.dataset.cnt === "plus" ? 0 : 0) : toNum(inp.value);
+    const next = cb.dataset.cnt === "plus" ? cur + st : Math.max(0, cur - st);
+    const v = String(Math.round(next * 100) / 100);
+    inp.value = v; const d = s2Draft(); d.counts[it.id] = v; s2Save();
+    row.classList.toggle("short", toNum(v) <= 0); row.classList.remove("missing"); s2UpdateBar(); return;
+  }
+  const ch = e.target.closest("[data-ch]");
+  if (ch) {
+    const d = s2Draft(), it = S2_ITEMS.find(x => x.id === ch.dataset.ch); d.choice[ch.dataset.ch] = Number(ch.dataset.k); s2Save();
+    ch.parentElement.querySelectorAll(".chip2").forEach(b => b.setAttribute("aria-checked", b === ch ? "true" : "false"));
+    ch.closest(".row").classList.toggle("short", ((it.options[Number(ch.dataset.k)] || {}).level || "ok") !== "ok"); s2UpdateBar(); return;
+  }
   const sb = e.target.closest("[data-s2act]");
   if (sb) {
     const row = sb.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.id); if (!it) return;
@@ -979,6 +1044,8 @@ $("s2Body").addEventListener("click", e => {
     fb.setAttribute("aria-checked", d.flags[id] ? "true" : "false"); fb.textContent = d.flags[id] ? "Need to order" : "Enough";
     fb.closest(".row").classList.toggle("short", !!d.flags[id]); s2UpdateBar(); return;
   }
+  const rb = e.target.closest("[data-reason]");
+  if (rb) { const d = s2Draft(); d.det.reason = rb.dataset.reason; s2Save(); rb.parentElement.querySelectorAll(".chip2").forEach(b => b.setAttribute("aria-checked", b === rb ? "true" : "false")); return; }
   const x = e.target.closest("[data-extra]");
   if (x) { const d = s2Draft(); d.extra = x.dataset.extra; s2Save(); renderS2Form($("s2Body")); const t = $("s2ExtraText"); if (t) t.focus(); return; }
   if (e.target.closest("[data-s2hist]")) { location.hash = K + "-history"; return; }
@@ -993,6 +1060,12 @@ $("s2Body").addEventListener("input", e => {
   const d = s2Draft();
   if (e.target.id === "s2Name") { d.name = e.target.value; s2Save(); if (d.name.trim()) e.target.closest(".who").classList.remove("need"); }
   if (e.target.id === "s2ExtraText") { d.extraText = e.target.value; s2Save(); }
+  if (e.target.dataset && e.target.dataset.count) {
+    d.counts[e.target.dataset.count] = e.target.value; s2Save();
+    const r = e.target.closest(".row"); r.classList.toggle("short", e.target.value.trim() !== "" && toNum(e.target.value) <= 0);
+    if (e.target.value.trim() !== "") r.classList.remove("missing"); s2UpdateBar();
+  }
+  if (e.target.dataset && e.target.dataset.det) { d.det[e.target.dataset.det] = e.target.value; s2Save(); }
   if (e.target.dataset && e.target.dataset.short) {
     d.short[e.target.dataset.short] = e.target.value; s2Save();
     const r = e.target.closest(".row"); r.classList.toggle("short", toNum(e.target.value) > 0); r.querySelector(".sfr").textContent = s2FracHint(e.target.value); s2UpdateBar();
@@ -1002,7 +1075,7 @@ $("s2Body").addEventListener("input", e => {
     if (e.target.value.trim()) e.target.closest(".row").classList.remove("missing");
   }
 });
-$("s2Body").addEventListener("focusin", e => { if (e.target.dataset && e.target.dataset.short) setTimeout(() => { try { e.target.select(); } catch (_) {} }, 0); });
+$("s2Body").addEventListener("focusin", e => { if (e.target.dataset && (e.target.dataset.short || e.target.dataset.count)) setTimeout(() => { try { e.target.select(); } catch (_) {} }, 0); });
 $("s2Body").addEventListener("focusout", e => {
   if (!(e.target.dataset && e.target.dataset.short)) return;
   const row = e.target.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.id);
@@ -1012,9 +1085,9 @@ $("s2Body").addEventListener("focusout", e => {
 });
 $("s2Body").addEventListener("keydown", e => {
   if (e.target.id === "s2Name" && e.key === "Enter") { e.preventDefault(); e.target.blur(); return; }
-  if (e.key === "Enter" && e.target.dataset && e.target.dataset.short) {
+  if (e.key === "Enter" && e.target.dataset && (e.target.dataset.short || e.target.dataset.count)) {
     e.preventDefault();
-    const inputs = [...$("s2Body").querySelectorAll("input[data-short]")]; const i = inputs.indexOf(e.target);
+    const inputs = [...$("s2Body").querySelectorAll("input[data-short], input[data-count]")]; const i = inputs.indexOf(e.target);
     if (inputs[i + 1]) inputs[i + 1].focus(); else e.target.blur();
   }
 });
@@ -1022,7 +1095,8 @@ $("s2Body").addEventListener("keydown", e => {
 /* Order button: copyable order list from what is entered right now (before submitting) */
 $("s2Order").addEventListener("click", () => {
   const d = s2Draft();
-  s2Copy({ check_date: current, checked_by: d.name.trim(), answers: s2Answers(d), extra_request: d.extra === "yes" ? d.extraText.trim() : null }, "not submitted yet");
+  const ex = d.extra === "yes" ? (S2.extra && S2.extra.details ? detText(d.det) : d.extraText.trim()) : null;
+  s2Copy({ check_date: current, checked_by: d.name.trim(), answers: s2Answers(d), extra_request: ex || null }, "not submitted yet");
 });
 $("s2Submit").addEventListener("click", async () => {
   const d = s2Draft();
@@ -1031,17 +1105,22 @@ $("s2Submit").addEventListener("click", async () => {
   if (missing.length) {
     missing.forEach(it => { const c = $("s2-" + it.id); if (c) c.classList.add("missing"); });
     $("s2-" + missing[0].id).scrollIntoView({ behavior: "smooth", block: "center" });
-    toast(`Fill in ${missing.length} written item${missing.length > 1 ? "s" : ""} (write “None” if nothing is needed).`, true); return;
+    const nc = missing.filter(isCount).length, nt = missing.length - nc;
+    toast(nc ? `Enter a count for ${nc} item${nc > 1 ? "s" : ""}${nt ? ` and fill in ${nt} written item${nt > 1 ? "s" : ""}` : ""}. Enter 0 if there is none.` : `Fill in ${nt} written item${nt > 1 ? "s" : ""} (write “None” if nothing is needed).`, true); return;
   }
   if (S2.extra && !d.extra) { $("s2-extra-q").classList.add("missing"); $("s2-extra").scrollIntoView({ behavior: "smooth", block: "start" }); toast("Answer the last question (Yes / No).", true); return; }
-  if (d.extra === "yes" && !d.extraText.trim()) { const t = $("s2ExtraText"); t.focus(); toast("Write what needs to be ordered, or choose No.", true); return; }
+  if (S2.extra && S2.extra.details && d.extra === "yes") {
+    if (!(d.det.item || "").trim()) { const t = $("detItem"); if (t) t.focus(); toast("Write the item needed, or choose No.", true); return; }
+    d.extraText = detText(d.det);
+  }
+  if (d.extra === "yes" && !d.extraText.trim()) { const t = $("s2ExtraText"); if (t) t.focus(); toast("Write what needs to be ordered, or choose No.", true); return; }
   const btn = $("s2Submit"); btn.disabled = true; btn.textContent = "Submitting…";
   const answers = s2Answers(d);
   try {
     const id = await rpc("save_store_check", { p_pin: S.pin, p_store: K, p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
     T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: d.extra === "yes" ? d.extraText.trim() : null, created_at: new Date().toISOString() };
     T.detailId = id; T.list = null; T.last = T.detail;
-    T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: d.name }; s2Save();
+    T.draft = { v: 2, short: {}, flags: {}, texts: {}, counts: {}, choice: {}, det: {}, extra: null, extraText: "", name: d.name }; s2Save();
     T.view = "detail"; T.justSubmitted = true; location.hash = K + "-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
     toast("Check submitted. 제출 완료!");
   } catch (e) {
@@ -1063,7 +1142,7 @@ function s2Copy(c, note) {
   for (const [, title, list] of s2Groups(c.answers)) {
     if (!list.length) continue;
     parts.push(title.toUpperCase());
-    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.short != null ? `${fmtFrac(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
+    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.count != null ? `Out (0 ${a.unit || ""} left)` : a.short != null ? `${fmtFrac(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
     parts.push("");
   }
   if (c.extra_request) { parts.push("OTHER"); parts.push(c.extra_request); parts.push(""); }
@@ -1155,14 +1234,14 @@ async function loadS2Last() {
 }
 function renderStore2Pick() {
   setMode("store2"); renderModeHeader();
-  const due = weeklyDue();
-  $("s2Body").innerHTML = `<p class="hint" style="margin-top:14px">Pick the check. 체크 종류를 고르세요.</p>
-    <div class="pick-grid">${Object.entries(KINDS).map(([k, v]) => { const L = TS[k].last; const n = (v.cfg ? v.cfg.sections.flatMap(s => s.items).length : 0);
+  const due = weeklyDue(), g = S.s2pick;
+  $("s2Body").innerHTML = `<p class="hint" style="margin-top:14px">${esc(GROUPS[g].hint)}</p>
+    <div class="pick-grid">${Object.entries(KINDS).filter(([, v]) => v.group === g).map(([k, v]) => { const L = TS[k].last; const n = (v.cfg ? v.cfg.sections.flatMap(s => s.items).length : 0);
       return `<button type="button" class="tile role-btn pick-${k}" data-pick="${k}">
         <span class="ic" aria-hidden="true">${svg(v.icon)}</span>
         <span class="tt">${esc(v.pick)}${k === "store2w" && due ? ' <span class="due">Due today</span>' : ""}</span>
         <span class="ts">${esc(v.pko)} · ${n} items</span>
-        <span class="meter"><span class="st">${L ? `Last: ${esc(shortDate(String(L.check_date).slice(0, 10)))} · ${esc(L.checked_by)}` : k === "store2w" ? "Once a week · Saturday" : "Regular check"}</span></span>
+        <span class="meter"><span class="st">${L ? `Last: ${esc(shortDate(String(L.check_date).slice(0, 10)))} · ${esc(L.checked_by)}` : k === "store2w" ? "Once a week · Saturday" : g === "store1" ? "Station inventory" : "Regular check"}</span></span>
         <span class="go" aria-hidden="true">${GO_ICON}</span></button>`; }).join("")}</div>`;
 }
 $("s2Body").addEventListener("click", e => { const b = e.target.closest("[data-pick]"); if (b) location.hash = b.dataset.pick; });
@@ -1193,14 +1272,15 @@ function route() {
     });
     return;
   }
-  if (h === "store2-pick") {
-    S.s2pick = true; renderStore2Pick(); window.scrollTo(0, 0);
+  if (h === "store2-pick" || h === "store1-pick") {
+    S.s2pick = h.slice(0, 6); renderStore2Pick(); window.scrollTo(0, 0);
     loadS2Last().then(() => { if (S.s2pick && S.mode === "store2") renderStore2Pick(); });
     return;
   }
   S.s2pick = false;
-  if (h.startsWith("store2")) {
-    useKind(h.startsWith("store2w") ? "store2w" : "store2");
+  const kk = h.replace(/-history$/, "");
+  if (KINDS[kk]) {
+    useKind(kk);
     if (h === K + "-history") { if (T.view !== "detail" || !T.justSubmitted) { T.view = "history"; T.list = null; } }
     else { T.view = "form"; T.justSubmitted = false; }
     renderStore2(); window.scrollTo(0, 0);
@@ -1214,7 +1294,7 @@ window.addEventListener("hashchange", route);
 $("homeBtn").addEventListener("click", () => {
   if (S.mode === "closing" && C.view !== "roles") location.hash = "closing";
   else if (S.mode === "store2" && !S.s2pick && T.view === "detail" && !T.justSubmitted) { T.view = "history"; renderStore2(); window.scrollTo(0, 0); }
-  else if (S.mode === "store2" && !S.s2pick && !T.justSubmitted) location.hash = "store2-pick";
+  else if (S.mode === "store2" && !S.s2pick && !T.justSubmitted) location.hash = KINDS[K].group + "-pick";
   else location.hash = "home";
 });
 $("view-home").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) location.hash = b.dataset.go; });

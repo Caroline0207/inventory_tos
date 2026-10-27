@@ -352,7 +352,7 @@ returns bigint language plpgsql security definer set search_path = '' as $$
 declare new_id bigint; u integer; o integer; l integer;
 begin
   perform private.require_pin(p_pin, 'staff');
-  if p_store not in ('store2', 'store2w') then raise exception 'invalid_store'; end if;
+  if p_store not in ('store2', 'store2w', 's1server', 's1sushi', 's1middle', 's1cook') then raise exception 'invalid_store'; end if;
   if p_date is null or p_date < current_date - 7 or p_date > current_date + 1 then raise exception 'invalid_date'; end if;
   if p_name is null or length(trim(p_name)) = 0 then raise exception 'name_required'; end if;
   if jsonb_typeof(p_answers) <> 'array' then raise exception 'invalid_items'; end if;
