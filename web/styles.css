@@ -337,3 +337,4 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .step .flagbtn{width:auto;display:block;line-height:1.1;min-width:120px;height:52px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;font-size:.92rem;color:var(--muted)}
 .step .flagbtn[aria-checked="true"]{border-color:var(--short);background:var(--short);color:#fff}
 .s2row.short .name{color:var(--short)}
+.home-card.stock .tt{font-size:1.65rem}
