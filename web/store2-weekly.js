@@ -2030,7 +2030,7 @@ window.STORE2_WEEKLY = {
     },
     {
      "name": "Gluten free soy sauce",
-     "ko": "글루텐 프리 스",
+     "ko": "글루텐 프리 간장",
      "note": "",
      "options": [
       {

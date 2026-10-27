@@ -1709,6 +1709,30 @@ window.STORE1_STATIONS = {
             ]
           },
           {
+            "id": "s1202",
+            "name": "Gluten-free soy sauce",
+            "ko": "글루텐 프리 간장",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
             "id": "s1103",
             "name": "Rice – Shared Stock (bags)",
             "ko": "쌀 – 공용재고 (포대)",
@@ -3448,6 +3472,30 @@ window.STORE1_STATIONS = {
               {
                 "label": "Almost Out / 거의 없음",
                 "status": "",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1203",
+            "name": "Doenjang (soybean paste)",
+            "ko": "된장",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
                 "level": "urgent"
               }
             ]
