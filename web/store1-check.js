@@ -9,12 +9,12 @@ window.STORE1_STATIONS = {
   "server": {
     "name": "Server",
     "ko": "서버",
-    "note": "Count all Server station items, including beverages, front counter supplies, and assigned back stock. Enter the actual quantity on hand. 음료, 카운터 비품 및 서버 파트 보관 재고를 포함하여 실제 보유수량을 확인 후, 입력해주세요.",
+    "note": "Enter how much is SHORT of the target for each item, in whole units (case, box, bottle…). Leave 0 if it's full. 품목마다 기준보다 부족한 수량만 단위(박스, 병 등)에 맞춰 정수로 입력해주세요. 가득 차 있으면 0 그대로 두세요.",
     "sections": [
       {
         "en": "Beverages",
         "ko": "음료",
-        "note": "Count beverages by case, including both the cooler and back stock. Estimate opened cases in 0.25 increments(0.25 / 0.5 / 0.75) 냉장고와 보관 재고를 모두 포함하여 박스 단위로 확인해주세요. 개봉된 박스는 남은 수량을 기준으로 0.25단위로 계산해주세요.(ex) 2 full cases + about half a case = 2.5)",
+        "note": "Enter how many cases are short of the target, counting the cooler and back stock together. Whole cases only. 냉장고와 보관 재고를 합쳐서 기준보다 부족한 박스 수만 입력해주세요. (예: 기준 3박스, 2박스 있음 → 1)",
         "items": [
           {
             "id": "s1001",
@@ -24,7 +24,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -35,7 +35,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -46,7 +46,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -57,7 +57,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -68,7 +68,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -79,7 +79,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -90,7 +90,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -101,7 +101,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 3
           },
           {
@@ -112,7 +112,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "4-pack set",
             "unitKo": "4팩 세트",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -123,7 +123,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "4-pack set",
             "unitKo": "4팩 세트",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -134,7 +134,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "4-pack set",
             "unitKo": "4팩 세트",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -145,7 +145,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "4-pack set",
             "unitKo": "4팩 세트",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -156,7 +156,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -167,7 +167,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 1
           },
           {
@@ -178,7 +178,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "case",
             "unitKo": "박스",
-            "step": 0.25,
+            "step": 1,
             "target": 1
           }
         ]
@@ -186,7 +186,7 @@ window.STORE1_STATIONS = {
       {
         "en": "Bubble tea Station",
         "ko": "버블티 제조재료 및 용품",
-        "note": "Count beverage ingredients currently in stock. 현재 보유 중인 음료 제조 재료 및 용품의 재고를 확인해주세요.",
+        "note": "Enter how much is short of the target for each item. 각 품목마다 기준보다 부족한 수량만 입력해주세요.",
         "items": [
           {
             "id": "s1017",
@@ -2517,7 +2517,7 @@ window.STORE1_STATIONS = {
   "cook": {
     "name": "Cook",
     "ko": "쿡",
-    "note": "Counting Rules/카운트기준\n* Visible amount / 잔량 확인 가능 : 1 / 0.75 / 0.5 / 0.25\n* Non-visible amount / 잔량 확인 불가 : Count UNOPEND bottles only / 미개봉제품만 카운트\n* Enter 0 if there is no stock / 재고가 없으면 0 입력",
+    "note": "Enter how much is SHORT of the target in whole bottles, cans or packs (no decimals). Leave 0 if it's full. 기준보다 부족한 수량을 병·캔·팩 단위 정수로 입력해주세요. 가득 차 있으면 0 그대로 두세요.",
     "sections": [
       {
         "en": "Sauces, Seasonings & Dry Ingredients",
@@ -2532,7 +2532,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 8
           },
           {
@@ -2543,7 +2543,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 4
           },
           {
@@ -2554,7 +2554,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 6
           },
           {
@@ -2565,7 +2565,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 6
           },
           {
@@ -2576,7 +2576,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "can",
             "unitKo": "캔",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -2587,7 +2587,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 6
           },
           {
@@ -2598,7 +2598,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -2609,7 +2609,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 6
           },
           {
@@ -2620,7 +2620,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 6
           },
           {
@@ -2631,7 +2631,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 6
           },
           {
@@ -2642,7 +2642,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bottle",
             "unitKo": "병",
-            "step": 0.25,
+            "step": 1,
             "target": 1
           },
           {
@@ -2725,7 +2725,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bag",
             "unitKo": "봉",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -2736,7 +2736,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "bag",
             "unitKo": "봉",
-            "step": 0.25,
+            "step": 1,
             "target": 2
           },
           {
@@ -2747,7 +2747,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "pack",
             "unitKo": "팩",
-            "step": 0.25,
+            "step": 1,
             "target": 1
           },
           {
@@ -2758,7 +2758,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "pack",
             "unitKo": "팩",
-            "step": 0.25,
+            "step": 1,
             "target": 1
           },
           {
@@ -2769,7 +2769,7 @@ window.STORE1_STATIONS = {
             "input": "number",
             "unit": "pack",
             "unitKo": "팩",
-            "step": 0.25,
+            "step": 1,
             "target": 1
           },
           {

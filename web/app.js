@@ -1007,7 +1007,7 @@ function s2Row(it, d) {
       <div class="tgt num"><span>Target <b>${fmtFrac(it.target)}</b> ${esc(unitLabel(it))}</span><span class="sfr">${s2FracHint(v)}</span></div>${note}
       <div class="step">
         <button type="button" data-s2act="minus" aria-label="Less ${esc(it.name)}">−</button>
-        <input type="number" inputmode="decimal" step="any" min="0" value="${esc(v)}" data-short="${esc(it.id)}" aria-label="${esc(it.name)} short by (${esc(it.unit || "")})">
+        <input type="number" inputmode="${Number(it.step) === 1 ? "numeric" : "decimal"}" step="${Number(it.step) === 1 ? "1" : "any"}" min="0" value="${esc(v)}" data-short="${esc(it.id)}" aria-label="${esc(it.name)} short by (${esc(it.unit || "")})">
         <button type="button" data-s2act="plus" aria-label="More ${esc(it.name)}">+</button>
       </div></li>`;
 }
@@ -1091,6 +1091,7 @@ $("s2Body").addEventListener("focusout", e => {
   if (!(e.target.dataset && e.target.dataset.short)) return;
   const row = e.target.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.id);
   let v = e.target.value.trim() === "" ? 0 : toNum(e.target.value);
+  if (it && Number(it.step) === 1 && v % 1) { v = Math.ceil(v); toast(`Whole ${it.unit || "units"} only. Rounded up to ${v}.`); }
   if (it && v > Number(it.target)) { v = Number(it.target); toast(`Short can't be more than the target (${fmtFrac(it.target)}). It's set to ${fmtFrac(v)} = OUT.`); }
   s2SetShort(row, String(v));
 });
