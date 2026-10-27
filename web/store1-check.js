@@ -3095,6 +3095,30 @@ window.STORE1_STATIONS = {
             "target": 8
           },
           {
+            "id": "s1204",
+            "name": "Gluten-free teriyaki sauce",
+            "ko": "글루텐 프리 데리야끼 소스",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
             "id": "s1140",
             "name": "Okonomiyaki sauce",
             "ko": "오꼬노미야끼소스",
