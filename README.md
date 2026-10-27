@@ -99,7 +99,7 @@ supabase/schema.sql  ← 데이터베이스 구조 + 초기 상품 34개 + PIN �
 2. 이름을 쓰고, 2호점처럼 기준치(Target)보다 **부족한 수량만** 입력합니다(가득 차 있으면 0 그대로). 상태 항목은 칩을 탭해서 고릅니다(기본값은 첫 번째 = 충분).
 3. 마지막 질문에서 교체·추가 구매가 필요하면 Yes → 물품, 수량, 사유를 적습니다.
 4. **Order** 버튼은 부족하다고 입력한 품목, 부족 상태로 고른 품목, 추가 요청을 복사용 목록으로 만들어 줍니다.
-5. 품목을 바꾸려면 `web/store1-check.js`를 수정하세요. 기존 **Store #1 Sushi Stock**은 그대로입니다. (처음 쓰기 전에 `supabase/007_store1_checks.sql`을 SQL Editor에서 한 번 실행해야 합니다.)
+5. 품목을 바꾸려면 `web/store1-check.js`를 수정하세요. 기존 **위시모토 인벤토리**(예전 이름 Store #1 Sushi Stock)는 그대로입니다. (처음 쓰기 전에 `supabase/007_store1_checks.sql`을 SQL Editor에서 한 번 실행해야 합니다.)
 
 ### 재고 (Stock)
 

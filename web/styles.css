@@ -356,3 +356,4 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .det input{width:100%;font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
 .home-card.store1{--tint:var(--tile-teal)}
 .pick-s1server{--tint:var(--tile-indigo)} .pick-s1sushi{--tint:var(--tile-green)} .pick-s1middle{--tint:var(--tile-amber)} .pick-s1cook{--tint:var(--tile-rose)}
+.home-card .tt{word-break:keep-all}

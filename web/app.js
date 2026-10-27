@@ -130,7 +130,7 @@ $("pinForm").addEventListener("submit", async e => {
 function renderHeader() {
   if (S.mode && S.mode !== "stock") return renderModeHeader();
   $("homeBtn").hidden = false; $("homeBtn").textContent = "‹ Home";
-  const titles = { today: "Daily Inventory", history: "History", products: "Products" };
+  const titles = { today: "위시모토 인벤토리", history: "History", products: "Products" };
   $("viewTitle").textContent = titles[S.view];
   $("dateLine").textContent = S.view === "today" ? longDate(current) : (S.view === "history" ? "Past inventory records" : "Products and target stock");
   const pills = [];
@@ -437,7 +437,7 @@ function editorHtml(p) {
       <div class="field"><label for="f-target">Target stock</label><input id="f-target" type="number" inputmode="decimal" step="any" min="0" value="${p.target_stock ?? ""}"></div>
       <div class="field"><label for="f-unit">Unit</label><input id="f-unit" list="unitList" value="${esc(p.unit || "")}" autocomplete="off"></div>
     </div>
-    <label class="check"><input type="checkbox" id="f-active"${p.active === false ? "" : " checked"}> Active (shown on Daily Inventory)</label>
+    <label class="check"><input type="checkbox" id="f-active"${p.active === false ? "" : " checked"}> Active (shown on 위시모토 인벤토리)</label>
     ${p.needs_review ? `<p class="err-msg" style="color:var(--review)">Needs review: ${esc(p.needs_review)}. Saving marks it as reviewed.</p>` : ""}
     ${S.editErr ? `<p class="err-msg">${esc(S.editErr)}</p>` : ""}
     <div class="actions"><button class="btn primary" type="submit">${isNew ? "Add product" : "Save changes"}</button><button class="btn" type="button" data-cancel>Cancel</button></div>
