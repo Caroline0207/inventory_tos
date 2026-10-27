@@ -884,8 +884,8 @@ const s2Missing = d => S2_ITEMS.filter(it => isText(it) && !(d.texts[it.id] || "
 const s2ShortCount = d => S2_ITEMS.filter(it => (isFlag(it) && d.flags[it.id]) || (!isText(it) && !isFlag(it) && s2Short(d, it) > 0)).length;
 const statusText = o => (o.status || "").split(" / ")[0] || LEVEL_NAME[o.level] || "";
 const isNone = s => /^(none|no|nothing|n\/a|없음|없어요|없습니다|x|-)[.!]?$/i.test(String(s).trim());
-/* show 0.33 as 1/3, 1.5 as 1 1/2 … (Store #2 targets come from fractions like 반통, 1/3통) */
-const FRACS = [[1 / 2, "1/2"], [1 / 3, "1/3"], [2 / 3, "2/3"], [1 / 4, "1/4"], [3 / 4, "3/4"], [1 / 5, "1/5"], [2 / 5, "2/5"]];
+/* show 0.33 as 1/3, 0.75 as 3/4 … halves stay as 0.5 / 1.5 */
+const FRACS = [[1 / 3, "1/3"], [2 / 3, "2/3"], [1 / 4, "1/4"], [3 / 4, "3/4"], [1 / 5, "1/5"], [2 / 5, "2/5"]];
 function fmtFrac(n) {
   n = Number(n); if (!isFinite(n)) return "?";
   const w = Math.floor(n + 1e-9), f = n - w;
@@ -956,7 +956,7 @@ function s2UpdateBar() {
   $("s2Submit").textContent = `Submit check${n ? ` (${n} short)` : ""}`;
   const pill = $("s2Pill"); if (pill) { pill.textContent = n ? `${n} short` : "All full"; pill.classList.toggle("warn", !!n); pill.classList.remove("mute"); }
 }
-function s2FracHint(v) { const n = toNum(v); return n > 0 && n % 1 ? `short ${fmtFrac(n)}` : ""; }
+function s2FracHint(v) { const n = toNum(v); return n > 0 && fmtFrac(n) !== fmt(n) ? `short ${fmtFrac(n)}` : ""; }
 function s2SetShort(row, val) {
   const it = S2_ITEMS.find(x => x.id === row.dataset.id); if (!it) return;
   const d = s2Draft(); d.short[it.id] = val; s2Save();
