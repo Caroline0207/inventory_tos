@@ -1999,64 +1999,6 @@ window.STORE1_STATIONS = {
         "note": "Check all frozen items used at the Middle Station. Follow the counting unit or stock level shown for each item. / 미들 파트에서 사용하는 모든 냉동제품의 재고를 확인해주세요. 각 품목에 표시된 수량 단위 또는 재고 기준에 따라 확인해주세요.",
         "items": [
           {
-            "id": "s1113",
-            "name": "Pork & Beef Dumpling",
-            "ko": "고기만두",
-            "note": "",
-            "input": "choice",
-            "options": [
-              {
-                "label": "More than 10 Bags / 10봉 초과",
-                "status": "",
-                "level": "ok"
-              },
-              {
-                "label": "10 Bags or Less / 10봉 이하",
-                "status": "PREP",
-                "level": "order"
-              },
-              {
-                "label": "5 Bags or Less / 5봉 이하",
-                "status": "PREP URGENT",
-                "level": "urgent"
-              },
-              {
-                "label": "OUT / 없음",
-                "status": "PREP URGENT",
-                "level": "urgent"
-              }
-            ]
-          },
-          {
-            "id": "s1114",
-            "name": "Vegetable Dumpling",
-            "ko": "야채만두",
-            "note": "",
-            "input": "choice",
-            "options": [
-              {
-                "label": "24 Bags or More / 24봉 이상",
-                "status": "SAFE",
-                "level": "ok"
-              },
-              {
-                "label": "12–23 Bags / 12~23봉",
-                "status": "",
-                "level": "low"
-              },
-              {
-                "label": "6–11 Bags / 6~11봉",
-                "status": "ORDER",
-                "level": "order"
-              },
-              {
-                "label": "OUT / 없음",
-                "status": "URGENT",
-                "level": "urgent"
-              }
-            ]
-          },
-          {
             "id": "s1115",
             "name": "Fried Boneless Chicken – Stock Level",
             "ko": "튀긴 본레스 치킨 – 재고 상태",
@@ -3787,6 +3729,64 @@ window.STORE1_STATIONS = {
               },
               {
                 "label": "Less than 2 Bags / 2봉 미만",
+                "status": "URGENT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1113",
+            "name": "Pork & Beef Dumpling",
+            "ko": "고기만두",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "More than 10 Bags / 10봉 초과",
+                "status": "",
+                "level": "ok"
+              },
+              {
+                "label": "10 Bags or Less / 10봉 이하",
+                "status": "PREP",
+                "level": "order"
+              },
+              {
+                "label": "5 Bags or Less / 5봉 이하",
+                "status": "PREP URGENT",
+                "level": "urgent"
+              },
+              {
+                "label": "OUT / 없음",
+                "status": "PREP URGENT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1114",
+            "name": "Vegetable Dumpling",
+            "ko": "야채만두",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "24 Bags or More / 24봉 이상",
+                "status": "SAFE",
+                "level": "ok"
+              },
+              {
+                "label": "12–23 Bags / 12~23봉",
+                "status": "",
+                "level": "low"
+              },
+              {
+                "label": "6–11 Bags / 6~11봉",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "OUT / 없음",
                 "status": "URGENT",
                 "level": "urgent"
               }
