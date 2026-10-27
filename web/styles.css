@@ -343,7 +343,9 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 
 /* Store #1 station checks: compact option chips + replacement details */
 :where(.chip2){--lv:var(--lv-none)}
-.s2choicerow{grid-template-columns:1fr}
+.s2row.s2choicerow{grid-template-columns:minmax(0,1fr);grid-template-areas:"name" "note" "chips"}
+.s2choicerow .chips2{grid-area:chips}
+.chip2{max-width:100%;text-align:left;line-height:1.25}
 .chips2{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .chip2{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:6px 12px;border-radius:999px;font:inherit;font-size:.88rem;
   color:var(--ink);background:var(--surface);border:1.5px solid var(--line);cursor:pointer}
