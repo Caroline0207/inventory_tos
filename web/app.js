@@ -898,7 +898,7 @@ const fmtQty = (n, it) => `${fmtFrac(n)} ${it.unit || ""}${it.unitKo ? " (" + it
 function s2Answers(d) {
   return S2_ITEMS.map(it => {
     const base = { id: it.id, name: it.name, ko: it.ko };
-    if (isText(it)) { const t = (d.texts[it.id] || "").trim(); return { ...base, choice: t, level: isNone(t) ? "ok" : "request", text: true }; }
+    if (isText(it)) { const t = (d.texts[it.id] || "").trim(); return { ...base, choice: t, level: !t ? "none" : isNone(t) ? "ok" : "request", text: true }; }
     if (isFlag(it)) { const on = !!d.flags[it.id]; return { ...base, choice: on ? "Need to order / 주문 필요" : "Enough / 충분함", level: on ? "order" : "ok", flag: true }; }
     const s = s2Short(d, it), t = Number(it.target);
     const level = s <= 0 ? "ok" : s >= t ? "urgent" : "order";
@@ -1019,6 +1019,11 @@ $("s2Body").addEventListener("keydown", e => {
   }
 });
 
+/* Order button: copyable order list from what is entered right now (before submitting) */
+$("s2Order").addEventListener("click", () => {
+  const d = s2Draft();
+  s2Copy({ check_date: current, checked_by: d.name.trim(), answers: s2Answers(d), extra_request: d.extra === "yes" ? d.extraText.trim() : null }, "not submitted yet");
+});
 $("s2Submit").addEventListener("click", async () => {
   const d = s2Draft();
   if (!d.name.trim()) { const n = $("s2Name"); n.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); n.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
@@ -1050,7 +1055,7 @@ function s2Groups(answers) {
   const by = l => (answers || []).filter(a => a.level === l);
   return [["urgent", "Out / Urgent", by("urgent")], ["order", "Short / Order", by("order")], ["request", "Written requests", by("request")], ["low", "Low", by("low")]];
 }
-function s2Copy(c) {
+function s2Copy(c, note) {
   if (!c) return;
   const day = String(c.check_date).slice(0, 10);
   const d = parseKey(day).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -1062,9 +1067,9 @@ function s2Copy(c) {
     parts.push("");
   }
   if (c.extra_request) { parts.push("OTHER"); parts.push(c.extra_request); parts.push(""); }
-  if (!n && !c.extra_request) { toast("Nothing needs ordering in this check.", true); return; }
+  if (!n && !c.extra_request) { toast(note ? "Nothing is short. Enter shortages first." : "Nothing needs ordering in this check.", true); return; }
   parts.push(`Total: ${n} item${n === 1 ? "" : "s"}${c.extra_request ? " + other request" : ""}`, "", "Thank you!");
-  showTextSheet("Order list", parts.join("\n"), `${n} item${n === 1 ? "" : "s"} · ${longDate(day)} · checked by ${c.checked_by}. You can edit the text before copying.`);
+  showTextSheet("Order list", parts.join("\n"), `${n} item${n === 1 ? "" : "s"} · ${longDate(day)}${c.checked_by ? " · checked by " + c.checked_by : ""}${note ? " · " + note : ""}. You can edit the text before copying.`);
 }
 
 async function renderS2History(el) {
