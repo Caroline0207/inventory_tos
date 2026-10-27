@@ -2554,8 +2554,8 @@ window.STORE1_STATIONS = {
         ]
       },
       {
-        "en": "Packaging",
-        "ko": "포장용기",
+        "en": "Packaging & Supplies",
+        "ko": "포장용기 및 소모품",
         "note": "",
         "items": [
           {
@@ -2994,6 +2994,30 @@ window.STORE1_STATIONS = {
             "id": "s1197",
             "name": "Foil tray L",
             "ko": "호일 트레이 L",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1201",
+            "name": "White paper towel",
+            "ko": "흰색 페이퍼 타올",
             "note": "",
             "input": "choice",
             "options": [
@@ -3778,8 +3802,8 @@ window.STORE1_STATIONS = {
         ]
       },
       {
-        "en": "Packaging",
-        "ko": "포장용기",
+        "en": "Packaging & Supplies",
+        "ko": "포장용기 및 소모품",
         "note": "",
         "items": [
           {
@@ -3810,6 +3834,30 @@ window.STORE1_STATIONS = {
             "id": "s1188",
             "name": "1000ml container",
             "ko": "1000ml 컨테이너",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1200",
+            "name": "Brown paper towel",
+            "ko": "갈색 페이퍼 타올",
             "note": "",
             "input": "choice",
             "options": [
