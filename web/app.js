@@ -895,6 +895,13 @@ const s2Save = () => store.set(KINDS[K].key, JSON.stringify(T.draft));
 const isText = it => it.input === "text";
 const isFlag = it => it.input === "flag";
 const isCount = it => it.input === "count";
+const hasVal = v => String(v ?? "").trim() !== "";
+const cntNeed = (it, v) => !hasVal(v) ? 0 : toNum(v) <= 0 ? Math.max(Number(it.target) || 0, 0) : it.target != null ? Math.max(Math.round((Number(it.target) - toNum(v)) * 100) / 100, 0) : 0;
+const cntLow = (it, v) => hasVal(v) && (toNum(v) <= 0 || (it.target != null && toNum(v) < Number(it.target)));
+function cntRowUpdate(row, it, v) {
+  row.classList.toggle("short", cntLow(it, v));
+  const s = row.querySelector("[data-need]"); if (s) s.textContent = cntLow(it, v) && it.target != null ? ` · order ${fmtFrac(cntNeed(it, v))}` : "";
+}
 const isChoice = it => it.input === "choice";
 const choiceIdx = (d, it) => d.choice[it.id] !== undefined ? d.choice[it.id] : 0;
 const unitLabel = it => it.unit ? `${it.unit}${it.unitKo ? " (" + it.unitKo + ")" : ""}` : "";
@@ -903,7 +910,7 @@ const s2Short = (d, it) => Math.min(toNum(d.short[it.id] || 0), Number(it.target
 const s2Missing = d => S2_ITEMS.filter(it => (isText(it) && !(d.texts[it.id] || "").trim()) || (isCount(it) && String(d.counts[it.id] ?? "").trim() === ""));
 const s2ShortCount = d => S2_ITEMS.filter(it =>
   isFlag(it) ? !!d.flags[it.id] :
-  isCount(it) ? (String(d.counts[it.id] ?? "").trim() !== "" && toNum(d.counts[it.id]) <= 0) :
+  isCount(it) ? cntLow(it, d.counts[it.id]) :
   isChoice(it) ? ((it.options[choiceIdx(d, it)] || {}).level || "ok") !== "ok" :
   isText(it) ? false : s2Short(d, it) > 0).length;
 const statusText = o => (o.status || "").split(" / ")[0] || LEVEL_NAME[o.level] || "";
@@ -924,7 +931,10 @@ function s2Answers(d) {
     const base = { id: it.id, name: it.name, ko: it.ko };
     if (isText(it)) { const t = (d.texts[it.id] || "").trim(); return { ...base, choice: t, level: !t ? "none" : isNone(t) ? "ok" : "request", text: true }; }
     if (isCount(it)) { const raw = String(d.counts[it.id] ?? "").trim(), c = raw === "" ? null : Math.round(parseFloat(raw.replace(",", ".")) * 100) / 100;
-      return { ...base, count: c, unit: it.unit, unitKo: it.unitKo, choice: c == null ? "" : `${fmtFrac(c)} ${it.unit}${it.unitKo ? " (" + it.unitKo + ")" : ""}`, level: c == null ? "none" : c <= 0 ? "urgent" : "ok" }; }
+      const u = `${it.unit}${it.unitKo ? " (" + it.unitKo + ")" : ""}`, t = it.target != null ? Number(it.target) : null;
+      const need = c == null ? 0 : cntNeed(it, c), lvl = c == null ? "none" : c <= 0 ? "urgent" : t != null && c < t ? "order" : "ok";
+      return { ...base, count: c, target: t, need: lvl === "ok" || lvl === "none" ? null : need, unit: it.unit, unitKo: it.unitKo,
+        choice: c == null ? "" : `${fmtFrac(c)} ${u}${t != null ? ` / target ${fmtFrac(t)}` : ""}`, level: lvl }; }
     if (isChoice(it)) { const o = it.options[choiceIdx(d, it)] || {}; return { ...base, choice: o.label || "", status: o.status || "", level: o.level || "ok" }; }
     if (isFlag(it)) { const on = !!d.flags[it.id]; return { ...base, choice: on ? "Need to order / 주문 필요" : "Enough / 충분함", level: on ? "order" : "ok", flag: true }; }
     const s = s2Short(d, it), t = Number(it.target);
@@ -947,7 +957,7 @@ function renderS2Form(el) {
   const d = s2Draft();
   el.innerHTML = `<div class="who"><label for="s2Name">Checked by</label>
       <input id="s2Name" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(d.name)}" enterkeyhint="done"></div>
-    <p class="hint">${KINDS[K].group === "store1" ? "Count what you have and tap the stock level. Enter 0 if there is none. 현재 수량을 입력하고 재고 상태를 선택하세요." : "Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요."}</p>
+    <p class="hint">${KINDS[K].group === "store1" ? "Count what you have (0 if none). Below the target shows what to order. 현재 수량을 입력하면 기준보다 부족한 만큼 주문량이 표시돼요." : "Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요."}</p>
     ${S2.sections.map(sec => `<section class="s2sec"><h2>${esc(sec.en)} <small>${esc(sec.ko)}</small></h2>
       ${sec.note ? `<p class="secnote">${esc(sec.note)}</p>` : ""}
       <ul class="list s2list">${sec.items.map(it => s2Row(it, d)).join("")}</ul></section>`).join("")}
@@ -979,8 +989,9 @@ function s2Row(it, d) {
     return `<li class="row s2row s2choicerow${lv !== "ok" ? " short" : ""}" id="s2-${esc(it.id)}">${name}${note}
       <div class="chips2" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `<button type="button" class="chip2 lv-${esc(o.level)}" role="radio" aria-checked="${k === sel}" data-ch="${esc(it.id)}" data-k="${k}"><span class="dot"></span><span>${esc(o.label)}</span></button>`).join("")}</div></li>`; }
   if (isCount(it)) { const v = d.counts[it.id] ?? "";
-    return `<li class="row s2row${String(v).trim() !== "" && toNum(v) <= 0 ? " short" : ""}" id="s2-${esc(it.id)}" data-cid="${esc(it.id)}">${name}
-      <div class="tgt num"><span>Count in <b>${esc(it.unit)}</b>${it.unitKo ? " (" + esc(it.unitKo) + ")" : ""}</span></div>${note}
+    const low = cntLow(it, v), u = `${esc(it.unit)}${it.unitKo ? " (" + esc(it.unitKo) + ")" : ""}`;
+    return `<li class="row s2row${low ? " short" : ""}" id="s2-${esc(it.id)}" data-cid="${esc(it.id)}">${name}
+      <div class="tgt num"><span>${it.target != null ? `Target <b>${esc(fmtFrac(Number(it.target)))}</b> ${u}` : `Count in <b>${esc(it.unit)}</b>${it.unitKo ? " (" + esc(it.unitKo) + ")" : ""}`}<span class="sfr" data-need>${low && it.target != null ? ` · order ${esc(fmtFrac(cntNeed(it, v)))}` : ""}</span></span></div>${note}
       <div class="step">
         <button type="button" data-cnt="minus" aria-label="Less ${esc(it.name)}">−</button>
         <input type="number" inputmode="decimal" step="any" min="0" value="${esc(v)}" placeholder="–" data-count="${esc(it.id)}" aria-label="${esc(it.name)} on hand (${esc(it.unit)})">
@@ -1022,7 +1033,7 @@ $("s2Body").addEventListener("click", e => {
     const next = cb.dataset.cnt === "plus" ? cur + st : Math.max(0, cur - st);
     const v = String(Math.round(next * 100) / 100);
     inp.value = v; const d = s2Draft(); d.counts[it.id] = v; s2Save();
-    row.classList.toggle("short", toNum(v) <= 0); row.classList.remove("missing"); s2UpdateBar(); return;
+    cntRowUpdate(row, it, v); row.classList.remove("missing"); s2UpdateBar(); return;
   }
   const ch = e.target.closest("[data-ch]");
   if (ch) {
@@ -1062,7 +1073,7 @@ $("s2Body").addEventListener("input", e => {
   if (e.target.id === "s2ExtraText") { d.extraText = e.target.value; s2Save(); }
   if (e.target.dataset && e.target.dataset.count) {
     d.counts[e.target.dataset.count] = e.target.value; s2Save();
-    const r = e.target.closest(".row"); r.classList.toggle("short", e.target.value.trim() !== "" && toNum(e.target.value) <= 0);
+    const r = e.target.closest(".row"); cntRowUpdate(r, S2_ITEMS.find(x => x.id === e.target.dataset.count), e.target.value);
     if (e.target.value.trim() !== "") r.classList.remove("missing"); s2UpdateBar();
   }
   if (e.target.dataset && e.target.dataset.det) { d.det[e.target.dataset.det] = e.target.value; s2Save(); }
@@ -1142,7 +1153,7 @@ function s2Copy(c, note) {
   for (const [, title, list] of s2Groups(c.answers)) {
     if (!list.length) continue;
     parts.push(title.toUpperCase());
-    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.count != null ? `Out (0 ${a.unit || ""} left)` : a.short != null ? `${fmtFrac(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
+    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.count != null ? (a.need ? `${fmtFrac(a.need)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""} (have ${fmtFrac(a.count)})` : `Out (0 ${a.unit || ""} left)`) : a.short != null ? `${fmtFrac(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
     parts.push("");
   }
   if (c.extra_request) { parts.push("OTHER"); parts.push(c.extra_request); parts.push(""); }
