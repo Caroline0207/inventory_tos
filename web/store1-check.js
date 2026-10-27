@@ -1023,6 +1023,30 @@ window.STORE1_STATIONS = {
                 "level": "order"
               }
             ]
+          },
+          {
+            "id": "s1198",
+            "name": "Miso soup container",
+            "ko": "미소숩 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
