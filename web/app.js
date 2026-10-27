@@ -884,7 +884,16 @@ const s2Missing = d => S2_ITEMS.filter(it => isText(it) && !(d.texts[it.id] || "
 const s2ShortCount = d => S2_ITEMS.filter(it => (isFlag(it) && d.flags[it.id]) || (!isText(it) && !isFlag(it) && s2Short(d, it) > 0)).length;
 const statusText = o => (o.status || "").split(" / ")[0] || LEVEL_NAME[o.level] || "";
 const isNone = s => /^(none|no|nothing|n\/a|없음|없어요|없습니다|x|-)[.!]?$/i.test(String(s).trim());
-const fmtQty = (n, it) => `${fmt(n)} ${it.unit || ""}${it.unitKo ? " (" + it.unitKo + ")" : ""}`.trim();
+/* show 0.33 as 1/3, 1.5 as 1 1/2 … (Store #2 targets come from fractions like 반통, 1/3통) */
+const FRACS = [[1 / 2, "1/2"], [1 / 3, "1/3"], [2 / 3, "2/3"], [1 / 4, "1/4"], [3 / 4, "3/4"], [1 / 5, "1/5"], [2 / 5, "2/5"]];
+function fmtFrac(n) {
+  n = Number(n); if (!isFinite(n)) return "?";
+  const w = Math.floor(n + 1e-9), f = n - w;
+  if (f < 0.01) return String(w);
+  for (const [v, s] of FRACS) if (Math.abs(f - v) < 0.02) return w ? `${w} ${s}` : s;
+  return fmt(n);
+}
+const fmtQty = (n, it) => `${fmtFrac(n)} ${it.unit || ""}${it.unitKo ? " (" + it.unitKo + ")" : ""}`.trim();
 
 function s2Answers(d) {
   return S2_ITEMS.map(it => {
@@ -894,7 +903,7 @@ function s2Answers(d) {
     const s = s2Short(d, it), t = Number(it.target);
     const level = s <= 0 ? "ok" : s >= t ? "urgent" : "order";
     return { ...base, short: s, target: t, unit: it.unit, unitKo: it.unitKo,
-      choice: s <= 0 ? `Full · target ${fmtQty(t, it)}` : s >= t ? `OUT · short ${fmtQty(s, it)} (target ${fmt(t)})` : `Short ${fmtQty(s, it)} (target ${fmt(t)})`, level };
+      choice: s <= 0 ? `Full · target ${fmtQty(t, it)}` : s >= t ? `OUT · short ${fmtQty(s, it)} (target ${fmtFrac(t)})` : `Short ${fmtQty(s, it)} (target ${fmtFrac(t)})`, level };
   });
 }
 
@@ -935,7 +944,7 @@ function s2Row(it, d) {
       <div class="step"><button type="button" class="flagbtn" role="switch" aria-checked="${on}" data-flag="${esc(it.id)}">${on ? "Need to order" : "Enough"}</button></div></li>`; }
   const v = d.short[it.id] !== undefined ? d.short[it.id] : "0";
   return `<li class="row s2row${toNum(v) > 0 ? " short" : ""}" id="s2-${esc(it.id)}" data-id="${esc(it.id)}">${name}
-      <div class="tgt num"><span>Target <b>${fmt(it.target)}</b> ${esc(unitLabel(it))}</span></div>${note}
+      <div class="tgt num"><span>Target <b>${fmtFrac(it.target)}</b> ${esc(unitLabel(it))}</span><span class="sfr">${s2FracHint(v)}</span></div>${note}
       <div class="step">
         <button type="button" data-s2act="minus" aria-label="Less ${esc(it.name)}">−</button>
         <input type="number" inputmode="decimal" step="any" min="0" value="${esc(v)}" data-short="${esc(it.id)}" aria-label="${esc(it.name)} short by (${esc(it.unit || "")})">
@@ -947,11 +956,12 @@ function s2UpdateBar() {
   $("s2Submit").textContent = `Submit check${n ? ` (${n} short)` : ""}`;
   const pill = $("s2Pill"); if (pill) { pill.textContent = n ? `${n} short` : "All full"; pill.classList.toggle("warn", !!n); pill.classList.remove("mute"); }
 }
+function s2FracHint(v) { const n = toNum(v); return n > 0 && n % 1 ? `short ${fmtFrac(n)}` : ""; }
 function s2SetShort(row, val) {
   const it = S2_ITEMS.find(x => x.id === row.dataset.id); if (!it) return;
   const d = s2Draft(); d.short[it.id] = val; s2Save();
   const inp = row.querySelector("input"); if (inp.value !== val) inp.value = val;
-  row.classList.toggle("short", toNum(val) > 0); s2UpdateBar();
+  row.classList.toggle("short", toNum(val) > 0); row.querySelector(".sfr").textContent = s2FracHint(val); s2UpdateBar();
 }
 
 $("s2Body").addEventListener("click", e => {
@@ -985,7 +995,7 @@ $("s2Body").addEventListener("input", e => {
   if (e.target.id === "s2ExtraText") { d.extraText = e.target.value; s2Save(); }
   if (e.target.dataset && e.target.dataset.short) {
     d.short[e.target.dataset.short] = e.target.value; s2Save();
-    e.target.closest(".row").classList.toggle("short", toNum(e.target.value) > 0); s2UpdateBar();
+    const r = e.target.closest(".row"); r.classList.toggle("short", toNum(e.target.value) > 0); r.querySelector(".sfr").textContent = s2FracHint(e.target.value); s2UpdateBar();
   }
   if (e.target.dataset && e.target.dataset.text) {
     d.texts[e.target.dataset.text] = e.target.value; s2Save();
@@ -997,7 +1007,7 @@ $("s2Body").addEventListener("focusout", e => {
   if (!(e.target.dataset && e.target.dataset.short)) return;
   const row = e.target.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.id);
   let v = e.target.value.trim() === "" ? 0 : toNum(e.target.value);
-  if (it && v > Number(it.target)) { v = Number(it.target); toast(`Short can't be more than the target (${fmt(it.target)}). It's set to ${fmt(v)} = OUT.`); }
+  if (it && v > Number(it.target)) { v = Number(it.target); toast(`Short can't be more than the target (${fmtFrac(it.target)}). It's set to ${fmtFrac(v)} = OUT.`); }
   s2SetShort(row, String(v));
 });
 $("s2Body").addEventListener("keydown", e => {
@@ -1048,7 +1058,7 @@ function s2Copy(c) {
   for (const [, title, list] of s2Groups(c.answers)) {
     if (!list.length) continue;
     parts.push(title.toUpperCase());
-    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.short != null ? `${fmt(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
+    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.short != null ? `${fmtFrac(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
     parts.push("");
   }
   if (c.extra_request) { parts.push("OTHER"); parts.push(c.extra_request); parts.push(""); }

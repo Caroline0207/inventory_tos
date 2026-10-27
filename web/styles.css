@@ -338,3 +338,5 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .step .flagbtn[aria-checked="true"]{border-color:var(--short);background:var(--short);color:#fff}
 .s2row.short .name{color:var(--short)}
 .home-card.stock .tt{font-size:1.65rem}
+.s2row .sfr{font-weight:700;color:var(--short)}
+.s2row .sfr:empty{display:none}
