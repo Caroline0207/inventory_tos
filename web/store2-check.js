@@ -1,6 +1,8 @@
 // Store #2 regular inventory check, from the store's check form.
 // To change an item, edit its text here and push to GitHub.
 // Keep each item `id` the same so past checks still line up; use a new id for a new item.
+// input: number = staff enter how much is short vs `target` (in `unit`); flag = one "Need to order" toggle; text = written answer.
+// `target` comes from each item's SAFE line in the original form. `options` are kept for reference.
 // level: ok (green, SAFE) · low (yellow) · order (red, ORDER/REQUEST) · urgent (OUT) · none (no colour in the form)
 window.STORE2_CHECK = {
  "sections": [
@@ -36,7 +38,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i01"
+     "id": "i01",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Teriyaki Sauce (For Dupbap)",
@@ -64,7 +70,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i02"
+     "id": "i02",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Cooking Oil",
@@ -92,7 +102,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i03"
+     "id": "i03",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Coke regular",
@@ -120,7 +134,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i04"
+     "id": "i04",
+     "input": "number",
+     "target": 10.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Diet Coke",
@@ -148,7 +166,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i05"
+     "id": "i05",
+     "input": "number",
+     "target": 10.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Coke Zero",
@@ -176,7 +198,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i06"
+     "id": "i06",
+     "input": "number",
+     "target": 10.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Canada dry",
@@ -204,7 +230,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i07"
+     "id": "i07",
+     "input": "number",
+     "target": 10.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Fuze",
@@ -232,7 +262,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i08"
+     "id": "i08",
+     "input": "number",
+     "target": 10.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Sprite",
@@ -260,7 +294,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i09"
+     "id": "i09",
+     "input": "number",
+     "target": 10.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Arizona",
@@ -288,7 +326,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i10"
+     "id": "i10",
+     "input": "number",
+     "target": 8.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Milkis",
@@ -316,7 +358,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i11"
+     "id": "i11",
+     "input": "number",
+     "target": 5.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Banana milk",
@@ -344,7 +390,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i12"
+     "id": "i12",
+     "input": "number",
+     "target": 6.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Sanpellegrino Lemon",
@@ -372,7 +422,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i13"
+     "id": "i13",
+     "input": "number",
+     "target": 5.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Sanpellegrino Blood orange",
@@ -400,7 +454,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i14"
+     "id": "i14",
+     "input": "number",
+     "target": 5.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Paper Towels",
@@ -428,7 +486,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i15"
+     "id": "i15",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Roll",
+     "unitKo": "롤"
     },
     {
      "name": "Brown Paper Towels",
@@ -456,7 +518,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i16"
+     "id": "i16",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Roll",
+     "unitKo": "롤"
     },
     {
      "name": "Triangle Kimbap Seaweed",
@@ -484,7 +550,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i17"
+     "id": "i17",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Sushi Vinegar",
@@ -502,7 +572,11 @@ window.STORE2_CHECK = {
        "level": "order"
       }
      ],
-     "id": "i18"
+     "id": "i18",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Prepped Carrots – Vacuum Packs",
@@ -530,7 +604,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i19"
+     "id": "i19",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Prepped Purple cabbage – Vacuum Packs",
@@ -558,7 +636,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i20"
+     "id": "i20",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Avocado",
@@ -586,7 +668,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i21"
+     "id": "i21",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Eggs",
@@ -614,7 +700,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i22"
+     "id": "i22",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Pan",
+     "unitKo": "판"
     },
     {
      "name": "Salmon Back Loin – Ready Stock",
@@ -647,7 +737,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i23"
+     "id": "i23",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Strip",
+     "unitKo": "줄"
     },
     {
      "name": "Salmon Belly – Ready Stock",
@@ -680,7 +774,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i24"
+     "id": "i24",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Strip",
+     "unitKo": "줄"
     },
     {
      "name": "Oshi Salmon – Ready Stock",
@@ -708,7 +806,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i25"
+     "id": "i25",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     }
    ]
   },
@@ -744,7 +846,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i26"
+     "id": "i26",
+     "input": "number",
+     "target": 1.5,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "8-Compartment Sushi Case & Lid",
@@ -772,7 +878,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i27"
+     "id": "i27",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "10-Compartment Sushi Case & Lid",
@@ -800,7 +910,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i28"
+     "id": "i28",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "Poke Containers & Lids",
@@ -828,7 +942,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i29"
+     "id": "i29",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "Bibimbap Containers & Lids",
@@ -856,7 +974,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i30"
+     "id": "i30",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     }
    ]
   },
@@ -887,7 +1009,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i31"
+     "id": "i31",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Veggi Dumpling",
@@ -910,7 +1036,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i32"
+     "id": "i32",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Udon Noodles",
@@ -933,7 +1063,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i33"
+     "id": "i33",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Fried Shrimp",
@@ -956,7 +1090,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i34"
+     "id": "i34",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "YAM",
@@ -979,7 +1117,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i35"
+     "id": "i35",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "ICE",
@@ -1002,7 +1144,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i36"
+     "id": "i36",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Portioned Black Tapioca Pearls",
@@ -1025,7 +1171,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i37"
+     "id": "i37",
+     "input": "number",
+     "target": 15.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Ground Beef",
@@ -1053,7 +1203,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i38"
+     "id": "i38",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Dupbap Beef",
@@ -1081,7 +1235,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i39"
+     "id": "i39",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Spicy pork",
@@ -1109,7 +1267,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i40"
+     "id": "i40",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Cube Chicken",
@@ -1137,7 +1299,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i41"
+     "id": "i41",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Halal Chicken",
@@ -1155,7 +1321,8 @@ window.STORE2_CHECK = {
        "level": "order"
       }
      ],
-     "id": "i42"
+     "id": "i42",
+     "input": "flag"
     },
     {
      "name": "Portioned Teriyaki pork",
@@ -1183,7 +1350,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i43"
+     "id": "i43",
+     "input": "number",
+     "target": 10.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Boneless Chicken",
@@ -1211,7 +1382,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i44"
+     "id": "i44",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     }
    ]
   },
@@ -1247,7 +1422,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i45"
+     "id": "i45",
+     "input": "number",
+     "target": 8.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Whole Carrots",
@@ -1275,7 +1454,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i46"
+     "id": "i46",
+     "input": "number",
+     "target": 5.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Unprepped Zucchini",
@@ -1298,7 +1481,11 @@ window.STORE2_CHECK = {
        "level": "order"
       }
      ],
-     "id": "i47"
+     "id": "i47",
+     "input": "number",
+     "target": 6.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Unprepped Cabbage",
@@ -1326,7 +1513,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i48"
+     "id": "i48",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Unprepped Chives",
@@ -1354,7 +1545,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i49"
+     "id": "i49",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Bunch",
+     "unitKo": "단"
     },
     {
      "name": "Backup Whole Cucumbers",
@@ -1382,7 +1577,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i50"
+     "id": "i50",
+     "input": "number",
+     "target": 16.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Green Onions",
@@ -1410,7 +1609,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i51"
+     "id": "i51",
+     "input": "number",
+     "target": 5.0,
+     "unit": "Bunch",
+     "unitKo": "단"
     },
     {
      "name": "Japchae",
@@ -1438,7 +1641,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i52"
+     "id": "i52",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Tofu",
@@ -1466,7 +1673,11 @@ window.STORE2_CHECK = {
        "level": "urgent"
       }
      ],
-     "id": "i53"
+     "id": "i53",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Milk",
@@ -1489,7 +1700,11 @@ window.STORE2_CHECK = {
        "level": "order"
       }
      ],
-     "id": "i54"
+     "id": "i54",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Heavy Cream",
@@ -1512,7 +1727,11 @@ window.STORE2_CHECK = {
        "level": "order"
       }
      ],
-     "id": "i55"
+     "id": "i55",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Carton",
+     "unitKo": "팩"
     }
    ]
   }

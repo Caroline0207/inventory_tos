@@ -1,6 +1,8 @@
 // Store #2 weekly inventory (once a week, Saturday), from the store's weekly form.
 // To change an item, edit its text here and push to GitHub.
 // Keep each item `id` the same so past checks still line up; use a new id for a new item.
+// input: number = staff enter how much is short vs `target` (in `unit`); flag = one "Need to order" toggle; text = written answer.
+// `target` comes from each item's SAFE line in the original form. `options` are kept for reference.
 // level: ok (green, SAFE) · low (yellow) · order (red, ORDER/REQUEST) · urgent (OUT)
 // type "text": staff type an answer (write "None" / "없음" if nothing is needed).
 window.STORE2_WEEKLY = {
@@ -36,7 +38,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w001"
+     "id": "w001",
+     "input": "number",
+     "target": 0.33,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Tteokbokki Sauce – Bulk Container",
@@ -64,7 +70,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w002"
+     "id": "w002",
+     "input": "number",
+     "target": 0.75,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Sriracha Sauce",
@@ -92,7 +102,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w003"
+     "id": "w003",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Okonomiyaki Sauce",
@@ -120,7 +134,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w004"
+     "id": "w004",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Sesame Oil",
@@ -148,7 +166,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w005"
+     "id": "w005",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Poke panko",
@@ -176,7 +198,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w006"
+     "id": "w006",
+     "input": "number",
+     "target": 1.5,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Sesame Seeds",
@@ -204,7 +230,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w007"
+     "id": "w007",
+     "input": "number",
+     "target": 0.33,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Fine Chili Powder",
@@ -232,7 +262,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w008"
+     "id": "w008",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Coarse Chili Powder",
@@ -260,7 +294,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w009"
+     "id": "w009",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Custard",
@@ -288,7 +326,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w010"
+     "id": "w010",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Choco Pie",
@@ -316,7 +358,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w011"
+     "id": "w011",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Fresh Berry",
@@ -344,7 +390,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w012"
+     "id": "w012",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Card Terminal Paper Rolls",
@@ -372,7 +422,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w013"
+     "id": "w013",
+     "input": "number",
+     "target": 7.0,
+     "unit": "Roll",
+     "unitKo": "롤"
     },
     {
      "name": "Loyalty Cards",
@@ -400,7 +454,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w014"
+     "id": "w014",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Disposable Forks",
@@ -428,7 +486,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w015"
+     "id": "w015",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Disposable Spoons",
@@ -456,7 +518,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w016"
+     "id": "w016",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Disposable Chopsticks",
@@ -484,7 +550,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w017"
+     "id": "w017",
+     "input": "number",
+     "target": 5.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Napkins",
@@ -512,7 +582,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w018"
+     "id": "w018",
+     "input": "number",
+     "target": 5.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Small To-Go Bags",
@@ -540,7 +614,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w019"
+     "id": "w019",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Large To-Go Bags",
@@ -568,7 +646,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w020"
+     "id": "w020",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Small Hot Drink Cups & Lids",
@@ -596,7 +678,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w021"
+     "id": "w021",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "Large Hot Drink Cups & Lids",
@@ -624,7 +710,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w022"
+     "id": "w022",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "Low To-Go Containers & Lids",
@@ -632,7 +722,8 @@ window.STORE2_WEEKLY = {
      "note": "Please list ONLY containers or lids with less than ½ sleeve remaining. If everything is sufficiently stocked, write “None.”\n반 줄 미만으로 남은 투고 용기 또는 뚜껑만 적어주세요. 모두 충분하면 “없음”이라고 적어주세요.",
      "options": [],
      "id": "w023",
-     "type": "text"
+     "type": "text",
+     "input": "text"
     },
     {
      "name": "Dupbap Containers and lids for open fridge",
@@ -660,7 +751,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w024"
+     "id": "w024",
+     "input": "number",
+     "target": 50.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Jabchae Containers and lids for open fridge",
@@ -688,7 +783,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w025"
+     "id": "w025",
+     "input": "number",
+     "target": 50.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Seaweed salad Containers",
@@ -716,7 +815,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w026"
+     "id": "w026",
+     "input": "number",
+     "target": 30.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Miso Soup Containers & Lids",
@@ -744,7 +847,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w027"
+     "id": "w027",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "1000 mL Container&Lids",
@@ -772,7 +879,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w028"
+     "id": "w028",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "Bubble Tea Cups & Lids",
@@ -800,7 +911,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w029"
+     "id": "w029",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Sleeve",
+     "unitKo": "줄"
     },
     {
      "name": "Fried Onions",
@@ -828,7 +943,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w030"
+     "id": "w030",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Wasabi Powder",
@@ -856,7 +975,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w031"
+     "id": "w031",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Sushi Gloves",
@@ -864,7 +987,8 @@ window.STORE2_WEEKLY = {
      "note": "Please enter the SIZE and QUANTITY needed. If no gloves are needed, write “None.”\n필요한 장갑의 사이즈와 수량을 적어주세요. 필요한 장갑이 없으면 “없음”이라고 적어주세요.",
      "options": [],
      "id": "w032",
-     "type": "text"
+     "type": "text",
+     "input": "text"
     },
     {
      "name": "Gloves for middle part",
@@ -872,7 +996,8 @@ window.STORE2_WEEKLY = {
      "note": "Please enter the SIZE and QUANTITY needed. If no gloves are needed, write “None.”\n필요한 장갑의 사이즈와 수량을 적어주세요. 필요한 장갑이 없으면 “없음”이라고 적어주세요.",
      "options": [],
      "id": "w033",
-     "type": "text"
+     "type": "text",
+     "input": "text"
     },
     {
      "name": "Half-Size Seaweed",
@@ -900,7 +1025,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w034"
+     "id": "w034",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Full-Size Seaweed",
@@ -928,7 +1057,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w035"
+     "id": "w035",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "To-Go Sushi Soy Sauce",
@@ -956,7 +1089,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w036"
+     "id": "w036",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Sushi Panko",
@@ -974,7 +1111,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w037"
+     "id": "w037",
+     "input": "flag"
     },
     {
      "name": "Lemon",
@@ -1002,7 +1140,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w038"
+     "id": "w038",
+     "input": "number",
+     "target": 7.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Lime",
@@ -1025,7 +1167,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w039"
+     "id": "w039",
+     "input": "number",
+     "target": 6.0,
+     "unit": "EA",
+     "unitKo": "개"
     },
     {
      "name": "Pickled Ginger – Stock Level",
@@ -1048,7 +1194,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w040"
+     "id": "w040",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Wasabi mayo",
@@ -1066,7 +1216,8 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w041"
+     "id": "w041",
+     "input": "flag"
     },
     {
      "name": "Yuzu mayo",
@@ -1084,7 +1235,8 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w042"
+     "id": "w042",
+     "input": "flag"
     },
     {
      "name": "Sesame mayo",
@@ -1102,7 +1254,8 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w043"
+     "id": "w043",
+     "input": "flag"
     },
     {
      "name": "Garlic mayo",
@@ -1120,7 +1273,8 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w044"
+     "id": "w044",
+     "input": "flag"
     },
     {
      "name": "Cheongyang Chili Peppers – Stock Level",
@@ -1148,7 +1302,8 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w045"
+     "id": "w045",
+     "input": "flag"
     }
    ],
    "id": "ws1"
@@ -1184,7 +1339,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w046"
+     "id": "w046",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Lemon juice",
@@ -1212,7 +1371,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w047"
+     "id": "w047",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Bubble Tea Straws",
@@ -1240,7 +1403,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w048"
+     "id": "w048",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Bubly",
@@ -1268,7 +1435,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w049"
+     "id": "w049",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Matcha Powder",
@@ -1296,7 +1467,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w050"
+     "id": "w050",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Taro Powder",
@@ -1324,7 +1499,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w051"
+     "id": "w051",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Milk tea Powder",
@@ -1352,7 +1531,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w052"
+     "id": "w052",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Takeout Drink Supplies Request",
@@ -1360,7 +1543,8 @@ window.STORE2_WEEKLY = {
      "note": "Please list any takeout drink supplies that are running low or need to be ordered, such as sealing film or drink carriers. If nothing is needed, write “None.”\n투고용 음료 실링지, 음료 캐리어 등 부족하거나 주문이 필요한 음료용품을 적어주세요. 필요한 것이 없으면 “없음”이라고 적어주세요.",
      "options": [],
      "id": "w053",
-     "type": "text"
+     "type": "text",
+     "input": "text"
     },
     {
      "name": "Half-Pound Chicken Box",
@@ -1388,7 +1572,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w054"
+     "id": "w054",
+     "input": "number",
+     "target": 30.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "One-Pound Chicken Box",
@@ -1416,7 +1604,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w055"
+     "id": "w055",
+     "input": "number",
+     "target": 30.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Small Sushi Platter Boxes",
@@ -1444,7 +1636,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w056"
+     "id": "w056",
+     "input": "number",
+     "target": 20.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Large Sushi Platter Boxes",
@@ -1472,7 +1668,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w057"
+     "id": "w057",
+     "input": "number",
+     "target": 20.0,
+     "unit": "Box",
+     "unitKo": "박스"
     },
     {
      "name": "Mayonnaise –(pails)",
@@ -1495,7 +1695,11 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w058"
+     "id": "w058",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "MSG (Mi-won)",
@@ -1513,7 +1717,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w059"
+     "id": "w059",
+     "input": "flag"
     },
     {
      "name": "Potato Starch",
@@ -1531,7 +1736,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w060"
+     "id": "w060",
+     "input": "flag"
     },
     {
      "name": "Black Bean Paste (Chunjang)",
@@ -1549,7 +1755,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w061"
+     "id": "w061",
+     "input": "flag"
     },
     {
      "name": "Chinese soy sauce",
@@ -1567,7 +1774,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w062"
+     "id": "w062",
+     "input": "flag"
     },
     {
      "name": "Miso Soup",
@@ -1595,7 +1803,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w063"
+     "id": "w063",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Rice",
@@ -1623,7 +1835,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w064"
+     "id": "w064",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Sack",
+     "unitKo": "포대"
     },
     {
      "name": "Rice cake",
@@ -1651,7 +1867,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w065"
+     "id": "w065",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Purple rice",
@@ -1679,7 +1899,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w066"
+     "id": "w066",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "White sesame seeds",
@@ -1707,7 +1931,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w067"
+     "id": "w067",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Black sesame seeds",
@@ -1730,7 +1958,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w068"
+     "id": "w068",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Yuzu Soy Sauce",
@@ -1758,7 +1990,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w069"
+     "id": "w069",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Tsuyu",
@@ -1786,7 +2022,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w070"
+     "id": "w070",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Gluten free soy sauce",
@@ -1814,7 +2054,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w071"
+     "id": "w071",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Yuzu Dressing",
@@ -1842,7 +2086,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w072"
+     "id": "w072",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Soy Sauce",
@@ -1870,7 +2118,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w073"
+     "id": "w073",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Dumpling Soy Sauce",
@@ -1898,7 +2150,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w074"
+     "id": "w074",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Cook Soy Sauce",
@@ -1926,7 +2182,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w075"
+     "id": "w075",
+     "input": "number",
+     "target": 0.75,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Canned Tuna",
@@ -1954,7 +2214,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w076"
+     "id": "w076",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Can",
+     "unitKo": "캔"
     },
     {
      "name": "Canned mushroom",
@@ -1972,7 +2236,11 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w077"
+     "id": "w077",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Can",
+     "unitKo": "캔"
     },
     {
      "name": "Mango Syrup",
@@ -2000,7 +2268,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w078"
+     "id": "w078",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Passion fruit Syrup",
@@ -2028,7 +2300,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w079"
+     "id": "w079",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Brown sugar Syrup",
@@ -2056,7 +2332,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w080"
+     "id": "w080",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Honeydew Syrup",
@@ -2084,7 +2364,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w081"
+     "id": "w081",
+     "input": "number",
+     "target": 0.5,
+     "unit": "Container",
+     "unitKo": "통"
     }
    ],
    "id": "ws2"
@@ -2120,7 +2404,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w082"
+     "id": "w082",
+     "input": "number",
+     "target": 5.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Shredded Crab",
@@ -2148,7 +2436,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w083"
+     "id": "w083",
+     "input": "number",
+     "target": 5.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Tamago",
@@ -2171,7 +2463,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w084"
+     "id": "w084",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Seaweed Salad",
@@ -2194,7 +2490,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w085"
+     "id": "w085",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Inari",
@@ -2217,7 +2517,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w086"
+     "id": "w086",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Masago",
@@ -2240,7 +2544,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w087"
+     "id": "w087",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Imitation Crab stick",
@@ -2263,7 +2571,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w088"
+     "id": "w088",
+     "input": "number",
+     "target": 6.0,
+     "unit": "Pack",
+     "unitKo": "팩"
     },
     {
      "name": "Fish Cake",
@@ -2291,7 +2603,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w089"
+     "id": "w089",
+     "input": "number",
+     "target": 2.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     },
     {
      "name": "Portioned Ham & Bacon (For Tteokbokki)",
@@ -2319,7 +2635,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w090"
+     "id": "w090",
+     "input": "number",
+     "target": 15.0,
+     "unit": "Bag",
+     "unitKo": "봉"
     }
    ],
    "id": "ws3"
@@ -2350,7 +2670,11 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w091"
+     "id": "w091",
+     "input": "number",
+     "target": 4.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Mango Purée",
@@ -2373,7 +2697,11 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w092"
+     "id": "w092",
+     "input": "number",
+     "target": 3.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Low Toppings",
@@ -2381,7 +2709,8 @@ window.STORE2_WEEKLY = {
      "note": "Please list any toppings that are running low or need to be ordered.\n부족하거나 주문이 필요한 토핑이 있으면 적어주세요.\ne.g., Mango Popping Boba, Lychee Popping Boba, Rainbow Jelly, etc. / 예: 망고 팝핑보바, 리치 팝핑보바, 레인보우 젤리 등\nIf nothing is needed, write “None.” / 필요한 것이 없으면 “없음”이라고 적어주세요.",
      "options": [],
      "id": "w093",
-     "type": "text"
+     "type": "text",
+     "input": "text"
     },
     {
      "name": "Gochujang Sauce",
@@ -2409,7 +2738,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w094"
+     "id": "w094",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Teriyaki Sauce",
@@ -2437,7 +2770,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w095"
+     "id": "w095",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Sweet & Spicy Sauce",
@@ -2465,7 +2802,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w096"
+     "id": "w096",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Honey Garlic Sauce",
@@ -2493,7 +2834,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w097"
+     "id": "w097",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     }
    ],
    "id": "ws4"
@@ -2519,7 +2864,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w098"
+     "id": "w098",
+     "input": "flag"
     },
     {
      "name": "Windex",
@@ -2537,7 +2883,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w099"
+     "id": "w099",
+     "input": "flag"
     },
     {
      "name": "Febreze",
@@ -2555,7 +2902,8 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w100"
+     "id": "w100",
+     "input": "flag"
     },
     {
      "name": "Dishwashing Detergent",
@@ -2573,7 +2921,11 @@ window.STORE2_WEEKLY = {
        "level": "order"
       }
      ],
-     "id": "w101"
+     "id": "w101",
+     "input": "number",
+     "target": 1.0,
+     "unit": "Container",
+     "unitKo": "통"
     },
     {
      "name": "Toilet Paper",
@@ -2601,7 +2953,11 @@ window.STORE2_WEEKLY = {
        "level": "urgent"
       }
      ],
-     "id": "w102"
+     "id": "w102",
+     "input": "number",
+     "target": 6.0,
+     "unit": "Roll",
+     "unitKo": "롤"
     }
    ],
    "id": "ws5"

@@ -326,3 +326,14 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .pick-grid .role-btn .go{top:50%;transform:translateY(-50%)}
 .pick-store2{--tint:var(--tile-amber)} .pick-store2w{--tint:var(--tile-rose)}
 .pick-grid .due{font-size:.7rem}
+
+/* Store #2 as shortage entry */
+.s2list{margin-top:10px}
+.s2row{grid-template-areas:"name step" "tgt step" "note note"}
+.s2row .s2note{grid-area:note;margin-top:6px;color:var(--muted);font-size:.8rem;line-height:1.35}
+.s2row.missing{box-shadow:inset 0 0 0 2px var(--lv-urgent)}
+.s2textrow{grid-template-columns:1fr;grid-template-areas:"name" "note" "text"}
+.s2textrow .s2text{grid-area:text}
+.step .flagbtn{width:auto;display:block;line-height:1.1;min-width:120px;height:52px;padding:0 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;font-size:.92rem;color:var(--muted)}
+.step .flagbtn[aria-checked="true"]{border-color:var(--short);background:var(--short);color:#fff}
+.s2row.short .name{color:var(--short)}

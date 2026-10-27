@@ -661,7 +661,7 @@ function renderModeHeader() {
     title = T.view === "history" || T.view === "detail" ? KINDS[K].hist : KINDS[K].title;
     line = T.view === "form" ? longDate(current) : T.view === "history" ? "Past inventory checks" : (T.detail ? longDate(String(T.detail.check_date).slice(0, 10)) + " · " + timeOf(T.detail.created_at) : "");
     $("viewTitle").textContent = title; $("dateLine").textContent = line;
-    $("statusPills").innerHTML = T.view === "form" ? `<span class="pill num ${s2Answered() === S2_ITEMS.length ? "" : "mute"}" id="s2Pill">${s2Answered()}/${S2_ITEMS.length} checked</span>` : "";
+    $("statusPills").innerHTML = T.view === "form" ? `<span class="pill num" id="s2Pill"></span>` : "";
     return;
   }
   else if (C.view === "roles") { hb.hidden = false; hb.textContent = "‹ Home"; title = "Closing"; line = longDate(C.date); }
@@ -871,22 +871,30 @@ useKind("store2");
 const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", none: "", request: "REQUEST" };
 function s2Draft() {
   if (!T.draft) { try { T.draft = JSON.parse(store.get(KINDS[K].key) || "null"); } catch (e) {} }
-  if (!T.draft) T.draft = { answers: {}, texts: {}, extra: null, extraText: "", name: "" };
-  if (!T.draft.texts) T.draft.texts = {};
+  if (!T.draft || T.draft.v !== 2) T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: (T.draft && T.draft.name) || "" };
   return T.draft;
 }
 const s2Save = () => store.set(KINDS[K].key, JSON.stringify(T.draft));
-const isText = it => it.type === "text";
-const s2Has = (d, it) => isText(it) ? !!(d.texts[it.id] || "").trim() : d.answers[it.id] !== undefined;
-const s2Answered = () => { const d = s2Draft(); return S2_ITEMS.filter(it => s2Has(d, it)).length; };
+const isText = it => it.input === "text";
+const isFlag = it => it.input === "flag";
+const unitLabel = it => it.unit ? `${it.unit}${it.unitKo ? " (" + it.unitKo + ")" : ""}` : "";
+const s2Step = it => { const t = Number(it.target); return t > 0 && t < 1 ? t : (t % 1 ? 0.5 : 1); };
+const s2Short = (d, it) => Math.min(toNum(d.short[it.id] || 0), Number(it.target) || Infinity);
+const s2Missing = d => S2_ITEMS.filter(it => isText(it) && !(d.texts[it.id] || "").trim());
+const s2ShortCount = d => S2_ITEMS.filter(it => (isFlag(it) && d.flags[it.id]) || (!isText(it) && !isFlag(it) && s2Short(d, it) > 0)).length;
 const statusText = o => (o.status || "").split(" / ")[0] || LEVEL_NAME[o.level] || "";
 const isNone = s => /^(none|no|nothing|n\/a|없음|없어요|없습니다|x|-)[.!]?$/i.test(String(s).trim());
+const fmtQty = (n, it) => `${fmt(n)} ${it.unit || ""}${it.unitKo ? " (" + it.unitKo + ")" : ""}`.trim();
 
 function s2Answers(d) {
-  return S2_ITEMS.filter(it => s2Has(d, it)).map(it => {
-    if (isText(it)) { const t = d.texts[it.id].trim(); return { id: it.id, name: it.name, ko: it.ko, choice: t, status: "", level: isNone(t) ? "ok" : "request", text: true }; }
-    const o = it.options[d.answers[it.id]] || {};
-    return { id: it.id, name: it.name, ko: it.ko, choice: o.label || "", status: o.status || "", level: o.level || "none" };
+  return S2_ITEMS.map(it => {
+    const base = { id: it.id, name: it.name, ko: it.ko };
+    if (isText(it)) { const t = (d.texts[it.id] || "").trim(); return { ...base, choice: t, level: isNone(t) ? "ok" : "request", text: true }; }
+    if (isFlag(it)) { const on = !!d.flags[it.id]; return { ...base, choice: on ? "Need to order / 주문 필요" : "Enough / 충분함", level: on ? "order" : "ok", flag: true }; }
+    const s = s2Short(d, it), t = Number(it.target);
+    const level = s <= 0 ? "ok" : s >= t ? "urgent" : "order";
+    return { ...base, short: s, target: t, unit: it.unit, unitKo: it.unitKo,
+      choice: s <= 0 ? `Full · target ${fmtQty(t, it)}` : s >= t ? `OUT · short ${fmtQty(s, it)} (target ${fmt(t)})` : `Short ${fmtQty(s, it)} (target ${fmt(t)})`, level };
   });
 }
 
@@ -901,19 +909,12 @@ function renderStore2() {
 
 function renderS2Form(el) {
   const d = s2Draft();
-  let n = 0;
   el.innerHTML = `<div class="who"><label for="s2Name">Checked by</label>
       <input id="s2Name" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(d.name)}" enterkeyhint="done"></div>
+    <p class="hint">Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요.</p>
     ${S2.sections.map(sec => `<section class="s2sec"><h2>${esc(sec.en)} <small>${esc(sec.ko)}</small></h2>
       ${sec.note ? `<p class="secnote">${esc(sec.note)}</p>` : ""}
-      <div class="s2items">${sec.items.map(it => { n++; const sel = d.answers[it.id];
-        return `<div class="s2item" id="s2-${esc(it.id)}">
-          <div class="in"><div class="iname">${esc(it.name)}${it.ko ? `<span class="iko">${esc(it.ko)}</span>` : ""}</div><span class="inum">${n}/${S2_ITEMS.length}</span></div>
-          ${it.note ? `<p class="inote">${isText(it) ? "" : "※ "}${esc(it.note).replace(/\n/g, "<br>")}</p>` : ""}
-          ${isText(it) ? `<textarea class="s2text" data-text="${esc(it.id)}" rows="2" placeholder="Write here, or “None / 없음”" aria-label="${esc(it.name)}">${esc(d.texts[it.id] || "")}</textarea>` : `<div class="opts" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `
-            <button type="button" class="opt lv-${esc(o.level)}" role="radio" aria-checked="${sel === k ? "true" : "false"}" data-item="${esc(it.id)}" data-k="${k}">
-              <span class="dot" aria-hidden="true"></span><span>${esc(o.label)}</span><span class="lvl">${esc(statusText(o))}</span></button>`).join("")}
-          </div>`}</div>`; }).join("")}</div></section>`).join("")}
+      <ul class="list s2list">${sec.items.map(it => s2Row(it, d)).join("")}</ul></section>`).join("")}
     ${S2.extra ? `<section class="s2sec s2extra" id="s2-extra"><h2>${esc(S2.extra.title)} <small>${esc(S2.extra.ko)}</small></h2>
       ${S2.extra.help ? `<p class="secnote">${esc(S2.extra.help)}</p>` : ""}
       <div class="s2item" id="s2-extra-q"><div class="iname">${esc(S2.extra.question)}</div>
@@ -924,18 +925,49 @@ function renderS2Form(el) {
     <div class="linkrow"><button type="button" class="hist-btn" data-s2hist>${svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>')}Past checks</button></div>`;
   s2UpdateBar();
 }
+function s2Row(it, d) {
+  const name = `<div class="name">${esc(it.name)}${it.ko ? `<small>${esc(it.ko)}</small>` : ""}</div>`;
+  const note = it.note ? `<div class="s2note">${isText(it) ? "" : "※ "}${esc(it.note).replace(/\n/g, "<br>")}</div>` : "";
+  if (isText(it)) return `<li class="row s2row s2textrow" id="s2-${esc(it.id)}">${name}${note}
+      <textarea class="s2text" data-text="${esc(it.id)}" rows="2" placeholder="Write here, or “None / 없음”" aria-label="${esc(it.name)}">${esc(d.texts[it.id] || "")}</textarea></li>`;
+  if (isFlag(it)) { const on = !!d.flags[it.id];
+    return `<li class="row s2row${on ? " short" : ""}" id="s2-${esc(it.id)}">${name}<div class="tgt">Count not needed</div>${note}
+      <div class="step"><button type="button" class="flagbtn" role="switch" aria-checked="${on}" data-flag="${esc(it.id)}">${on ? "Need to order" : "Enough"}</button></div></li>`; }
+  const v = d.short[it.id] !== undefined ? d.short[it.id] : "0";
+  return `<li class="row s2row${toNum(v) > 0 ? " short" : ""}" id="s2-${esc(it.id)}" data-id="${esc(it.id)}">${name}
+      <div class="tgt num"><span>Target <b>${fmt(it.target)}</b> ${esc(unitLabel(it))}</span></div>${note}
+      <div class="step">
+        <button type="button" data-s2act="minus" aria-label="Less ${esc(it.name)}">−</button>
+        <input type="number" inputmode="decimal" step="any" min="0" value="${esc(v)}" data-short="${esc(it.id)}" aria-label="${esc(it.name)} short by (${esc(it.unit || "")})">
+        <button type="button" data-s2act="plus" aria-label="More ${esc(it.name)}">+</button>
+      </div></li>`;
+}
 function s2UpdateBar() {
-  const done = s2Answered(), total = S2_ITEMS.length;
-  $("s2Submit").textContent = `Submit check (${done}/${total})`;
-  const pill = $("s2Pill"); if (pill) { pill.textContent = `${done}/${total} checked`; pill.classList.toggle("mute", done !== total); }
+  const d = s2Draft(), n = s2ShortCount(d);
+  $("s2Submit").textContent = `Submit check${n ? ` (${n} short)` : ""}`;
+  const pill = $("s2Pill"); if (pill) { pill.textContent = n ? `${n} short` : "All full"; pill.classList.toggle("warn", !!n); pill.classList.remove("mute"); }
+}
+function s2SetShort(row, val) {
+  const it = S2_ITEMS.find(x => x.id === row.dataset.id); if (!it) return;
+  const d = s2Draft(); d.short[it.id] = val; s2Save();
+  const inp = row.querySelector("input"); if (inp.value !== val) inp.value = val;
+  row.classList.toggle("short", toNum(val) > 0); s2UpdateBar();
 }
 
 $("s2Body").addEventListener("click", e => {
-  const o = e.target.closest("[data-item]");
-  if (o) {
-    const d = s2Draft(); d.answers[o.dataset.item] = Number(o.dataset.k); s2Save();
-    o.parentElement.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-checked", b === o ? "true" : "false"));
-    o.closest(".s2item").classList.remove("missing"); s2UpdateBar(); return;
+  const sb = e.target.closest("[data-s2act]");
+  if (sb) {
+    const row = sb.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.id); if (!it) return;
+    const st = s2Step(it), cur = toNum(row.querySelector("input").value), t = Number(it.target);
+    let next = sb.dataset.s2act === "plus" ? cur + st : Math.max(0, cur - st);
+    next = Math.min(Math.round(next * 100) / 100, t);
+    s2SetShort(row, String(next)); return;
+  }
+  const fb = e.target.closest("[data-flag]");
+  if (fb) {
+    const d = s2Draft(), id = fb.dataset.flag; d.flags[id] = !d.flags[id]; s2Save();
+    fb.setAttribute("aria-checked", d.flags[id] ? "true" : "false"); fb.textContent = d.flags[id] ? "Need to order" : "Enough";
+    fb.closest(".row").classList.toggle("short", !!d.flags[id]); s2UpdateBar(); return;
   }
   const x = e.target.closest("[data-extra]");
   if (x) { const d = s2Draft(); d.extra = x.dataset.extra; s2Save(); renderS2Form($("s2Body")); const t = $("s2ExtraText"); if (t) t.focus(); return; }
@@ -951,21 +983,40 @@ $("s2Body").addEventListener("input", e => {
   const d = s2Draft();
   if (e.target.id === "s2Name") { d.name = e.target.value; s2Save(); if (d.name.trim()) e.target.closest(".who").classList.remove("need"); }
   if (e.target.id === "s2ExtraText") { d.extraText = e.target.value; s2Save(); }
+  if (e.target.dataset && e.target.dataset.short) {
+    d.short[e.target.dataset.short] = e.target.value; s2Save();
+    e.target.closest(".row").classList.toggle("short", toNum(e.target.value) > 0); s2UpdateBar();
+  }
   if (e.target.dataset && e.target.dataset.text) {
-    d.texts[e.target.dataset.text] = e.target.value; s2Save(); s2UpdateBar();
-    if (e.target.value.trim()) e.target.closest(".s2item").classList.remove("missing");
+    d.texts[e.target.dataset.text] = e.target.value; s2Save();
+    if (e.target.value.trim()) e.target.closest(".row").classList.remove("missing");
   }
 });
-$("s2Body").addEventListener("keydown", e => { if (e.target.id === "s2Name" && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+$("s2Body").addEventListener("focusin", e => { if (e.target.dataset && e.target.dataset.short) setTimeout(() => { try { e.target.select(); } catch (_) {} }, 0); });
+$("s2Body").addEventListener("focusout", e => {
+  if (!(e.target.dataset && e.target.dataset.short)) return;
+  const row = e.target.closest(".row"), it = S2_ITEMS.find(x => x.id === row.dataset.id);
+  let v = e.target.value.trim() === "" ? 0 : toNum(e.target.value);
+  if (it && v > Number(it.target)) { v = Number(it.target); toast(`Short can't be more than the target (${fmt(it.target)}). It's set to ${fmt(v)} = OUT.`); }
+  s2SetShort(row, String(v));
+});
+$("s2Body").addEventListener("keydown", e => {
+  if (e.target.id === "s2Name" && e.key === "Enter") { e.preventDefault(); e.target.blur(); return; }
+  if (e.key === "Enter" && e.target.dataset && e.target.dataset.short) {
+    e.preventDefault();
+    const inputs = [...$("s2Body").querySelectorAll("input[data-short]")]; const i = inputs.indexOf(e.target);
+    if (inputs[i + 1]) inputs[i + 1].focus(); else e.target.blur();
+  }
+});
 
 $("s2Submit").addEventListener("click", async () => {
   const d = s2Draft();
   if (!d.name.trim()) { const n = $("s2Name"); n.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); n.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
-  const missing = S2_ITEMS.filter(it => !s2Has(d, it));
+  const missing = s2Missing(d);
   if (missing.length) {
     missing.forEach(it => { const c = $("s2-" + it.id); if (c) c.classList.add("missing"); });
-    $("s2-" + missing[0].id).scrollIntoView({ behavior: "smooth", block: "start" });
-    toast(`${missing.length} item${missing.length > 1 ? "s" : ""} not checked yet. 체크 안 한 항목이 있어요.`, true); return;
+    $("s2-" + missing[0].id).scrollIntoView({ behavior: "smooth", block: "center" });
+    toast(`Fill in ${missing.length} written item${missing.length > 1 ? "s" : ""} (write “None” if nothing is needed).`, true); return;
   }
   if (S2.extra && !d.extra) { $("s2-extra-q").classList.add("missing"); $("s2-extra").scrollIntoView({ behavior: "smooth", block: "start" }); toast("Answer the last question (Yes / No).", true); return; }
   if (d.extra === "yes" && !d.extraText.trim()) { const t = $("s2ExtraText"); t.focus(); toast("Write what needs to be ordered, or choose No.", true); return; }
@@ -975,7 +1026,7 @@ $("s2Submit").addEventListener("click", async () => {
     const id = await rpc("save_store_check", { p_pin: S.pin, p_store: K, p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
     T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: d.extra === "yes" ? d.extraText.trim() : null, created_at: new Date().toISOString() };
     T.detailId = id; T.list = null; T.last = T.detail;
-    T.draft = { answers: {}, texts: {}, extra: null, extraText: "", name: d.name }; s2Save();
+    T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: d.name }; s2Save();
     T.view = "detail"; T.justSubmitted = true; location.hash = K + "-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
     toast("Check submitted. 제출 완료!");
   } catch (e) {
@@ -987,7 +1038,7 @@ $("s2Submit").addEventListener("click", async () => {
 
 function s2Groups(answers) {
   const by = l => (answers || []).filter(a => a.level === l);
-  return [["urgent", "Urgent", by("urgent")], ["order", "Order / Request", by("order")], ["request", "Written requests", by("request")], ["low", "Low", by("low")]];
+  return [["urgent", "Out / Urgent", by("urgent")], ["order", "Short / Order", by("order")], ["request", "Written requests", by("request")], ["low", "Low", by("low")]];
 }
 function s2Copy(c) {
   if (!c) return;
@@ -997,7 +1048,7 @@ function s2Copy(c) {
   for (const [, title, list] of s2Groups(c.answers)) {
     if (!list.length) continue;
     parts.push(title.toUpperCase());
-    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.choice}`));
+    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.short != null ? `${fmt(a.short)} ${a.unit || ""}${a.unitKo ? " (" + a.unitKo + ")" : ""}`.trim() : a.flag ? "Need to order" : a.choice}`));
     parts.push("");
   }
   if (c.extra_request) { parts.push("OTHER"); parts.push(c.extra_request); parts.push(""); }
