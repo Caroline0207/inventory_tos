@@ -1739,7 +1739,7 @@ window.STORE1_STATIONS = {
         "items": [
           {
             "id": "s1106",
-            "name": "8-Compartment Sushi Case (boxes)",
+            "name": "8-Compartment Sushi Case (boxes) YW-ST2",
             "ko": "8구 스시케이스 (박스)",
             "note": "",
             "input": "choice",
