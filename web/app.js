@@ -240,15 +240,16 @@ function buildOrderText(dateKey, entries) {
   return { text: `Order - ${d}\n\n${lines.join("\n")}\n\n${total}\n\nThank you!`, count: lines.length };
 }
 let sheetReturnFocus = null;
+function showTextSheet(title, text, meta) {
+  clearTimeout(toastT); $("toast").hidden = true;
+  $("orderTitle").textContent = title; $("orderText").value = text; $("orderMeta").textContent = meta;
+  sheetReturnFocus = document.activeElement;
+  $("orderSheet").hidden = false; $("orderCopy").focus();
+}
 function openOrderSheet(dateKey, entries, note) {
   const { text, count } = buildOrderText(dateKey, entries);
   if (!count) { toast(dateKey === current ? "Nothing is short. Enter shortages first." : "Nothing was short on this day.", true); return; }
-  clearTimeout(toastT); $("toast").hidden = true;
-  $("orderText").value = text;
-  $("orderMeta").textContent = `${count} item${count > 1 ? "s" : ""} · ${longDate(dateKey)}${note ? " · " + note : ""}. You can edit the text before copying.`;
-  sheetReturnFocus = document.activeElement;
-  $("orderSheet").hidden = false;
-  $("orderCopy").focus();
+  showTextSheet("Order text", text, `${count} item${count > 1 ? "s" : ""} · ${longDate(dateKey)}${note ? " · " + note : ""}. You can edit the text before copying.`);
 }
 function closeOrderSheet() {
   $("orderSheet").hidden = true;
@@ -521,6 +522,7 @@ productsBody.addEventListener("submit", async e => {
 function show(view) {
   S.view = view; S.mode = "stock";
   $("view-home").hidden = true; $("view-closing").hidden = true; $("closebar").hidden = true;
+  $("view-store2").hidden = true; $("s2bar").hidden = true;
   document.querySelector(".tabs").hidden = false; document.body.classList.remove("no-bar", "close-bar");
   ["today", "history", "products"].forEach(v => { $("view-" + v).hidden = v !== view; });
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.view === view ? "page" : "false"));
@@ -637,10 +639,12 @@ function roleStatus(r) {
 function setMode(mode) {
   S.mode = mode;
   ["today", "history", "products"].forEach(v => { $("view-" + v).hidden = true; });
-  $("view-home").hidden = mode !== "home"; $("view-closing").hidden = mode !== "closing";
+  $("view-home").hidden = mode !== "home"; $("view-closing").hidden = mode !== "closing"; $("view-store2").hidden = mode !== "store2";
   $("savebar").hidden = true; document.querySelector(".tabs").hidden = true;
-  const bar = mode === "closing" && C.view === "role";
-  $("closebar").hidden = !bar;
+  const cbar = mode === "closing" && C.view === "role";
+  const sbar = mode === "store2" && T.view === "form";
+  const bar = cbar || sbar;
+  $("closebar").hidden = !cbar; $("s2bar").hidden = !sbar;
   document.body.classList.remove("no-save");
   document.body.classList.toggle("close-bar", bar); document.body.classList.toggle("no-bar", !bar);
 }
@@ -648,6 +652,14 @@ function setMode(mode) {
 function renderModeHeader() {
   const hb = $("homeBtn"); let title = "", line = "";
   if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
+  else if (S.mode === "store2") {
+    hb.hidden = false; hb.textContent = T.view === "detail" && !T.justSubmitted ? "‹ Past checks" : "‹ Home";
+    title = T.view === "history" || T.view === "detail" ? "Store #2 Checks" : "Store #2 Inventory";
+    line = T.view === "form" ? longDate(current) : T.view === "history" ? "Past inventory checks" : (T.detail ? longDate(String(T.detail.check_date).slice(0, 10)) + " · " + timeOf(T.detail.created_at) : "");
+    $("viewTitle").textContent = title; $("dateLine").textContent = line;
+    $("statusPills").innerHTML = T.view === "form" ? `<span class="pill num ${s2Answered() === S2_ITEMS.length ? "" : "mute"}" id="s2Pill">${s2Answered()}/${S2_ITEMS.length} checked</span>` : "";
+    return;
+  }
   else if (C.view === "roles") { hb.hidden = false; hb.textContent = "‹ Home"; title = "Closing"; line = longDate(C.date); }
   else if (C.view === "role") { hb.hidden = false; hb.textContent = "‹ Closing"; const r = roleById(C.role); title = r ? r.name : "Closing"; line = (r ? r.ko + " · " : "") + longDate(C.date); }
   else { hb.hidden = false; hb.textContent = "‹ Closing"; title = "Closing History"; line = "Past closing checklists"; }
@@ -662,6 +674,7 @@ function renderHome() {
     const lead = C.rows.get("leader");
     $("homeCloseSub").textContent = lead ? `Final check done · ${lead.checked_by}` : `${n} of ${WORK_ROLES.length} parts submitted tonight`;
   }
+  if (T.last) $("homeS2Sub").textContent = `Last check ${shortDate(String(T.last.check_date).slice(0, 10))} · ${T.last.checked_by}`;
   renderModeHeader();
 }
 
@@ -833,6 +846,222 @@ $("closingBody").addEventListener("submit", async e => {
   renderClosing();
 });
 
+
+/* =========================================================
+   Store #2 regular inventory check
+   ========================================================= */
+const S2 = window.STORE2_CHECK || { sections: [], extra: null };
+const S2_ITEMS = S2.sections.flatMap(s => s.items);
+const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", none: "" };
+const T = { view: "form", draft: null, list: null, detail: null, detailId: null, last: null, notSetUp: false, confirmDelete: false, deleteErr: "" };
+const S2KEY = "s2-draft";
+function s2Draft() {
+  if (!T.draft) { try { T.draft = JSON.parse(store.get(S2KEY) || "null"); } catch (e) {} }
+  if (!T.draft) T.draft = { answers: {}, extra: null, extraText: "", name: "" };
+  return T.draft;
+}
+const s2Save = () => store.set(S2KEY, JSON.stringify(T.draft));
+const s2Answered = () => S2_ITEMS.filter(it => s2Draft().answers[it.id] !== undefined).length;
+const statusText = o => (o.status || "").split(" / ")[0];
+
+function s2Answers(d) {
+  return S2_ITEMS.filter(it => d.answers[it.id] !== undefined).map(it => {
+    const o = it.options[d.answers[it.id]] || {};
+    return { id: it.id, name: it.name, ko: it.ko, choice: o.label || "", status: o.status || "", level: o.level || "none" };
+  });
+}
+
+function renderStore2() {
+  setMode("store2"); renderModeHeader();
+  const el = $("s2Body");
+  if (T.notSetUp) { el.innerHTML = `<div class="banner">Store #2 check isn't set up yet. Run <b>supabase/005_store2_check.sql</b> in Supabase once (see README).</div>`; $("s2bar").hidden = true; return; }
+  if (T.view === "form") return renderS2Form(el);
+  if (T.view === "history") return renderS2History(el);
+  return renderS2Detail(el);
+}
+
+function renderS2Form(el) {
+  const d = s2Draft();
+  let n = 0;
+  el.innerHTML = `<div class="who"><label for="s2Name">Checked by</label>
+      <input id="s2Name" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(d.name)}" enterkeyhint="done"></div>
+    ${S2.sections.map(sec => `<section class="s2sec"><h2>${esc(sec.en)} <small>${esc(sec.ko)}</small></h2>
+      ${sec.note ? `<p class="secnote">${esc(sec.note)}</p>` : ""}
+      <div class="s2items">${sec.items.map(it => { n++; const sel = d.answers[it.id];
+        return `<div class="s2item" id="s2-${esc(it.id)}">
+          <div class="in"><div class="iname">${esc(it.name)}${it.ko ? `<span class="iko">${esc(it.ko)}</span>` : ""}</div><span class="inum">${n}/${S2_ITEMS.length}</span></div>
+          ${it.note ? `<p class="inote">※ ${esc(it.note)}</p>` : ""}
+          <div class="opts" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `
+            <button type="button" class="opt lv-${esc(o.level)}" role="radio" aria-checked="${sel === k ? "true" : "false"}" data-item="${esc(it.id)}" data-k="${k}">
+              <span class="dot" aria-hidden="true"></span><span>${esc(o.label)}</span><span class="lvl">${esc(statusText(o))}</span></button>`).join("")}
+          </div></div>`; }).join("")}</div></section>`).join("")}
+    ${S2.extra ? `<section class="s2sec s2extra" id="s2-extra"><h2>${esc(S2.extra.title)} <small>${esc(S2.extra.ko)}</small></h2>
+      <p class="secnote">${esc(S2.extra.help)}</p>
+      <div class="s2item" id="s2-extra-q"><div class="iname">${esc(S2.extra.question)}</div>
+        <div class="yn"><button type="button" class="opt lv-ok" role="radio" aria-checked="${d.extra === "no"}" data-extra="no"><span class="dot"></span><span>No</span><span></span></button>
+        <button type="button" class="opt lv-order" role="radio" aria-checked="${d.extra === "yes"}" data-extra="yes"><span class="dot"></span><span>Yes</span><span></span></button></div>
+        ${d.extra === "yes" ? `<textarea id="s2ExtraText" placeholder="What needs to be bought or replaced? 예: 마커 2개, 테이프">${esc(d.extraText)}</textarea>` : ""}
+      </div></section>` : ""}
+    <div class="linkrow"><button type="button" class="hist-btn" data-s2hist>${svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>')}Past checks</button></div>`;
+  s2UpdateBar();
+}
+function s2UpdateBar() {
+  const done = s2Answered(), total = S2_ITEMS.length;
+  $("s2Submit").textContent = `Submit check (${done}/${total})`;
+  const pill = $("s2Pill"); if (pill) { pill.textContent = `${done}/${total} checked`; pill.classList.toggle("mute", done !== total); }
+}
+
+$("s2Body").addEventListener("click", e => {
+  const o = e.target.closest("[data-item]");
+  if (o) {
+    const d = s2Draft(); d.answers[o.dataset.item] = Number(o.dataset.k); s2Save();
+    o.parentElement.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-checked", b === o ? "true" : "false"));
+    o.closest(".s2item").classList.remove("missing"); s2UpdateBar(); return;
+  }
+  const x = e.target.closest("[data-extra]");
+  if (x) { const d = s2Draft(); d.extra = x.dataset.extra; s2Save(); renderS2Form($("s2Body")); const t = $("s2ExtraText"); if (t) t.focus(); return; }
+  if (e.target.closest("[data-s2hist]")) { location.hash = "store2-history"; return; }
+  if (e.target.closest("[data-s2new]")) { T.view = "form"; location.hash = "store2"; renderStore2(); window.scrollTo(0, 0); return; }
+  if (e.target.closest("[data-s2home]")) { location.hash = "home"; return; }
+  const c = e.target.closest("[data-s2check]"); if (c) { T.detailId = Number(c.dataset.s2check); T.detail = null; T.view = "detail"; T.confirmDelete = false; renderStore2(); window.scrollTo(0, 0); return; }
+  if (e.target.closest("[data-s2copy]")) { s2Copy(T.detail); return; }
+  if (e.target.closest("[data-s2del]")) { T.confirmDelete = true; T.deleteErr = ""; renderStore2(); return; }
+  if (e.target.closest("[data-s2del-cancel]")) { T.confirmDelete = false; renderStore2(); }
+});
+$("s2Body").addEventListener("input", e => {
+  const d = s2Draft();
+  if (e.target.id === "s2Name") { d.name = e.target.value; s2Save(); if (d.name.trim()) e.target.closest(".who").classList.remove("need"); }
+  if (e.target.id === "s2ExtraText") { d.extraText = e.target.value; s2Save(); }
+});
+$("s2Body").addEventListener("keydown", e => { if (e.target.id === "s2Name" && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+
+$("s2Submit").addEventListener("click", async () => {
+  const d = s2Draft();
+  if (!d.name.trim()) { const n = $("s2Name"); n.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); n.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
+  const missing = S2_ITEMS.filter(it => d.answers[it.id] === undefined);
+  if (missing.length) {
+    missing.forEach(it => { const c = $("s2-" + it.id); if (c) c.classList.add("missing"); });
+    $("s2-" + missing[0].id).scrollIntoView({ behavior: "smooth", block: "start" });
+    toast(`${missing.length} item${missing.length > 1 ? "s" : ""} not checked yet. 체크 안 한 항목이 있어요.`, true); return;
+  }
+  if (S2.extra && !d.extra) { $("s2-extra-q").classList.add("missing"); $("s2-extra").scrollIntoView({ behavior: "smooth", block: "start" }); toast("Answer the last question (Yes / No).", true); return; }
+  if (d.extra === "yes" && !d.extraText.trim()) { const t = $("s2ExtraText"); t.focus(); toast("Write what needs to be ordered, or choose No.", true); return; }
+  const btn = $("s2Submit"); btn.disabled = true; btn.textContent = "Submitting…";
+  const answers = s2Answers(d);
+  try {
+    const id = await rpc("save_store_check", { p_pin: S.pin, p_store: "store2", p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
+    T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: d.extra === "yes" ? d.extraText.trim() : null, created_at: new Date().toISOString() };
+    T.detailId = id; T.list = null; T.last = T.detail;
+    T.draft = { answers: {}, extra: null, extraText: "", name: d.name }; s2Save();
+    T.view = "detail"; T.justSubmitted = true; location.hash = "store2-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
+    toast("Check submitted. 제출 완료!");
+  } catch (e) {
+    if (handlePinError(e)) return;
+    if (missingFn(e, "save_store_check")) { T.notSetUp = true; renderStore2(); }
+    else toast(e.code === "network" ? "No internet. Your answers are kept on this device. Try again when online." : "Couldn't submit. Your answers are kept. Try again.", true);
+  } finally { btn.disabled = false; s2UpdateBar(); }
+});
+
+function s2Groups(answers) {
+  const by = l => (answers || []).filter(a => a.level === l);
+  return [["urgent", "Urgent", by("urgent")], ["order", "Order / Request", by("order")], ["low", "Low", by("low")]];
+}
+function s2Copy(c) {
+  if (!c) return;
+  const day = String(c.check_date).slice(0, 10);
+  const d = parseKey(day).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  let n = 0; const parts = [`Store #2 Order - ${d}`, ""];
+  for (const [, title, list] of s2Groups(c.answers)) {
+    if (!list.length) continue;
+    parts.push(title.toUpperCase());
+    list.forEach(a => parts.push(`${++n}. ${a.name}${a.ko ? " / " + a.ko : ""}`, `   → ${a.choice}`));
+    parts.push("");
+  }
+  if (c.extra_request) { parts.push("OTHER"); parts.push(c.extra_request); parts.push(""); }
+  if (!n && !c.extra_request) { toast("Nothing needs ordering in this check.", true); return; }
+  parts.push(`Total: ${n} item${n === 1 ? "" : "s"}${c.extra_request ? " + other request" : ""}`, "", "Thank you!");
+  showTextSheet("Order list", parts.join("\n"), `${n} item${n === 1 ? "" : "s"} · ${longDate(day)} · checked by ${c.checked_by}. You can edit the text before copying.`);
+}
+
+async function renderS2History(el) {
+  try {
+    if (!T.list) {
+      el.innerHTML = `<div class="empty">Loading…</div>`;
+      T.list = await rpc("list_store_checks", { p_pin: S.pin, p_store: "store2", p_limit: 200 }) || [];
+      if (T.view !== "history") return;
+    }
+    if (!T.list.length) { el.innerHTML = `<div class="empty"><b>No checks yet</b>Submitted Store #2 checks will show up here.</div><div class="linkrow"><button type="button" class="hist-btn" data-s2new>Start a check</button></div>`; return; }
+    el.innerHTML = `<div class="sectitle"><h2>All checks</h2><span class="num">${T.list.length}</span></div>
+      <ul class="list">${T.list.map(c => { const k = String(c.check_date).slice(0, 10);
+        return `<li><button class="daybtn" type="button" data-s2check="${c.id}"><span><span class="d">${esc(longDate(k))}</span><br>
+          <span class="s">${esc(weekday(k))} · ${esc(timeOf(c.created_at))} · ${esc(c.checked_by)}</span></span>
+          <span class="chips">${c.urgent_count ? `<span class="chip lv-urgent">${c.urgent_count}</span>` : ""}${c.order_count ? `<span class="chip lv-order">${c.order_count}</span>` : ""}${c.low_count ? `<span class="chip lv-low">${c.low_count}</span>` : ""}${!c.urgent_count && !c.order_count && !c.low_count ? `<span class="chip lv-ok">All safe</span>` : ""}</span></button></li>`; }).join("")}</ul>
+      <p class="hint">Red = urgent, orange = order, yellow = low.</p>`;
+  } catch (e) {
+    if (handlePinError(e)) return;
+    if (missingFn(e, "store_check")) { T.notSetUp = true; renderStore2(); return; }
+    el.innerHTML = `<div class="empty"><b>Couldn't load</b>${esc(errorText(e, "load checks"))}</div>`;
+  }
+}
+
+async function renderS2Detail(el) {
+  try {
+    if (!T.detail || T.detail.id !== T.detailId) {
+      el.innerHTML = `<div class="empty">Loading…</div>`;
+      const rows = await rpc("get_store_check", { p_pin: S.pin, p_id: T.detailId }) || [];
+      T.detail = rows[0] || null; renderModeHeader();
+      if (!T.detail) { el.innerHTML = `<div class="empty">This check was deleted.</div>`; return; }
+    }
+    const c = T.detail, groups = s2Groups(c.answers);
+    const cnt = Object.fromEntries(groups.map(([l, , list]) => [l, list.length]));
+    el.innerHTML = `<div class="sumhead">
+        <span class="sumtitle">${T.justSubmitted ? "Submitted ✓" : "Checked by " + esc(c.checked_by)}</span>
+        <span class="tm">${esc(longDate(String(c.check_date).slice(0, 10)))} · ${esc(timeOf(c.created_at))}${T.justSubmitted ? " · " + esc(c.checked_by) : ""}</span>
+        <span class="chips"><span class="chip lv-urgent">${cnt.urgent} urgent</span><span class="chip lv-order">${cnt.order} order</span><span class="chip lv-low">${cnt.low} low</span></span>
+      </div>
+      ${groups.map(([lv, title, list]) => list.length ? `<div class="sumgroup"><h3><span class="chip lv-${lv}">${esc(title)}</span></h3>
+        <ul class="sumlist">${list.map(a => `<li class="lv-${lv}"><span class="dot"></span><span><span class="n">${esc(a.name)}${a.ko ? ` <span class="k">${esc(a.ko)}</span>` : ""}</span><span class="c">${esc(a.choice)}</span></span></li>`).join("")}</ul></div>` : "").join("")}
+      ${c.extra_request ? `<div class="sumgroup"><h3><span class="chip lv-order">Other request</span></h3><ul class="sumlist"><li class="lv-order"><span class="dot"></span><span class="n" style="white-space:pre-wrap">${esc(c.extra_request)}</span></li></ul></div>` : ""}
+      ${!cnt.urgent && !cnt.order && !cnt.low && !c.extra_request ? `<div class="sumgroup"><span class="chip lv-ok">Everything is safe</span></div>` : ""}
+      <div class="actrow">
+        ${cnt.urgent || cnt.order || cnt.low || c.extra_request ? `<button type="button" class="primary-wide" data-s2copy>Copy order list</button>` : ""}
+        ${T.justSubmitted ? `<button type="button" class="btn" data-s2home>Back to Home</button>` : ""}
+      </div>
+      <details class="allitems"><summary>All ${(c.answers || []).length} items</summary>
+        <ul class="sumlist">${(c.answers || []).map(a => `<li class="lv-${esc(a.level)}"><span class="dot"></span><span><span class="n">${esc(a.name)}</span><span class="c">${esc(a.choice)}</span></span></li>`).join("")}</ul></details>
+      ${T.justSubmitted ? "" : T.confirmDelete ? `<form class="danger-box" id="s2DeleteForm" novalidate>
+          <p><b>Delete this check?</b><br>This can't be undone.</p>
+          ${S.adminPin ? "" : `<label for="s2DelPin">Manager PIN</label><input id="s2DelPin" type="password" inputmode="numeric" autocomplete="off">`}
+          ${T.deleteErr ? `<p class="err-msg">${esc(T.deleteErr)}</p>` : ""}
+          <div class="actions"><button class="btn danger" type="submit">Delete</button><button class="btn" type="button" data-s2del-cancel>Cancel</button></div></form>`
+        : `<button class="btn delete-day" type="button" data-s2del>Delete this check</button>`}`;
+  } catch (e) {
+    if (handlePinError(e)) return;
+    el.innerHTML = `<div class="empty"><b>Couldn't load</b>${esc(errorText(e, "load this check"))}</div>`;
+  }
+}
+$("s2Body").addEventListener("submit", async e => {
+  if (e.target.id !== "s2DeleteForm") return;
+  e.preventDefault();
+  const pin = S.adminPin || ($("s2DelPin") ? $("s2DelPin").value.trim() : "");
+  if (!pin) { T.deleteErr = "Enter the manager PIN."; return renderStore2(); }
+  try {
+    await rpc("delete_store_check", { p_pin: pin, p_id: T.detailId });
+    if (!S.adminPin) { S.adminPin = pin; store.set("inv-admin-pin", pin, true); }
+    toast("Check deleted."); T.list = null; T.detail = null; T.confirmDelete = false; T.view = "history";
+    if (T.last && T.last.id === T.detailId) T.last = null;
+  } catch (err) {
+    if (err.code === "invalid_pin") { if (S.adminPin) { S.adminPin = ""; store.del("inv-admin-pin", true); } T.deleteErr = "Wrong manager PIN."; }
+    else T.deleteErr = errorText(err, "delete this check");
+  }
+  renderStore2();
+});
+async function loadS2Last() {
+  try { const r = await rpc("list_store_checks", { p_pin: S.pin, p_store: "store2", p_limit: 1 }) || []; T.last = r[0] || null; T.notSetUp = false; }
+  catch (e) { if (missingFn(e, "store_check")) T.notSetUp = true; }
+  if (S.mode === "home") renderHome();
+}
+
 /* ---------- routing (#home, #stock, #closing, #closing-server, #closing-history) ---------- */
 function route() {
   const h = (location.hash || "").replace("#", "");
@@ -851,12 +1080,21 @@ function route() {
     });
     return;
   }
+  if (h.startsWith("store2")) {
+    if (h === "store2-history") { if (T.view !== "detail" || !T.justSubmitted) { T.view = "history"; T.list = null; } }
+    else { T.view = "form"; T.justSubmitted = false; }
+    renderStore2(); window.scrollTo(0, 0);
+    return;
+  }
+  T.justSubmitted = false;
   setMode("home"); renderHome(); window.scrollTo(0, 0);
-  loadClosingDay(true);
+  loadClosingDay(true); loadS2Last();
 }
 window.addEventListener("hashchange", route);
 $("homeBtn").addEventListener("click", () => {
-  if (S.mode === "closing" && C.view !== "roles") location.hash = "closing"; else location.hash = "home";
+  if (S.mode === "closing" && C.view !== "roles") location.hash = "closing";
+  else if (S.mode === "store2" && T.view === "detail" && !T.justSubmitted) { T.view = "history"; renderStore2(); window.scrollTo(0, 0); }
+  else location.hash = "home";
 });
 $("view-home").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) location.hash = b.dataset.go; });
 $("signOutHome").addEventListener("click", () => { S.adminPin = ""; store.del("inv-admin-pin", true); lock(""); });

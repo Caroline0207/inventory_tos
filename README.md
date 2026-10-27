@@ -78,6 +78,13 @@ supabase/schema.sql  ← 데이터베이스 구조 + 초기 상품 34개 + PIN �
 5. 새벽 4시 전에 제출한 마감은 전날 마감으로 기록됩니다.
 6. 체크리스트 항목을 바꾸려면 `web/closing-tasks.js`를 수정하세요. (2026년 10월 9일 이전에 설치했다면 `supabase/004_closing.sql`을 SQL Editor에서 한 번 실행해야 마감 기능이 작동합니다.)
 
+### 2호점 정기 인벤토리 (Store #2 Inventory)
+1. **Store #2 Inventory** → 이름을 적고, 구역별로 각 품목의 상태를 하나씩 누릅니다. (🟢 SAFE · 🟡 LOW · 🔴 ORDER/REQUEST · 🚨 URGENT)
+2. 마지막 질문(기타 물품 구매 요청)에 Yes/No를 고르고, Yes면 필요한 물품을 적습니다.
+3. **Submit check**를 누르면 Urgent / Order / Low 품목만 모아서 보여주고, **Copy order list**로 주문 문자를 복사할 수 있습니다.
+4. **Past checks**에서 지난 체크를 모두 볼 수 있습니다. 하루에 여러 번 제출해도 각각 따로 저장됩니다.
+5. 품목을 바꾸려면 `web/store2-check.js`를 수정하세요. (2026년 10월 27일 이전에 설치했다면 `supabase/005_store2_check.sql`을 SQL Editor에서 한 번 실행해야 작동합니다.)
+
 ### 재고 (Stock)
 
 1. 링크를 엽니다. 오늘 날짜가 자동으로 나옵니다.

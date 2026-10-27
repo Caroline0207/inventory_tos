@@ -58,12 +58,22 @@
           <span class="ts" id="homeCloseSub">Closing checklist</span>
           <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
         </button>
+        <button type="button" class="tile home-card store2" data-go="store2">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M8.5 10l1.5 1.5 3-3"/><path d="M8.5 16h7"/></svg></span>
+          <span class="tt">Store #2 Inventory</span>
+          <span class="ts" id="homeS2Sub">Regular stock check</span>
+          <span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+        </button>
       </div>
       <div class="foot"><button type="button" id="signOutHome">Sign out of this device</button></div>
     </section>
 
     <section id="view-closing" hidden>
       <div id="closingBody"></div>
+    </section>
+
+    <section id="view-store2" hidden>
+      <div id="s2Body"></div>
     </section>
 
     <section id="view-today">
@@ -100,6 +110,10 @@
     <div class="savebar-in one"><button id="closeSubmit" type="button" class="primary-wide">Submit</button></div>
   </div>
 
+  <div class="savebar" id="s2bar" hidden>
+    <div class="savebar-in one"><button id="s2Submit" type="button" class="primary-wide">Submit check</button></div>
+  </div>
+
   <nav class="tabs" aria-label="Pages">
     <button type="button" data-view="today" aria-current="page">Daily Inventory</button>
     <button type="button" data-view="history">History</button>
@@ -124,6 +138,7 @@
 
 <script src="config.js?v=__BUILD__"></script>
 <script src="closing-tasks.js?v=__BUILD__"></script>
+<script src="store2-check.js?v=__BUILD__"></script>
 <script src="app.js?v=__BUILD__"></script>
 </body>
 </html>
