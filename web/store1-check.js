@@ -2504,6 +2504,61 @@ window.STORE1_STATIONS = {
             ]
           }
         ]
+      },
+      {
+        "en": "Packaging",
+        "ko": "포장용기",
+        "note": "",
+        "items": [
+          {
+            "id": "s1177",
+            "name": "Bibimbap container",
+            "ko": "비빔밥 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1178",
+            "name": "Poke container",
+            "ko": "포케 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          }
+        ]
       }
     ],
     "extra": {
