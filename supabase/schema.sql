@@ -326,7 +326,8 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------
--- Store #2 regular inventory check. Every submission is its own row
+-- Store #2 inventory checks: 'store2' = regular check, 'store2w' = weekly (Saturday) check.
+-- Every submission is its own row
 -- (checks can happen more than once a day).
 -- answers = [{"id":"i01","name":"Unagi Sauce","ko":"…","choice":"1통 이상 / 1+ Container","status":"SAFE","level":"ok"}, ...]
 -- ---------------------------------------------------------------------
@@ -351,12 +352,12 @@ returns bigint language plpgsql security definer set search_path = '' as $$
 declare new_id bigint; u integer; o integer; l integer;
 begin
   perform private.require_pin(p_pin, 'staff');
-  if p_store not in ('store2') then raise exception 'invalid_store'; end if;
+  if p_store not in ('store2', 'store2w') then raise exception 'invalid_store'; end if;
   if p_date is null or p_date < current_date - 7 or p_date > current_date + 1 then raise exception 'invalid_date'; end if;
   if p_name is null or length(trim(p_name)) = 0 then raise exception 'name_required'; end if;
   if jsonb_typeof(p_answers) <> 'array' then raise exception 'invalid_items'; end if;
   select count(*) filter (where x->>'level' = 'urgent'),
-         count(*) filter (where x->>'level' = 'order'),
+         count(*) filter (where x->>'level' in ('order', 'request')),
          count(*) filter (where x->>'level' = 'low')
     into u, o, l from jsonb_array_elements(p_answers) x;
   insert into public.store_checks (store, check_date, checked_by, answers, extra_request, urgent_count, order_count, low_count)

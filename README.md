@@ -85,6 +85,13 @@ supabase/schema.sql  ← 데이터베이스 구조 + 초기 상품 34개 + PIN �
 4. **Past checks**에서 지난 체크를 모두 볼 수 있습니다. 하루에 여러 번 제출해도 각각 따로 저장됩니다.
 5. 품목을 바꾸려면 `web/store2-check.js`를 수정하세요. (2026년 10월 27일 이전에 설치했다면 `supabase/005_store2_check.sql`을 SQL Editor에서 한 번 실행해야 작동합니다.)
 
+### 2호점 주간 인벤토리 (Store #2 Weekly · 토요일)
+1. **Store #2 Weekly** → 이름을 적고 102개 품목의 상태를 고릅니다.
+2. 장갑 사이즈, 부족한 토핑처럼 **직접 적는 항목**은 글로 적고, 필요 없으면 "None" 또는 "없음"이라고 적습니다.
+3. 제출하면 Urgent / Order / Written requests / Low로 모아서 보여주고, **Copy order list**로 복사할 수 있습니다.
+4. 토요일인데 그 주 체크가 아직 없으면 첫 화면 카드에 **Due today**가 표시됩니다.
+5. 품목을 바꾸려면 `web/store2-weekly.js`를 수정하세요. (2026년 10월 27일 이전에 설치했다면 `supabase/006_store2_weekly.sql`을 SQL Editor에서 한 번 실행해야 작동합니다.)
+
 ### 재고 (Stock)
 
 1. 링크를 엽니다. 오늘 날짜가 자동으로 나옵니다.

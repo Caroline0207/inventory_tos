@@ -654,7 +654,7 @@ function renderModeHeader() {
   if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
   else if (S.mode === "store2") {
     hb.hidden = false; hb.textContent = T.view === "detail" && !T.justSubmitted ? "‹ Past checks" : "‹ Home";
-    title = T.view === "history" || T.view === "detail" ? "Store #2 Checks" : "Store #2 Inventory";
+    title = T.view === "history" || T.view === "detail" ? KINDS[K].hist : KINDS[K].title;
     line = T.view === "form" ? longDate(current) : T.view === "history" ? "Past inventory checks" : (T.detail ? longDate(String(T.detail.check_date).slice(0, 10)) + " · " + timeOf(T.detail.created_at) : "");
     $("viewTitle").textContent = title; $("dateLine").textContent = line;
     $("statusPills").innerHTML = T.view === "form" ? `<span class="pill num ${s2Answered() === S2_ITEMS.length ? "" : "mute"}" id="s2Pill">${s2Answered()}/${S2_ITEMS.length} checked</span>` : "";
@@ -674,7 +674,9 @@ function renderHome() {
     const lead = C.rows.get("leader");
     $("homeCloseSub").textContent = lead ? `Final check done · ${lead.checked_by}` : `${n} of ${WORK_ROLES.length} parts submitted tonight`;
   }
-  if (T.last) $("homeS2Sub").textContent = `Last check ${shortDate(String(T.last.check_date).slice(0, 10))} · ${T.last.checked_by}`;
+  for (const k in KINDS) { const L = TS[k].last; if (L) $(KINDS[k].sub).textContent = `Last check ${shortDate(String(L.check_date).slice(0, 10))} · ${L.checked_by}`; }
+  const due = weeklyDue(); $("homeS2wDue").hidden = !due;
+  if (due) $("homeS2wSub").textContent = "Due today · Saturday check";
   renderModeHeader();
 }
 
@@ -850,22 +852,33 @@ $("closingBody").addEventListener("submit", async e => {
 /* =========================================================
    Store #2 regular inventory check
    ========================================================= */
-const S2 = window.STORE2_CHECK || { sections: [], extra: null };
-const S2_ITEMS = S2.sections.flatMap(s => s.items);
-const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", none: "" };
-const T = { view: "form", draft: null, list: null, detail: null, detailId: null, last: null, notSetUp: false, confirmDelete: false, deleteErr: "" };
-const S2KEY = "s2-draft";
+/* Two Store #2 forms share these screens: the regular check and the weekly (Saturday) check. */
+const KINDS = {
+  store2:  { cfg: window.STORE2_CHECK,  title: "Store #2 Inventory", hist: "Store #2 Checks",        order: "Store #2 Order",        sql: "005_store2_check.sql",  sub: "homeS2Sub",  key: "s2-draft" },
+  store2w: { cfg: window.STORE2_WEEKLY, title: "Store #2 Weekly",    hist: "Store #2 Weekly Checks", order: "Store #2 Weekly Order", sql: "006_store2_weekly.sql", sub: "homeS2wSub", key: "s2w-draft" }
+};
+const TS = {};
+for (const k in KINDS) TS[k] = { view: "form", draft: null, list: null, detail: null, detailId: null, last: null, notSetUp: false, confirmDelete: false, deleteErr: "" };
+let K = "store2", S2, S2_ITEMS, T;
+function useKind(k) { K = k; S2 = KINDS[k].cfg || { sections: [], extra: null }; S2_ITEMS = S2.sections.flatMap(s => s.items); T = TS[k]; }
+useKind("store2");
+const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", none: "", request: "REQUEST" };
 function s2Draft() {
-  if (!T.draft) { try { T.draft = JSON.parse(store.get(S2KEY) || "null"); } catch (e) {} }
-  if (!T.draft) T.draft = { answers: {}, extra: null, extraText: "", name: "" };
+  if (!T.draft) { try { T.draft = JSON.parse(store.get(KINDS[K].key) || "null"); } catch (e) {} }
+  if (!T.draft) T.draft = { answers: {}, texts: {}, extra: null, extraText: "", name: "" };
+  if (!T.draft.texts) T.draft.texts = {};
   return T.draft;
 }
-const s2Save = () => store.set(S2KEY, JSON.stringify(T.draft));
-const s2Answered = () => S2_ITEMS.filter(it => s2Draft().answers[it.id] !== undefined).length;
-const statusText = o => (o.status || "").split(" / ")[0];
+const s2Save = () => store.set(KINDS[K].key, JSON.stringify(T.draft));
+const isText = it => it.type === "text";
+const s2Has = (d, it) => isText(it) ? !!(d.texts[it.id] || "").trim() : d.answers[it.id] !== undefined;
+const s2Answered = () => { const d = s2Draft(); return S2_ITEMS.filter(it => s2Has(d, it)).length; };
+const statusText = o => (o.status || "").split(" / ")[0] || LEVEL_NAME[o.level] || "";
+const isNone = s => /^(none|no|nothing|n\/a|없음|없어요|없습니다|x|-)[.!]?$/i.test(String(s).trim());
 
 function s2Answers(d) {
-  return S2_ITEMS.filter(it => d.answers[it.id] !== undefined).map(it => {
+  return S2_ITEMS.filter(it => s2Has(d, it)).map(it => {
+    if (isText(it)) { const t = d.texts[it.id].trim(); return { id: it.id, name: it.name, ko: it.ko, choice: t, status: "", level: isNone(t) ? "ok" : "request", text: true }; }
     const o = it.options[d.answers[it.id]] || {};
     return { id: it.id, name: it.name, ko: it.ko, choice: o.label || "", status: o.status || "", level: o.level || "none" };
   });
@@ -874,7 +887,7 @@ function s2Answers(d) {
 function renderStore2() {
   setMode("store2"); renderModeHeader();
   const el = $("s2Body");
-  if (T.notSetUp) { el.innerHTML = `<div class="banner">Store #2 check isn't set up yet. Run <b>supabase/005_store2_check.sql</b> in Supabase once (see README).</div>`; $("s2bar").hidden = true; return; }
+  if (T.notSetUp) { el.innerHTML = `<div class="banner">This check isn't set up yet. Run <b>supabase/${esc(KINDS[K].sql)}</b> in Supabase once (see README).</div>`; $("s2bar").hidden = true; return; }
   if (T.view === "form") return renderS2Form(el);
   if (T.view === "history") return renderS2History(el);
   return renderS2Detail(el);
@@ -890,13 +903,13 @@ function renderS2Form(el) {
       <div class="s2items">${sec.items.map(it => { n++; const sel = d.answers[it.id];
         return `<div class="s2item" id="s2-${esc(it.id)}">
           <div class="in"><div class="iname">${esc(it.name)}${it.ko ? `<span class="iko">${esc(it.ko)}</span>` : ""}</div><span class="inum">${n}/${S2_ITEMS.length}</span></div>
-          ${it.note ? `<p class="inote">※ ${esc(it.note)}</p>` : ""}
-          <div class="opts" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `
+          ${it.note ? `<p class="inote">${isText(it) ? "" : "※ "}${esc(it.note).replace(/\n/g, "<br>")}</p>` : ""}
+          ${isText(it) ? `<textarea class="s2text" data-text="${esc(it.id)}" rows="2" placeholder="Write here, or “None / 없음”" aria-label="${esc(it.name)}">${esc(d.texts[it.id] || "")}</textarea>` : `<div class="opts" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `
             <button type="button" class="opt lv-${esc(o.level)}" role="radio" aria-checked="${sel === k ? "true" : "false"}" data-item="${esc(it.id)}" data-k="${k}">
               <span class="dot" aria-hidden="true"></span><span>${esc(o.label)}</span><span class="lvl">${esc(statusText(o))}</span></button>`).join("")}
-          </div></div>`; }).join("")}</div></section>`).join("")}
+          </div>`}</div>`; }).join("")}</div></section>`).join("")}
     ${S2.extra ? `<section class="s2sec s2extra" id="s2-extra"><h2>${esc(S2.extra.title)} <small>${esc(S2.extra.ko)}</small></h2>
-      <p class="secnote">${esc(S2.extra.help)}</p>
+      ${S2.extra.help ? `<p class="secnote">${esc(S2.extra.help)}</p>` : ""}
       <div class="s2item" id="s2-extra-q"><div class="iname">${esc(S2.extra.question)}</div>
         <div class="yn"><button type="button" class="opt lv-ok" role="radio" aria-checked="${d.extra === "no"}" data-extra="no"><span class="dot"></span><span>No</span><span></span></button>
         <button type="button" class="opt lv-order" role="radio" aria-checked="${d.extra === "yes"}" data-extra="yes"><span class="dot"></span><span>Yes</span><span></span></button></div>
@@ -920,8 +933,8 @@ $("s2Body").addEventListener("click", e => {
   }
   const x = e.target.closest("[data-extra]");
   if (x) { const d = s2Draft(); d.extra = x.dataset.extra; s2Save(); renderS2Form($("s2Body")); const t = $("s2ExtraText"); if (t) t.focus(); return; }
-  if (e.target.closest("[data-s2hist]")) { location.hash = "store2-history"; return; }
-  if (e.target.closest("[data-s2new]")) { T.view = "form"; location.hash = "store2"; renderStore2(); window.scrollTo(0, 0); return; }
+  if (e.target.closest("[data-s2hist]")) { location.hash = K + "-history"; return; }
+  if (e.target.closest("[data-s2new]")) { T.view = "form"; location.hash = K; renderStore2(); window.scrollTo(0, 0); return; }
   if (e.target.closest("[data-s2home]")) { location.hash = "home"; return; }
   const c = e.target.closest("[data-s2check]"); if (c) { T.detailId = Number(c.dataset.s2check); T.detail = null; T.view = "detail"; T.confirmDelete = false; renderStore2(); window.scrollTo(0, 0); return; }
   if (e.target.closest("[data-s2copy]")) { s2Copy(T.detail); return; }
@@ -932,13 +945,17 @@ $("s2Body").addEventListener("input", e => {
   const d = s2Draft();
   if (e.target.id === "s2Name") { d.name = e.target.value; s2Save(); if (d.name.trim()) e.target.closest(".who").classList.remove("need"); }
   if (e.target.id === "s2ExtraText") { d.extraText = e.target.value; s2Save(); }
+  if (e.target.dataset && e.target.dataset.text) {
+    d.texts[e.target.dataset.text] = e.target.value; s2Save(); s2UpdateBar();
+    if (e.target.value.trim()) e.target.closest(".s2item").classList.remove("missing");
+  }
 });
 $("s2Body").addEventListener("keydown", e => { if (e.target.id === "s2Name" && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
 
 $("s2Submit").addEventListener("click", async () => {
   const d = s2Draft();
   if (!d.name.trim()) { const n = $("s2Name"); n.closest(".who").classList.add("need"); window.scrollTo({ top: 0, behavior: "smooth" }); n.focus(); toast("Enter your name first. 이름을 먼저 적어주세요.", true); return; }
-  const missing = S2_ITEMS.filter(it => d.answers[it.id] === undefined);
+  const missing = S2_ITEMS.filter(it => !s2Has(d, it));
   if (missing.length) {
     missing.forEach(it => { const c = $("s2-" + it.id); if (c) c.classList.add("missing"); });
     $("s2-" + missing[0].id).scrollIntoView({ behavior: "smooth", block: "start" });
@@ -949,28 +966,28 @@ $("s2Submit").addEventListener("click", async () => {
   const btn = $("s2Submit"); btn.disabled = true; btn.textContent = "Submitting…";
   const answers = s2Answers(d);
   try {
-    const id = await rpc("save_store_check", { p_pin: S.pin, p_store: "store2", p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
+    const id = await rpc("save_store_check", { p_pin: S.pin, p_store: K, p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
     T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: d.extra === "yes" ? d.extraText.trim() : null, created_at: new Date().toISOString() };
     T.detailId = id; T.list = null; T.last = T.detail;
-    T.draft = { answers: {}, extra: null, extraText: "", name: d.name }; s2Save();
-    T.view = "detail"; T.justSubmitted = true; location.hash = "store2-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
+    T.draft = { answers: {}, texts: {}, extra: null, extraText: "", name: d.name }; s2Save();
+    T.view = "detail"; T.justSubmitted = true; location.hash = K + "-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
     toast("Check submitted. 제출 완료!");
   } catch (e) {
     if (handlePinError(e)) return;
-    if (missingFn(e, "save_store_check")) { T.notSetUp = true; renderStore2(); }
+    if (missingFn(e, "save_store_check") || /invalid_store/.test(e.message)) { T.notSetUp = true; renderStore2(); }
     else toast(e.code === "network" ? "No internet. Your answers are kept on this device. Try again when online." : "Couldn't submit. Your answers are kept. Try again.", true);
   } finally { btn.disabled = false; s2UpdateBar(); }
 });
 
 function s2Groups(answers) {
   const by = l => (answers || []).filter(a => a.level === l);
-  return [["urgent", "Urgent", by("urgent")], ["order", "Order / Request", by("order")], ["low", "Low", by("low")]];
+  return [["urgent", "Urgent", by("urgent")], ["order", "Order / Request", by("order")], ["request", "Written requests", by("request")], ["low", "Low", by("low")]];
 }
 function s2Copy(c) {
   if (!c) return;
   const day = String(c.check_date).slice(0, 10);
   const d = parseKey(day).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  let n = 0; const parts = [`Store #2 Order - ${d}`, ""];
+  let n = 0; const parts = [`${KINDS[K].order} - ${d}`, ""];
   for (const [, title, list] of s2Groups(c.answers)) {
     if (!list.length) continue;
     parts.push(title.toUpperCase());
@@ -987,10 +1004,10 @@ async function renderS2History(el) {
   try {
     if (!T.list) {
       el.innerHTML = `<div class="empty">Loading…</div>`;
-      T.list = await rpc("list_store_checks", { p_pin: S.pin, p_store: "store2", p_limit: 200 }) || [];
+      T.list = await rpc("list_store_checks", { p_pin: S.pin, p_store: K, p_limit: 200 }) || [];
       if (T.view !== "history") return;
     }
-    if (!T.list.length) { el.innerHTML = `<div class="empty"><b>No checks yet</b>Submitted Store #2 checks will show up here.</div><div class="linkrow"><button type="button" class="hist-btn" data-s2new>Start a check</button></div>`; return; }
+    if (!T.list.length) { el.innerHTML = `<div class="empty"><b>No checks yet</b>Submitted checks will show up here.</div><div class="linkrow"><button type="button" class="hist-btn" data-s2new>Start a check</button></div>`; return; }
     el.innerHTML = `<div class="sectitle"><h2>All checks</h2><span class="num">${T.list.length}</span></div>
       <ul class="list">${T.list.map(c => { const k = String(c.check_date).slice(0, 10);
         return `<li><button class="daybtn" type="button" data-s2check="${c.id}"><span><span class="d">${esc(longDate(k))}</span><br>
@@ -1014,17 +1031,18 @@ async function renderS2Detail(el) {
     }
     const c = T.detail, groups = s2Groups(c.answers);
     const cnt = Object.fromEntries(groups.map(([l, , list]) => [l, list.length]));
+    const any = cnt.urgent || cnt.order || cnt.request || cnt.low || c.extra_request;
     el.innerHTML = `<div class="sumhead">
         <span class="sumtitle">${T.justSubmitted ? "Submitted ✓" : "Checked by " + esc(c.checked_by)}</span>
         <span class="tm">${esc(longDate(String(c.check_date).slice(0, 10)))} · ${esc(timeOf(c.created_at))}${T.justSubmitted ? " · " + esc(c.checked_by) : ""}</span>
-        <span class="chips"><span class="chip lv-urgent">${cnt.urgent} urgent</span><span class="chip lv-order">${cnt.order} order</span><span class="chip lv-low">${cnt.low} low</span></span>
+        <span class="chips"><span class="chip lv-urgent">${cnt.urgent} urgent</span><span class="chip lv-order">${cnt.order} order</span>${cnt.request ? `<span class="chip lv-request">${cnt.request} request${cnt.request > 1 ? "s" : ""}</span>` : ""}<span class="chip lv-low">${cnt.low} low</span></span>
       </div>
       ${groups.map(([lv, title, list]) => list.length ? `<div class="sumgroup"><h3><span class="chip lv-${lv}">${esc(title)}</span></h3>
-        <ul class="sumlist">${list.map(a => `<li class="lv-${lv}"><span class="dot"></span><span><span class="n">${esc(a.name)}${a.ko ? ` <span class="k">${esc(a.ko)}</span>` : ""}</span><span class="c">${esc(a.choice)}</span></span></li>`).join("")}</ul></div>` : "").join("")}
+        <ul class="sumlist">${list.map(a => `<li class="lv-${lv}"><span class="dot"></span><span><span class="n">${esc(a.name)}${a.ko ? ` <span class="k">${esc(a.ko)}</span>` : ""}</span><span class="c" style="white-space:pre-wrap">${esc(a.choice)}</span></span></li>`).join("")}</ul></div>` : "").join("")}
       ${c.extra_request ? `<div class="sumgroup"><h3><span class="chip lv-order">Other request</span></h3><ul class="sumlist"><li class="lv-order"><span class="dot"></span><span class="n" style="white-space:pre-wrap">${esc(c.extra_request)}</span></li></ul></div>` : ""}
-      ${!cnt.urgent && !cnt.order && !cnt.low && !c.extra_request ? `<div class="sumgroup"><span class="chip lv-ok">Everything is safe</span></div>` : ""}
+      ${!any ? `<div class="sumgroup"><span class="chip lv-ok">Everything is safe</span></div>` : ""}
       <div class="actrow">
-        ${cnt.urgent || cnt.order || cnt.low || c.extra_request ? `<button type="button" class="primary-wide" data-s2copy>Copy order list</button>` : ""}
+        ${any ? `<button type="button" class="primary-wide" data-s2copy>Copy order list</button>` : ""}
         ${T.justSubmitted ? `<button type="button" class="btn" data-s2home>Back to Home</button>` : ""}
       </div>
       <details class="allitems"><summary>All ${(c.answers || []).length} items</summary>
@@ -1057,9 +1075,19 @@ $("s2Body").addEventListener("submit", async e => {
   renderStore2();
 });
 async function loadS2Last() {
-  try { const r = await rpc("list_store_checks", { p_pin: S.pin, p_store: "store2", p_limit: 1 }) || []; T.last = r[0] || null; T.notSetUp = false; }
-  catch (e) { if (missingFn(e, "store_check")) T.notSetUp = true; }
+  for (const k in KINDS) {
+    try { const r = await rpc("list_store_checks", { p_pin: S.pin, p_store: k, p_limit: 1 }) || []; TS[k].last = r[0] || null; TS[k].notSetUp = false; TS[k].lastLoaded = true; }
+    catch (e) { if (handlePinError(e)) return; if (missingFn(e, "store_check")) TS[k].notSetUp = true; }
+  }
   if (S.mode === "home") renderHome();
+}
+function weeklyDue() {
+  const t = TS.store2w; if (!t.lastLoaded) return false;
+  const today = parseKey(current);
+  if (today.getDay() !== 6) return false;                    /* Saturday */
+  if (!t.last) return true;
+  const last = parseKey(String(t.last.check_date).slice(0, 10));
+  return (today - last) / 86400000 >= 6;                     /* nothing in the last 6 days */
 }
 
 /* ---------- routing (#home, #stock, #closing, #closing-server, #closing-history) ---------- */
@@ -1081,12 +1109,13 @@ function route() {
     return;
   }
   if (h.startsWith("store2")) {
-    if (h === "store2-history") { if (T.view !== "detail" || !T.justSubmitted) { T.view = "history"; T.list = null; } }
+    useKind(h.startsWith("store2w") ? "store2w" : "store2");
+    if (h === K + "-history") { if (T.view !== "detail" || !T.justSubmitted) { T.view = "history"; T.list = null; } }
     else { T.view = "form"; T.justSubmitted = false; }
     renderStore2(); window.scrollTo(0, 0);
     return;
   }
-  T.justSubmitted = false;
+  for (const k in TS) TS[k].justSubmitted = false;
   setMode("home"); renderHome(); window.scrollTo(0, 0);
   loadClosingDay(true); loadS2Last();
 }

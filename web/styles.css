@@ -306,3 +306,14 @@ body.close-bar .toast{bottom:calc(var(--save-h) + 8px + env(safe-area-inset-bott
 .actrow{display:grid;gap:8px;margin-top:18px}
 details.allitems{margin-top:16px}
 details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
+
+/* weekly check */
+.home-card.store2w{--tint:var(--tile-rose)}
+.home-card.store2w .tt{font-size:1.65rem}
+.due{display:inline-block;vertical-align:middle;margin-left:6px;padding:3px 9px;border-radius:999px;font-family:var(--f-body);font-size:.75rem;font-weight:700;
+  letter-spacing:.02em;color:#fff;background:var(--lv-urgent)}
+:root{--lv-request:#3f6fd8}
+@media (prefers-color-scheme: dark){:root{--lv-request:#8fb0ff}}
+.lv-request{--lv:var(--lv-request)}
+.s2text{width:100%;min-height:64px;margin-top:10px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;padding:10px;resize:vertical}
+.s2text:focus{border-color:var(--accent);outline:none}
