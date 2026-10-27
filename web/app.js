@@ -642,7 +642,7 @@ function setMode(mode) {
   $("view-home").hidden = mode !== "home"; $("view-closing").hidden = mode !== "closing"; $("view-store2").hidden = mode !== "store2";
   $("savebar").hidden = true; document.querySelector(".tabs").hidden = true;
   const cbar = mode === "closing" && C.view === "role";
-  const sbar = mode === "store2" && T.view === "form";
+  const sbar = mode === "store2" && !S.s2pick && T.view === "form";
   const bar = cbar || sbar;
   $("closebar").hidden = !cbar; $("s2bar").hidden = !sbar;
   document.body.classList.remove("no-save");
@@ -652,8 +652,12 @@ function setMode(mode) {
 function renderModeHeader() {
   const hb = $("homeBtn"); let title = "", line = "";
   if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
+  else if (S.mode === "store2" && S.s2pick) {
+    hb.hidden = false; hb.textContent = "‹ Home";
+    $("viewTitle").textContent = "Store #2"; $("dateLine").textContent = longDate(current); $("statusPills").innerHTML = ""; return;
+  }
   else if (S.mode === "store2") {
-    hb.hidden = false; hb.textContent = T.view === "detail" && !T.justSubmitted ? "‹ Past checks" : "‹ Home";
+    hb.hidden = false; hb.textContent = T.view === "detail" && !T.justSubmitted ? "‹ Past checks" : T.justSubmitted ? "‹ Home" : "‹ Store #2";
     title = T.view === "history" || T.view === "detail" ? KINDS[K].hist : KINDS[K].title;
     line = T.view === "form" ? longDate(current) : T.view === "history" ? "Past inventory checks" : (T.detail ? longDate(String(T.detail.check_date).slice(0, 10)) + " · " + timeOf(T.detail.created_at) : "");
     $("viewTitle").textContent = title; $("dateLine").textContent = line;
@@ -674,9 +678,9 @@ function renderHome() {
     const lead = C.rows.get("leader");
     $("homeCloseSub").textContent = lead ? `Final check done · ${lead.checked_by}` : `${n} of ${WORK_ROLES.length} parts submitted tonight`;
   }
-  for (const k in KINDS) { const L = TS[k].last; if (L) $(KINDS[k].sub).textContent = `Last check ${shortDate(String(L.check_date).slice(0, 10))} · ${L.checked_by}`; }
   const due = weeklyDue(); $("homeS2wDue").hidden = !due;
-  if (due) $("homeS2wSub").textContent = "Due today · Saturday check";
+  const lasts = Object.values(TS).map(t => t.last).filter(Boolean).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at)));
+  $("homeS2Sub").textContent = due ? "Saturday check due today" : lasts[0] ? `Last check ${shortDate(String(lasts[0].check_date).slice(0, 10))} · ${lasts[0].checked_by}` : "Weekday & Saturday checks";
   renderModeHeader();
 }
 
@@ -854,8 +858,10 @@ $("closingBody").addEventListener("submit", async e => {
    ========================================================= */
 /* Two Store #2 forms share these screens: the regular check and the weekly (Saturday) check. */
 const KINDS = {
-  store2:  { cfg: window.STORE2_CHECK,  title: "Store #2 Inventory", hist: "Store #2 Checks",        order: "Store #2 Order",        sql: "005_store2_check.sql",  sub: "homeS2Sub",  key: "s2-draft" },
-  store2w: { cfg: window.STORE2_WEEKLY, title: "Store #2 Weekly",    hist: "Store #2 Weekly Checks", order: "Store #2 Weekly Order", sql: "006_store2_weekly.sql", sub: "homeS2wSub", key: "s2w-draft" }
+  store2:  { cfg: window.STORE2_CHECK,  title: "Store #2 Weekday",  pick: "Weekday",  pko: "평일 체크",     icon: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M8.5 10l1.5 1.5 3-3"/><path d="M8.5 16h7"/>',
+             hist: "Store #2 Weekday Checks",  order: "Store #2 Order",          sql: "005_store2_check.sql",  key: "s2-draft" },
+  store2w: { cfg: window.STORE2_WEEKLY, title: "Store #2 Saturday", pick: "Saturday", pko: "토요일 주간 체크", icon: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M9 15l2 2 4-4"/>',
+             hist: "Store #2 Saturday Checks", order: "Store #2 Saturday Order", sql: "006_store2_weekly.sql", key: "s2w-draft" }
 };
 const TS = {};
 for (const k in KINDS) TS[k] = { view: "form", draft: null, list: null, detail: null, detailId: null, last: null, notSetUp: false, confirmDelete: false, deleteErr: "" };
@@ -1081,6 +1087,19 @@ async function loadS2Last() {
   }
   if (S.mode === "home") renderHome();
 }
+function renderStore2Pick() {
+  setMode("store2"); renderModeHeader();
+  const due = weeklyDue();
+  $("s2Body").innerHTML = `<p class="hint" style="margin-top:14px">Pick the check. 체크 종류를 고르세요.</p>
+    <div class="pick-grid">${Object.entries(KINDS).map(([k, v]) => { const L = TS[k].last; const n = (v.cfg ? v.cfg.sections.flatMap(s => s.items).length : 0);
+      return `<button type="button" class="tile role-btn pick-${k}" data-pick="${k}">
+        <span class="ic" aria-hidden="true">${svg(v.icon)}</span>
+        <span class="tt">${esc(v.pick)}${k === "store2w" && due ? ' <span class="due">Due today</span>' : ""}</span>
+        <span class="ts">${esc(v.pko)} · ${n} items</span>
+        <span class="meter"><span class="st">${L ? `Last: ${esc(shortDate(String(L.check_date).slice(0, 10)))} · ${esc(L.checked_by)}` : k === "store2w" ? "Once a week · Saturday" : "Regular check"}</span></span>
+        <span class="go" aria-hidden="true">${GO_ICON}</span></button>`; }).join("")}</div>`;
+}
+$("s2Body").addEventListener("click", e => { const b = e.target.closest("[data-pick]"); if (b) location.hash = b.dataset.pick; });
 function weeklyDue() {
   const t = TS.store2w; if (!t.lastLoaded) return false;
   const today = parseKey(current);
@@ -1108,6 +1127,12 @@ function route() {
     });
     return;
   }
+  if (h === "store2-pick") {
+    S.s2pick = true; renderStore2Pick(); window.scrollTo(0, 0);
+    loadS2Last().then(() => { if (S.s2pick && S.mode === "store2") renderStore2Pick(); });
+    return;
+  }
+  S.s2pick = false;
   if (h.startsWith("store2")) {
     useKind(h.startsWith("store2w") ? "store2w" : "store2");
     if (h === K + "-history") { if (T.view !== "detail" || !T.justSubmitted) { T.view = "history"; T.list = null; } }
@@ -1122,7 +1147,8 @@ function route() {
 window.addEventListener("hashchange", route);
 $("homeBtn").addEventListener("click", () => {
   if (S.mode === "closing" && C.view !== "roles") location.hash = "closing";
-  else if (S.mode === "store2" && T.view === "detail" && !T.justSubmitted) { T.view = "history"; renderStore2(); window.scrollTo(0, 0); }
+  else if (S.mode === "store2" && !S.s2pick && T.view === "detail" && !T.justSubmitted) { T.view = "history"; renderStore2(); window.scrollTo(0, 0); }
+  else if (S.mode === "store2" && !S.s2pick && !T.justSubmitted) location.hash = "store2-pick";
   else location.hash = "home";
 });
 $("view-home").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) location.hash = b.dataset.go; });
