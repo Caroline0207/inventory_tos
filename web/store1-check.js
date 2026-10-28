@@ -4480,6 +4480,54 @@ window.STORE1_STATIONS = {
                 "level": "urgent"
               }
             ]
+          },
+          {
+            "id": "s1234",
+            "name": "Dumpling case S",
+            "ko": "만두 케이스 S",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1235",
+            "name": "Dumpling case L",
+            "ko": "만두 케이스 L",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       }
