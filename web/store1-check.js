@@ -1,236 +1,481 @@
 // Store #1 station inventory (Server, Sushi, Middle, Cook), from the store's inventory form.
 // To change an item, edit its text here and push to GitHub.
 // Keep each item `id` the same so past checks still line up; use a new id for a new item.
-// input: number = staff enter how much is SHORT of `target` (in `unit`; +/- moves by `step`), like Store #2
-//        count  = staff enter the actual quantity on hand (only for items without a target)
 //        choice = staff pick the stock level; the first option is pre-selected
 // level: ok (SAFE/OK) · low (LOW) · order (ORDER/BUY/PREP/REQUEST) · urgent (URGENT/OUT)
 window.STORE1_STATIONS = {
   "server": {
     "name": "Server",
     "ko": "서버",
-    "note": "Enter how much is SHORT of the target for each item, in whole units (case, box, bottle…). Leave 0 if it's full. 품목마다 기준보다 부족한 수량만 단위(박스, 병 등)에 맞춰 정수로 입력해주세요. 가득 차 있으면 0 그대로 두세요.",
+    "note": "Tap the stock level for each item. 각 품목의 재고 상태를 탭해서 골라주세요.",
     "sections": [
       {
         "en": "Beverages",
         "ko": "음료",
-        "note": "Enter how many cases are short of the target, counting the cooler and back stock together. Whole cases only. 냉장고와 보관 재고를 합쳐서 기준보다 부족한 박스 수만 입력해주세요. (예: 기준 3박스, 2박스 있음 → 1)",
+        "note": "Count the cooler and back stock together. 냉장고와 보관 재고를 합쳐서 확인해주세요.",
         "items": [
           {
             "id": "s1001",
             "name": "Coke(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1002",
             "name": "Coke Zero(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1003",
             "name": "Diet Coke(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1004",
             "name": "Canada dry(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1005",
             "name": "Sprite(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1006",
             "name": "Fuze(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1007",
             "name": "Bottled water(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1009",
             "name": "Banana milk(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 cases or more / 충분 – 3박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 cases / 주문 필요 – 3박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1010",
             "name": "San pellegrino(Red) (4-Pack Sets)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "4-pack set",
-            "unitKo": "4팩 세트",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 4-pack sets or more / 충분 – 24팩 세트 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 4-pack sets / 주문 필요 – 24팩 세트 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1011",
             "name": "San pellegrino(Yellow) (4-Pack Sets)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "4-pack set",
-            "unitKo": "4팩 세트",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 4-pack sets or more / 충분 – 24팩 세트 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 4-pack sets / 주문 필요 – 24팩 세트 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1012",
             "name": "San pellegrino(Green) ( 4-Pack Sets)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "4-pack set",
-            "unitKo": "4팩 세트",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 4-pack sets or more / 충분 – 24팩 세트 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 4-pack sets / 주문 필요 – 24팩 세트 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1013",
             "name": "San pellegrino(Orange) (4-Pack Sets)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "4-pack set",
-            "unitKo": "4팩 세트",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 4-pack sets or more / 충분 – 24팩 세트 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 4-pack sets / 주문 필요 – 24팩 세트 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1014",
             "name": "Arizona (case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 cases or more / 충분 – 2박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 cases / 주문 필요 – 2박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1015",
             "name": "Mango juice(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 case or more / 충분 – 1박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 case / 주문 필요 – 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1016",
             "name": "Milkis(case)",
             "ko": "",
             "note": "",
-            "input": "number",
-            "unit": "case",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 case or more / 충분 – 1박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 case / 주문 필요 – 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
       {
         "en": "Bubble tea Station",
         "ko": "버블티 제조재료 및 용품",
-        "note": "Enter how much is short of the target for each item. 각 품목마다 기준보다 부족한 수량만 입력해주세요.",
+        "note": "Check each item's stock level. 각 품목의 재고 상태를 확인해주세요.",
         "items": [
           {
             "id": "s1017",
             "name": "Bubble tea Straw",
             "ko": "버블티 빨대",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 boxes or more / 충분 – 6박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 boxes / 주문 필요 – 6박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1018",
             "name": "Drink Straw",
             "ko": "음료빨대",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 box or more / 충분 – 1박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 box / 주문 필요 – 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1019",
             "name": "1-Cup Drink bags(pack)",
             "ko": "음료비닐봉투 1구",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "묶음",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 packs or more / 충분 – 4묶음 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 packs / 주문 필요 – 4묶음 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1020",
             "name": "2-Cup Drink bags(pack)",
             "ko": "음료비닐봉투 2구",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "묶음",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 packs or more / 충분 – 4묶음 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 packs / 주문 필요 – 4묶음 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1021",
@@ -362,187 +607,408 @@ window.STORE1_STATIONS = {
             "name": "Brown Sugar Syrup UNOPENED(bottle)",
             "ko": "흑당시럽 - 미개봉병만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 bottles or more / 충분 – 2병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 bottles / 주문 필요 – 2병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1027",
             "name": "Mango Syrup UNOPENED(bottle)",
             "ko": "망고시럽 - 미개봉병만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 bottle or more / 충분 – 1병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 bottle / 주문 필요 – 1병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1028",
             "name": "Passion Fruit Syrup UNOPENED(bottle)",
             "ko": "패션후르츠시럽 - 미개봉병만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 bottle or more / 충분 – 1병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 bottle / 주문 필요 – 1병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1029",
             "name": "Bubly – Stock Level",
             "ko": "버블리 – 재고 (box)",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 7
+            "input": "choice",
+            "options": [
+              {
+                "label": "7 boxes or more / 충분 – 7박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 7 boxes / 주문 필요 – 7박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1030",
             "name": "Oat Milk (cartons)",
             "ko": "오트밀크 (팩)",
             "note": "",
-            "input": "number",
-            "unit": "carton",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 cartons or more / 충분 – 4팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 cartons / 주문 필요 – 4팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1031",
             "name": "Matcha Powder UNOPENED(bags)",
             "ko": "말차파우더 - 미개봉 봉지만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bags or more / 충분 – 6봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bags / 주문 필요 – 6봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1032",
             "name": "Milk tea Powder UNOPENED(bags)",
             "ko": "밀크티파우더 - 미개봉 봉지만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bags or more / 충분 – 6봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bags / 주문 필요 – 6봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1033",
             "name": "Taro Powder UNOPENED(bags)",
             "ko": "타로파우더 - 미개봉 봉지만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 bags or more / 충분 – 3봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 bags / 주문 필요 – 3봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1034",
             "name": "Lemon Juice - UNOPENED (bottles)",
             "ko": "레몬즙 미개봉병만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1035",
             "name": "Whipping cream - UNOPENED (cartons)",
             "ko": "생크림 미개봉팩만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "carton",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 cartons or more / 충분 – 2팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 cartons / 주문 필요 – 2팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1036",
             "name": "Yuzu Fruit base - UNOPENED (jar)",
             "ko": "유자청 미개봉병만 카운트",
             "note": "",
-            "input": "number",
-            "unit": "jar",
-            "unitKo": "병",
-            "step": 1,
-            "target": 12
+            "input": "choice",
+            "options": [
+              {
+                "label": "12 jars or more / 충분 – 12병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 12 jars / 주문 필요 – 12병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1037",
             "name": "Strawberry Fruit base (1000ml container)",
             "ko": "딸기청 1000ml",
             "note": "",
-            "input": "number",
-            "unit": "1000ml container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 8
+            "input": "choice",
+            "options": [
+              {
+                "label": "8 1000ml containers or more / 충분 – 8통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 8 1000ml containers / 주문 필요 – 8통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1038",
             "name": "Mango Fruit base (1000ml container)",
             "ko": "망고청 1000ml",
             "note": "",
-            "input": "number",
-            "unit": "1000ml container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 8
+            "input": "choice",
+            "options": [
+              {
+                "label": "8 1000ml containers or more / 충분 – 8통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 8 1000ml containers / 주문 필요 – 8통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1039",
             "name": "Lychee Popping boba - UNOPENED(containers)",
             "ko": "리치팝핑보바 - 미개봉통",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 containers or more / 충분 – 2통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 containers / 주문 필요 – 2통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1040",
             "name": "Mango Popping boba - UNOPENED(containers)",
             "ko": "망고팝핑보바 - 미개봉통",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 containers or more / 충분 – 2통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 containers / 주문 필요 – 2통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1041",
             "name": "Rainbow Jelly - UNOPENED(containers)",
             "ko": "레인보우젤리 - 미개봉통",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 containers or more / 충분 – 2통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 containers / 주문 필요 – 2통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1042",
             "name": "Uncooked Tapioca Pearls - UNOPENED(bags)",
             "ko": "안 삶은 타피오카펄 - 미개봉 봉지",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bags or more / 충분 – 6봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bags / 주문 필요 – 6봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1043",
@@ -573,11 +1039,24 @@ window.STORE1_STATIONS = {
             "name": "Milk (bags)",
             "ko": "우유 (봉지)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 5
+            "input": "choice",
+            "options": [
+              {
+                "label": "5 bags or more / 충분 – 5봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 5 bags / 주문 필요 – 5봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
@@ -620,33 +1099,72 @@ window.STORE1_STATIONS = {
             "name": "Disposable Spoons(box)",
             "ko": "일회용 숟가락(박스)",
             "note": "e.g. Unopened 1 box + about half box = 1.5",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 box or more / 충분 – 1박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 box / 주문 필요 – 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1047",
             "name": "Disposable Forks(box)",
             "ko": "일회용 포크(박스)",
             "note": "e.g. Unopened 1 box + about half box = 1.5",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 box or more / 충분 – 1박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 box / 주문 필요 – 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1048",
             "name": "Napkins(box)",
             "ko": "냅킨(박스)",
             "note": "e.g. Unopened 1 box + about half box = 1.5",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 box or more / 충분 – 1박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 box / 주문 필요 – 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1049",
@@ -1204,44 +1722,96 @@ window.STORE1_STATIONS = {
             "name": "Custard Cakes (boxes)",
             "ko": "커스타드 (박스)",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 boxes or more / 충분 – 4박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 boxes / 주문 필요 – 4박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1067",
             "name": "Choco Pie (boxes)",
             "ko": "초코파이 (박스)",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 boxes or more / 충분 – 4박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 boxes / 주문 필요 – 4박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1068",
             "name": "Fresh berry (boxes)",
             "ko": "후레쉬베리 (박스)",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 boxes or more / 충분 – 4박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 boxes / 주문 필요 – 4박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1069",
             "name": "Moncher (boxes)",
             "ko": "몽쉘 (박스)",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 boxes or more / 충분 – 4박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 boxes / 주문 필요 – 4박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       }
@@ -1298,55 +1868,120 @@ window.STORE1_STATIONS = {
             "name": "Tempura (boxes)",
             "ko": "새우튀김 (박스)",
             "note": "",
-            "input": "number",
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 boxes or more / 충분 – 6박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 boxes / 주문 필요 – 6박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1073",
             "name": "Ebi (Cooked Shrimp) – UNOPENED (packs)",
             "ko": "초새우 – 미개봉 팩",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 15
+            "input": "choice",
+            "options": [
+              {
+                "label": "15 packs or more / 충분 – 15팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 15 packs / 주문 필요 – 15팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1074",
             "name": "Saku Tuna – UNOPENED (packs)",
             "ko": "사쿠 참치 – 미개봉 팩",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 10
+            "input": "choice",
+            "options": [
+              {
+                "label": "10 packs or more / 충분 – 10팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 10 packs / 주문 필요 – 10팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1075",
             "name": "Tamago – UNOPENED (packs)",
             "ko": "타마고 – 미개봉 팩",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 packs or more / 충분 – 3팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 packs / 주문 필요 – 3팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1076",
             "name": "Shredded Crab – UNOPENED (packs)",
             "ko": "슈레디드크랩 – 미개봉 팩",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 20
+            "input": "choice",
+            "options": [
+              {
+                "label": "20 packs or more / 충분 – 20팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 20 packs / 주문 필요 – 20팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1077",
@@ -1377,55 +2012,120 @@ window.STORE1_STATIONS = {
             "name": "Fried Yam – UNOPENED (bags)",
             "ko": "미개봉 봉지",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 8
+            "input": "choice",
+            "options": [
+              {
+                "label": "8 bags or more / 충분 – 8봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 8 bags / 주문 필요 – 8봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1079",
             "name": "Inari (Seasoned Tofu Pockets) – UNOPENED (bags)",
             "ko": "유부 – 미개봉 봉지",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 5
+            "input": "choice",
+            "options": [
+              {
+                "label": "5 bags or more / 충분 – 5봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 5 bags / 주문 필요 – 5봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1080",
             "name": "Tobiko – UNOPENED (containers)",
             "ko": "토비코 – 미개봉 통",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 containers or more / 충분 – 2통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 containers / 주문 필요 – 2통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1081",
             "name": "Masago – UNOPENED (containers)",
             "ko": "마사고 – 미개봉 통",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 10
+            "input": "choice",
+            "options": [
+              {
+                "label": "10 containers or more / 충분 – 10통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 10 containers / 주문 필요 – 10통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1082",
             "name": "Seaweed Salad – UNOPENED (bags)",
             "ko": "씨위드 샐러드 – 미개봉 봉지",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 10
+            "input": "choice",
+            "options": [
+              {
+                "label": "10 bags or more / 충분 – 10봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 10 bags / 주문 필요 – 10봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
@@ -1439,33 +2139,72 @@ window.STORE1_STATIONS = {
             "name": "Ready-to-Use Salmon Back Loin (packs)",
             "ko": "장사용 연어 등살 (줄)",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 10
+            "input": "choice",
+            "options": [
+              {
+                "label": "10 packs or more / 충분 – 10팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 10 packs / 주문 필요 – 10팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1084",
             "name": "Ready-to-Use Salmon Belly (packs)",
             "ko": "장사용 연어 뱃살 (줄)",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 10
+            "input": "choice",
+            "options": [
+              {
+                "label": "10 packs or more / 충분 – 10팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 10 packs / 주문 필요 – 10팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1085",
             "name": "Lemon (each)",
             "ko": "레몬 (개)",
             "note": "",
-            "input": "number",
-            "unit": "each",
-            "unitKo": "개",
-            "step": 1,
-            "target": 12
+            "input": "choice",
+            "options": [
+              {
+                "label": "12 or more / 충분 – 12개 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 12 / 주문 필요 – 12개 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1086",
@@ -1556,77 +2295,168 @@ window.STORE1_STATIONS = {
             "name": "Mayonnaise – UNOPENED (pails)",
             "ko": "마요네즈 – 미개봉 말통",
             "note": "",
-            "input": "number",
-            "unit": "pail",
-            "unitKo": "말통",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 pails or more / 충분 – 3말통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 pails / 주문 필요 – 3말통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1090",
             "name": "Spicy Mayo (bags)",
             "ko": "스파이시마요 (소분 봉투)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 bags or more / 충분 – 3봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 bags / 주문 필요 – 3봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1091",
             "name": "Garlic Mayo (bags)",
             "ko": "갈릭마요 (소분 봉투)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 bags or more / 충분 – 3봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 bags / 주문 필요 – 3봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1092",
             "name": "Wasabi Mayo (bags)",
             "ko": "와사비마요 (소분 봉투)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 bags or more / 충분 – 3봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 bags / 주문 필요 – 3봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1093",
             "name": "Sesame Mayo (bags)",
             "ko": "세서미마요 (소분 봉투)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 bags or more / 충분 – 3봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 bags / 주문 필요 – 3봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1094",
             "name": "Yuzu Mayo (bags)",
             "ko": "유자마요 (소분 봉투)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 bags or more / 충분 – 3봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 bags / 주문 필요 – 3봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1095",
             "name": "Wasabi Powder – UNOPENED (bags)",
             "ko": "와사비파우더 – 미개봉 봉지",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 bags or more / 충분 – 4봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 bags / 주문 필요 – 4봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1096",
@@ -1715,22 +2545,48 @@ window.STORE1_STATIONS = {
             "name": "Unagi Sauce - Unopened",
             "ko": "우나기소스 미개봉(병)",
             "note": "",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 8
+            "input": "choice",
+            "options": [
+              {
+                "label": "8 bottles or more / 충분 – 8병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 8 bottles / 주문 필요 – 8병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1100",
             "name": "Cooking Oil Spray – UNOPENED (cans)",
             "ko": "오일 스프레이 – 미개봉 캔",
             "note": "",
-            "input": "number",
-            "unit": "can",
-            "unitKo": "캔",
-            "step": 1,
-            "target": 5
+            "input": "choice",
+            "options": [
+              {
+                "label": "5 cans or more / 충분 – 5캔 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 5 cans / 주문 필요 – 5캔 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1101",
@@ -1809,22 +2665,48 @@ window.STORE1_STATIONS = {
             "name": "Rice – Shared Stock (bags)",
             "ko": "쌀 – 공용재고 (포대)",
             "note": "Shared stock for all stations. Count the total number of rice bags in stock, including opened bags. / 전 파트 공용재고입니다. 사용 중인 포대를 포함하여 전체 쌀 재고를 확인해주세요.",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 12
+            "input": "choice",
+            "options": [
+              {
+                "label": "12 bags or more / 충분 – 12봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 12 bags / 주문 필요 – 12봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1104",
             "name": "Sushi Vinegar (containers)",
             "ko": "스시초 (통)",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 containers or more / 충분 – 2통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 containers / 주문 필요 – 2통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1105",
@@ -2264,11 +3146,24 @@ window.STORE1_STATIONS = {
             "name": "Spring Mix (containers)",
             "ko": "스프링믹스 (통)",
             "note": "",
-            "input": "number",
-            "unit": "container",
-            "unitKo": "통",
-            "step": 1,
-            "target": 15
+            "input": "choice",
+            "options": [
+              {
+                "label": "15 containers or more / 충분 – 15통 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 15 containers / 주문 필요 – 15통 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1120",
@@ -2439,44 +3334,96 @@ window.STORE1_STATIONS = {
             "name": "Prepped Carrots – Vacuum Packs",
             "ko": "프랩 당근 – 진공팩",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 packs or more / 충분 – 6팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 packs / 주문 필요 – 6팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1127",
             "name": "Prepped Purple Cabbage– Vacuum Packs",
             "ko": "프랩 적배추 – 진공팩",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 packs or more / 충분 – 6팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 packs / 주문 필요 – 6팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1128",
             "name": "Prepped Cucumber",
             "ko": "프랩 오이",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 packs or more / 충분 – 3팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 packs / 주문 필요 – 3팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1129",
             "name": "Prepped Zucchini",
             "ko": "프랩 호박",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 3
+            "input": "choice",
+            "options": [
+              {
+                "label": "3 packs or more / 충분 – 3팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 3 packs / 주문 필요 – 3팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1130",
@@ -2531,11 +3478,24 @@ window.STORE1_STATIONS = {
             "name": "Eggs (trays)",
             "ko": "계란 (판)",
             "note": "",
-            "input": "number",
-            "unit": "tray",
-            "unitKo": "판",
-            "step": 1,
-            "target": 5
+            "input": "choice",
+            "options": [
+              {
+                "label": "5 trays or more / 충분 – 5판 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 5 trays / 주문 필요 – 5판 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1133",
@@ -2583,11 +3543,24 @@ window.STORE1_STATIONS = {
             "name": "Panko – Middle Station (bags)",
             "ko": "팬코 – 미들용 (봉지)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 8
+            "input": "choice",
+            "options": [
+              {
+                "label": "8 bags or more / 충분 – 8봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 8 bags / 주문 필요 – 8봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1136",
@@ -3522,7 +4495,7 @@ window.STORE1_STATIONS = {
   "cook": {
     "name": "Cook",
     "ko": "쿡",
-    "note": "Enter how much is SHORT of the target in whole bottles, cans or packs (no decimals). Leave 0 if it's full. 기준보다 부족한 수량을 병·캔·팩 단위 정수로 입력해주세요. 가득 차 있으면 0 그대로 두세요.",
+    "note": "Tap the stock level for each item. Count unopened bottles and packs as backup stock. 각 품목의 재고 상태를 골라주세요. 미개봉 제품을 여분 재고로 봐주세요.",
     "sections": [
       {
         "en": "Sauces, Seasonings & Dry Ingredients",
@@ -3534,11 +4507,24 @@ window.STORE1_STATIONS = {
             "name": "Store-bought Teriyaki sauce",
             "ko": "시판 데리야끼소스",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 8
+            "input": "choice",
+            "options": [
+              {
+                "label": "8 bottles or more / 충분 – 8병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 8 bottles / 주문 필요 – 8병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1204",
@@ -3569,110 +4555,240 @@ window.STORE1_STATIONS = {
             "name": "Okonomiyaki sauce",
             "ko": "오꼬노미야끼소스",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 4
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 bottles or more / 충분 – 4병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 bottles / 주문 필요 – 4병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1141",
             "name": "Sesame oil",
             "ko": "참기름",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1142",
             "name": "Pineapple juice",
             "ko": "파인애플주스",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1143",
             "name": "Canned Mushroom",
             "ko": "캔버섯",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "can",
-            "unitKo": "캔",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 cans or more / 충분 – 2캔 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 cans / 주문 필요 – 2캔 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1144",
             "name": "Blueberry syrup",
             "ko": "블루베리시럽",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1145",
             "name": "Ketchup",
             "ko": "케찹",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 bottles or more / 충분 – 2병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 bottles / 주문 필요 – 2병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1146",
             "name": "Corn syrup",
             "ko": "물엿",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1147",
             "name": "Cooking wine",
             "ko": "미향",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1148",
             "name": "Fish Sauce",
             "ko": "액젓",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 6
+            "input": "choice",
+            "options": [
+              {
+                "label": "6 bottles or more / 충분 – 6병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 6 bottles / 주문 필요 – 6병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1149",
             "name": "Black pepper",
             "ko": "후추",
             "note": "UNOPENED only / 미개봉만 카운트",
-            "input": "number",
-            "unit": "bottle",
-            "unitKo": "병",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 bottle or more / 충분 – 1병 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 bottle / 주문 필요 – 1병 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1150",
@@ -3751,55 +4867,120 @@ window.STORE1_STATIONS = {
             "name": "Fine Red Pepper Powder – BACKUP (bags)",
             "ko": "고운 고춧가루 – 여분 (봉지)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 bags or more / 충분 – 2봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 bags / 주문 필요 – 2봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1154",
             "name": "Coarse Red Pepper Powder – BACKUP (bags)",
             "ko": "굵은 고춧가루 – 여분 (봉지)",
             "note": "",
-            "input": "number",
-            "unit": "bag",
-            "unitKo": "봉",
-            "step": 1,
-            "target": 2
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 bags or more / 충분 – 2봉 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 2 bags / 주문 필요 – 2봉 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1155",
             "name": "MSG (Miwon) (packs)",
             "ko": "미원 (팩)",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 pack or more / 충분 – 1팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 pack / 주문 필요 – 1팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1156",
             "name": "Hondashi (packs)",
             "ko": "혼다시 (팩)",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 pack or more / 충분 – 1팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 pack / 주문 필요 – 1팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1157",
             "name": "Beef Dashida (packs)",
             "ko": "소고기 다시다 (팩)",
             "note": "",
-            "input": "number",
-            "unit": "pack",
-            "unitKo": "팩",
-            "step": 1,
-            "target": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "1 pack or more / 충분 – 1팩 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 pack / 주문 필요 – 1팩 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1158",
@@ -3975,22 +5156,48 @@ window.STORE1_STATIONS = {
             "name": "Onion - Stock level",
             "ko": "양파 - 재고상태",
             "note": "",
-            "input": "number",
-            "unit": "EA",
-            "unitKo": "개",
-            "step": 1,
-            "target": 20
+            "input": "choice",
+            "options": [
+              {
+                "label": "20 or more / 충분 – 20개 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 20 / 주문 필요 – 20개 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1220",
             "name": "Japchae glass noodles (boxes)",
             "ko": "잡채 당면 (박스)",
             "note": "",
-            "input": "number",
-            "target": 4,
-            "unit": "box",
-            "unitKo": "박스",
-            "step": 1
+            "input": "choice",
+            "options": [
+              {
+                "label": "4 boxes or more / 충분 – 4박스 이상",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 4 boxes / 주문 필요 – 4박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           },
           {
             "id": "s1223",

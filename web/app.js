@@ -957,7 +957,7 @@ function renderS2Form(el) {
   const d = s2Draft();
   el.innerHTML = `<div class="who"><label for="s2Name">Checked by</label>
       <input id="s2Name" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(d.name)}" enterkeyhint="done"></div>
-    <p class="hint">Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요.${KINDS[K].group === "store1" ? " 상태 항목은 칩을 탭해서 고르세요." : ""}</p>
+    <p class="hint">${KINDS[K].group === "store1" ? "Tap the stock level for each item. Full stock is already selected. 각 품목의 재고 상태를 탭해서 골라주세요. 기본값은 ‘충분’이에요." : "Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요."}</p>
     ${S2.sections.map(sec => `<section class="s2sec"><h2>${esc(sec.en)} <small>${esc(sec.ko)}</small></h2>
       ${sec.note ? `<p class="secnote">${esc(sec.note)}</p>` : ""}
       <ul class="list s2list">${sec.items.map(it => s2Row(it, d)).join("")}</ul></section>`).join("")}
