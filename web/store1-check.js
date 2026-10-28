@@ -1026,8 +1026,8 @@ window.STORE1_STATIONS = {
           },
           {
             "id": "s1198",
-            "name": "Miso soup container",
-            "ko": "미소숩 용기",
+            "name": "Miso soup container 8oz",
+            "ko": "미소숩 용기 8oz",
             "note": "",
             "input": "choice",
             "options": [
@@ -1787,8 +1787,8 @@ window.STORE1_STATIONS = {
         "items": [
           {
             "id": "s1106",
-            "name": "8-Compartment Sushi Case (boxes) YW-ST2",
-            "ko": "8구 스시케이스 (박스)",
+            "name": "Sushi container 8pcs YW-ST2",
+            "ko": "스시 용기 8pcs (박스)",
             "note": "",
             "input": "choice",
             "options": [
@@ -1883,7 +1883,7 @@ window.STORE1_STATIONS = {
           },
           {
             "id": "s1110",
-            "name": "Round Sushi Platter Case (boxes)",
+            "name": "Sushi platter round container HQ-65",
             "ko": "원형 스시플래터 케이스 (박스)",
             "note": "",
             "input": "choice",
@@ -1907,7 +1907,7 @@ window.STORE1_STATIONS = {
           },
           {
             "id": "s1111",
-            "name": "Medium Plastic Wrap – UNOPENED (rolls)",
+            "name": "M plastic roll",
             "ko": "미디엄 사이즈 랩 – 미개봉 롤",
             "note": "",
             "input": "choice",
@@ -1931,7 +1931,7 @@ window.STORE1_STATIONS = {
           },
           {
             "id": "s1112",
-            "name": "Large Plastic Wrap – UNOPENED (rolls)",
+            "name": "L plastic roll",
             "ko": "라지 사이즈 랩 – 미개봉 롤",
             "note": "",
             "input": "choice",
@@ -2447,8 +2447,8 @@ window.STORE1_STATIONS = {
           },
           {
             "id": "s1136",
-            "name": "Yuzu Soy – Stock Level",
-            "ko": "유주소이 – 재고 상태",
+            "name": "Yuzu soy",
+            "ko": "유주소이",
             "note": "",
             "input": "choice",
             "options": [
@@ -2471,8 +2471,8 @@ window.STORE1_STATIONS = {
           },
           {
             "id": "s1137",
-            "name": "Dumpling Soy Sauce – Stock Level",
-            "ko": "만두간장 – 재고 상태",
+            "name": "Dumpling soy",
+            "ko": "만두간장",
             "note": "",
             "input": "choice",
             "options": [
@@ -2550,8 +2550,32 @@ window.STORE1_STATIONS = {
         "items": [
           {
             "id": "s1177",
-            "name": "Bibimbap container",
+            "name": "Bibimbap container BC-RB-32",
             "ko": "비빔밥 용기",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1209",
+            "name": "Bibimbap lid BC-RB-32",
+            "ko": "비빔밥 뚜껑 BC-RB-32",
             "note": "",
             "input": "choice",
             "options": [
@@ -3008,6 +3032,198 @@ window.STORE1_STATIONS = {
             "id": "s1201",
             "name": "White paper towel",
             "ko": "흰색 페이퍼 타올",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1206",
+            "name": "Chicken container 1/2lb",
+            "ko": "치킨 용기 1/2lb",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1207",
+            "name": "Chicken container 1lb",
+            "ko": "치킨 용기 1lb",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1208",
+            "name": "Chicken container 2lb",
+            "ko": "치킨 용기 2lb",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1210",
+            "name": "Kimchi bottle L",
+            "ko": "김치 병 L",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1211",
+            "name": "Sushi container 10pcs YW-ST5",
+            "ko": "스시 용기 10pcs YW-ST5",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1212",
+            "name": "Market sushi container ST-4-1105",
+            "ko": "마켓 스시 용기 ST-4-1105",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1213",
+            "name": "Sushi blue container 10pcs HQ-15",
+            "ko": "스시 파란 용기 10pcs HQ-15",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1214",
+            "name": "Sushi blue container 8pcs HQ-01",
+            "ko": "스시 파란 용기 8pcs HQ-01",
             "note": "",
             "input": "choice",
             "options": [
