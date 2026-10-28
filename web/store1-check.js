@@ -1825,6 +1825,30 @@ window.STORE1_STATIONS = {
                 "level": "urgent"
               }
             ]
+          },
+          {
+            "id": "s1221",
+            "name": "Sriracha sauce",
+            "ko": "스리라차 소스",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
@@ -2492,30 +2516,6 @@ window.STORE1_STATIONS = {
             "unitKo": "봉",
             "step": 1,
             "target": 8
-          },
-          {
-            "id": "s1135",
-            "name": "Tteokbokki Rice Cakes – Stock Level",
-            "ko": "떡볶이떡 – 재고 상태",
-            "note": "",
-            "input": "choice",
-            "options": [
-              {
-                "label": "2 Box or More / 2박스 이상",
-                "status": "SAFE",
-                "level": "ok"
-              },
-              {
-                "label": "Less than 1 Box / 1박스 미만",
-                "status": "ORDER",
-                "level": "order"
-              },
-              {
-                "label": "Almost Out / 거의 없음",
-                "status": "URGENT",
-                "level": "urgent"
-              }
-            ]
           },
           {
             "id": "s1136",
@@ -4135,6 +4135,30 @@ window.STORE1_STATIONS = {
               {
                 "label": "No stock / 재고 없음",
                 "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1135",
+            "name": "Tteokbokki Rice Cakes – Stock Level",
+            "ko": "떡볶이떡 – 재고 상태",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "2 Box or More / 2박스 이상",
+                "status": "SAFE",
+                "level": "ok"
+              },
+              {
+                "label": "Less than 1 Box / 1박스 미만",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "Almost Out / 거의 없음",
+                "status": "URGENT",
                 "level": "urgent"
               }
             ]
