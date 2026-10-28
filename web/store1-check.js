@@ -2612,6 +2612,30 @@ window.STORE1_STATIONS = {
                 "level": "urgent"
               }
             ]
+          },
+          {
+            "id": "s1222",
+            "name": "Canned tuna",
+            "ko": "캔참치",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last can in use / 주문 필요 – 마지막 캔 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
