@@ -1095,6 +1095,30 @@ window.STORE1_STATIONS = {
                 "level": "urgent"
               }
             ]
+          },
+          {
+            "id": "s1233",
+            "name": "Rubber gloves",
+            "ko": "고무장갑",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last pack in use / 주문 필요 – 마지막 팩 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
@@ -1840,6 +1864,54 @@ window.STORE1_STATIONS = {
               },
               {
                 "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1231",
+            "name": "Black sesame seeds",
+            "ko": "검은깨",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1232",
+            "name": "Sesame seeds",
+            "ko": "참깨",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
                 "status": "ORDER",
                 "level": "order"
               },
@@ -2627,6 +2699,102 @@ window.STORE1_STATIONS = {
               },
               {
                 "label": "Last can in use / 주문 필요 – 마지막 캔 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1227",
+            "name": "Korean pancake mix",
+            "ko": "부침가루",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1228",
+            "name": "Katsuobushi (bonito flakes)",
+            "ko": "가쓰오부시",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1229",
+            "name": "Triangle kimbap seaweed",
+            "ko": "삼각김밥 김",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last pack in use / 주문 필요 – 마지막 팩 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1230",
+            "name": "Chicken frying powder",
+            "ko": "치킨 파우더",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
                 "status": "ORDER",
                 "level": "order"
               },
@@ -3823,6 +3991,102 @@ window.STORE1_STATIONS = {
             "unit": "box",
             "unitKo": "박스",
             "step": 1
+          },
+          {
+            "id": "s1223",
+            "name": "Potato starch",
+            "ko": "감자전분",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1224",
+            "name": "Tapioca starch",
+            "ko": "타피오카 전분",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1225",
+            "name": "Vinegar",
+            "ko": "식초",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1226",
+            "name": "Wide glass noodles",
+            "ko": "넙적당면",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last bag in use / 주문 필요 – 마지막 봉지 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
