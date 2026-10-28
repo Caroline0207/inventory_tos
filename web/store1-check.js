@@ -977,6 +977,54 @@ window.STORE1_STATIONS = {
             ]
           },
           {
+            "id": "s1218",
+            "name": "Lysol",
+            "ko": "라이솔",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1219",
+            "name": "Bleach",
+            "ko": "락스",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last one in use / 주문 필요 – 마지막 1개 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
             "id": "s1061",
             "name": "Hand Soap – Stock Level",
             "ko": "핸드솝 – 재고 상태",
@@ -1967,6 +2015,30 @@ window.STORE1_STATIONS = {
               },
               {
                 "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1217",
+            "name": "Blue cleaning cloth",
+            "ko": "파란 행주",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last pack in use / 주문 필요 – 마지막 팩 사용 중",
                 "status": "ORDER",
                 "level": "order"
               },
@@ -3716,6 +3788,17 @@ window.STORE1_STATIONS = {
             "unitKo": "개",
             "step": 1,
             "target": 20
+          },
+          {
+            "id": "s1220",
+            "name": "Japchae glass noodles (boxes)",
+            "ko": "잡채 당면 (박스)",
+            "note": "",
+            "input": "number",
+            "target": 4,
+            "unit": "box",
+            "unitKo": "박스",
+            "step": 1
           }
         ]
       },
@@ -4031,6 +4114,30 @@ window.STORE1_STATIONS = {
                 "level": "urgent"
               }
             ]
+          },
+          {
+            "id": "s1215",
+            "name": "Fish cake",
+            "ko": "어묵",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last pack in use / 주문 필요 – 마지막 팩 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
           }
         ]
       },
@@ -4180,6 +4287,30 @@ window.STORE1_STATIONS = {
               },
               {
                 "label": "Last box in use / 주문 필요 – 마지막 박스 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ]
+          },
+          {
+            "id": "s1216",
+            "name": "Yellow cleaning cloth",
+            "ko": "노란 행주",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last pack in use / 주문 필요 – 마지막 팩 사용 중",
                 "status": "ORDER",
                 "level": "order"
               },
