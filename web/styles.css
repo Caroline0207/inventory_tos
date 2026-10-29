@@ -369,3 +369,11 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .suphead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .suphead h2{margin:0;font-size:1.15rem;flex:1}
 .supcard.prep{background:color-mix(in srgb, var(--tile-teal) 7%, var(--surface))}
+.ordlist li{grid-template-columns:auto 1fr auto;align-items:center}
+.ordlist .c.t{font-size:.78rem}
+.donebtn{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--tile-green);font-size:1.1rem;font-weight:700;cursor:pointer}
+.donebtn:active{background:color-mix(in srgb, var(--tile-green) 15%, var(--surface))}
+.pinbar{margin-top:12px;display:grid;gap:6px;padding:12px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.pinbar label{font-size:.85rem;font-weight:600}
+.pinbar input{font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.undobar{margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-radius:12px;background:color-mix(in srgb, var(--tile-green) 10%, var(--surface))}
