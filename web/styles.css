@@ -357,3 +357,14 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .home-card.store1{--tint:var(--tile-teal)}
 .pick-s1server{--tint:var(--tile-indigo)} .pick-s1sushi{--tint:var(--tile-green)} .pick-s1middle{--tint:var(--tile-amber)} .pick-s1cook{--tint:var(--tile-rose)}
 .home-card .tt{word-break:keep-all}
+
+/* Store #1 orders by supplier */
+.orders-card{--tint:var(--tile-plum);margin-top:12px;width:100%}
+.ordstations{list-style:none;margin:10px 0 4px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ordstations li{display:grid;gap:2px;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:.85rem}
+.ordstations li span{color:var(--muted)}
+.ordstations li.old{border-color:var(--lv-low)} .ordstations li.old span{color:var(--lv-low)}
+.supcard{margin-top:14px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.supcard.nosup{border-style:dashed}
+.suphead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.suphead h2{margin:0;font-size:1.15rem;flex:1}

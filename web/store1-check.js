@@ -2,6 +2,7 @@
 // To change an item, edit its text here and push to GitHub.
 // Keep each item `id` the same so past checks still line up; use a new id for a new item.
 //        choice = staff pick the stock level; the first option is pre-selected
+// supplier (optional) = who to order from; shown on "Orders by Supplier"
 // level: ok (SAFE/OK) · low (LOW) · order (ORDER/BUY/PREP/REQUEST) · urgent (URGENT/OUT)
 window.STORE1_STATIONS = {
   "server": {
