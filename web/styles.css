@@ -368,3 +368,4 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .supcard.nosup{border-style:dashed}
 .suphead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .suphead h2{margin:0;font-size:1.15rem;flex:1}
+.supcard.prep{background:color-mix(in srgb, var(--tile-teal) 7%, var(--surface))}

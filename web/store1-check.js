@@ -37,7 +37,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1002",
@@ -61,7 +62,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1003",
@@ -85,7 +87,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1004",
@@ -109,7 +112,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1005",
@@ -133,7 +137,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1006",
@@ -157,7 +162,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1007",
@@ -181,7 +187,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1009",
@@ -205,7 +212,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1010",
@@ -229,7 +237,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1011",
@@ -253,7 +262,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1012",
@@ -277,7 +287,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1013",
@@ -301,7 +312,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1014",
@@ -325,7 +337,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1015",
@@ -349,7 +362,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1016",
@@ -373,7 +387,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           }
         ]
       },
@@ -404,7 +419,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1018",
@@ -428,7 +444,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1019",
@@ -452,7 +469,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1020",
@@ -476,7 +494,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1021",
@@ -505,7 +524,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "AMAZON"
           },
           {
             "id": "s1022",
@@ -529,7 +549,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1023",
@@ -553,7 +574,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1024",
@@ -577,7 +599,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1025",
@@ -601,7 +624,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1026",
@@ -625,7 +649,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1027",
@@ -649,7 +674,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1028",
@@ -673,7 +699,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1029",
@@ -697,7 +724,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1030",
@@ -721,7 +749,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1031",
@@ -745,7 +774,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1032",
@@ -769,7 +799,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1033",
@@ -793,7 +824,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "AMAZON"
           },
           {
             "id": "s1034",
@@ -817,7 +849,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1035",
@@ -841,7 +874,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1036",
@@ -865,7 +899,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1037",
@@ -889,7 +924,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1038",
@@ -913,7 +949,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1039",
@@ -937,7 +974,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1040",
@@ -961,7 +999,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1041",
@@ -985,7 +1024,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1042",
@@ -1009,7 +1049,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1043",
@@ -1033,7 +1074,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1044",
@@ -1057,7 +1099,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           }
         ]
       },
@@ -1093,7 +1136,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1046",
@@ -1117,7 +1161,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1047",
@@ -1141,7 +1186,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1048",
@@ -1165,7 +1211,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Wholesale"
           },
           {
             "id": "s1049",
@@ -1194,7 +1241,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1050",
@@ -1223,7 +1271,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1051",
@@ -1252,7 +1301,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1052",
@@ -1281,7 +1331,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1053",
@@ -1310,7 +1361,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "예람"
           },
           {
             "id": "s1054",
@@ -1339,7 +1391,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "예람"
           },
           {
             "id": "s1055",
@@ -1363,7 +1416,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "AMAZON"
           },
           {
             "id": "s1056",
@@ -1397,7 +1451,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "AMAZON"
           },
           {
             "id": "s1057",
@@ -1421,7 +1476,8 @@ window.STORE1_STATIONS = {
                 "status": "BUY",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1058",
@@ -1445,7 +1501,8 @@ window.STORE1_STATIONS = {
                 "status": "BUY",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1059",
@@ -1469,7 +1526,8 @@ window.STORE1_STATIONS = {
                 "status": "BUY",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1060",
@@ -1493,7 +1551,8 @@ window.STORE1_STATIONS = {
                 "status": "BUY",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1218",
@@ -1517,7 +1576,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1219",
@@ -1541,7 +1601,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1061",
@@ -1565,7 +1626,8 @@ window.STORE1_STATIONS = {
                 "status": "BUY",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1062",
@@ -1589,7 +1651,8 @@ window.STORE1_STATIONS = {
                 "status": "BUY",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1198",
@@ -1613,7 +1676,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Wholesale"
           },
           {
             "id": "s1233",
@@ -1637,7 +1701,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           }
         ]
       },
@@ -1740,7 +1805,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1067",
@@ -1764,7 +1830,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1068",
@@ -1788,7 +1855,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1069",
@@ -1812,7 +1880,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           }
         ]
       }
@@ -1862,7 +1931,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1072",
@@ -1886,7 +1956,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1073",
@@ -1910,7 +1981,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1074",
@@ -1934,7 +2006,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1075",
@@ -1958,7 +2031,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1076",
@@ -1982,7 +2056,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1077",
@@ -2006,7 +2081,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1078",
@@ -2030,7 +2106,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "SYSCO"
           },
           {
             "id": "s1079",
@@ -2054,7 +2131,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1080",
@@ -2078,7 +2156,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1081",
@@ -2102,7 +2181,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1082",
@@ -2126,7 +2206,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           }
         ]
       },
@@ -2157,7 +2238,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "CENTENIAL"
           },
           {
             "id": "s1084",
@@ -2181,7 +2263,33 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "CENTENIAL"
+          },
+          {
+            "id": "s1236",
+            "name": "Lime",
+            "ko": "라임 (개)",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Running low / 주문 필요 – 얼마 안 남음",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1085",
@@ -2205,7 +2313,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1086",
@@ -2234,7 +2343,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "BNT"
           },
           {
             "id": "s1087",
@@ -2258,7 +2368,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1088",
@@ -2282,7 +2393,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           }
         ]
       },
@@ -2313,7 +2425,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1090",
@@ -2337,7 +2450,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1091",
@@ -2361,7 +2475,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1092",
@@ -2385,7 +2500,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1093",
@@ -2409,7 +2525,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1094",
@@ -2433,7 +2550,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1095",
@@ -2457,7 +2575,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1096",
@@ -2486,7 +2605,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1097",
@@ -2515,7 +2635,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1098",
@@ -2539,7 +2660,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1099",
@@ -2563,7 +2685,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1100",
@@ -2587,7 +2710,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1101",
@@ -2611,7 +2735,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1102",
@@ -2635,7 +2760,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1202",
@@ -2659,7 +2785,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1103",
@@ -2683,7 +2810,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1104",
@@ -2707,7 +2835,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1105",
@@ -2731,7 +2860,8 @@ window.STORE1_STATIONS = {
                 "status": "긴급 주문",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1221",
@@ -2755,7 +2885,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1231",
@@ -2779,7 +2910,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1232",
@@ -2803,7 +2935,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           }
         ]
       },
@@ -2834,7 +2967,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1107",
@@ -2858,7 +2992,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1108",
@@ -2882,7 +3017,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "예람"
           },
           {
             "id": "s1109",
@@ -2906,7 +3042,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "예람"
           },
           {
             "id": "s1110",
@@ -2930,7 +3067,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1111",
@@ -2954,7 +3092,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1112",
@@ -2978,7 +3117,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1199",
@@ -3002,7 +3142,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1217",
@@ -3026,7 +3167,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Wholesale"
           }
         ]
       }
@@ -3066,7 +3208,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1116",
@@ -3085,7 +3228,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "SYSCO"
           }
         ]
       },
@@ -3116,7 +3260,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1118",
@@ -3140,7 +3285,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1119",
@@ -3164,7 +3310,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1120",
@@ -3188,7 +3335,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1121",
@@ -3212,7 +3360,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1122",
@@ -3241,7 +3390,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1123",
@@ -3270,7 +3420,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1124",
@@ -3299,7 +3450,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1125",
@@ -3328,7 +3480,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1126",
@@ -3352,7 +3505,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1127",
@@ -3376,7 +3530,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1128",
@@ -3400,7 +3555,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1129",
@@ -3424,7 +3580,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1130",
@@ -3448,7 +3605,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1131",
@@ -3472,7 +3630,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1132",
@@ -3496,7 +3655,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "OK egg farm"
           },
           {
             "id": "s1133",
@@ -3530,7 +3690,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "SYSCO"
           }
         ]
       },
@@ -3539,6 +3700,31 @@ window.STORE1_STATIONS = {
         "ko": "소스 및 실온보관 재료",
         "note": "Check all sauces, seasonings, powders, and other ingredients stored at room temperature. Follow the counting unit or stock level shown for each item. / 미들 파트에서 사용하는 소스, 조미료, 가루류 및 기타 실온보관 재료의 재고를 확인해주세요. 각 품목에 표시된 수량 단위 또는 재고 기준에 따라 확인해주세요.",
         "items": [
+          {
+            "id": "s1237",
+            "name": "Canola oil (pail)",
+            "ko": "카놀라유 (말통)",
+            "note": "",
+            "input": "choice",
+            "options": [
+              {
+                "label": "Backup stock available / 충분 – 여분 있음",
+                "status": "OK",
+                "level": "ok"
+              },
+              {
+                "label": "Last pail in use / 주문 필요 – 마지막 말통 사용 중",
+                "status": "ORDER",
+                "level": "order"
+              },
+              {
+                "label": "No stock / 재고 없음",
+                "status": "OUT",
+                "level": "urgent"
+              }
+            ],
+            "supplier": "SYSCO"
+          },
           {
             "id": "s1134",
             "name": "Panko – Middle Station (bags)",
@@ -3561,7 +3747,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1136",
@@ -3585,7 +3772,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1137",
@@ -3609,7 +3797,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1138",
@@ -3633,7 +3822,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1205",
@@ -3657,7 +3847,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1222",
@@ -3681,7 +3872,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1227",
@@ -3705,7 +3897,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1228",
@@ -3729,7 +3922,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1229",
@@ -3753,7 +3947,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1230",
@@ -3777,7 +3972,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           }
         ]
       },
@@ -3808,7 +4004,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1209",
@@ -3832,7 +4029,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1178",
@@ -3856,7 +4054,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1179",
@@ -3880,7 +4079,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1180",
@@ -3904,7 +4104,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1181",
@@ -3928,7 +4129,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1182",
@@ -3952,7 +4154,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1183",
@@ -3976,7 +4179,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1184",
@@ -4000,7 +4204,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1185",
@@ -4024,7 +4229,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1186",
@@ -4048,7 +4254,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1189",
@@ -4072,7 +4279,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1190",
@@ -4096,7 +4304,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1191",
@@ -4120,7 +4329,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1192",
@@ -4144,7 +4354,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1193",
@@ -4168,7 +4379,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1194",
@@ -4192,7 +4404,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1195",
@@ -4216,7 +4429,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1196",
@@ -4240,7 +4454,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1197",
@@ -4264,7 +4479,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1201",
@@ -4288,7 +4504,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1206",
@@ -4312,7 +4529,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1207",
@@ -4336,7 +4554,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1208",
@@ -4360,7 +4579,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1210",
@@ -4384,7 +4604,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "토론토"
           },
           {
             "id": "s1211",
@@ -4408,7 +4629,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1212",
@@ -4432,7 +4654,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1213",
@@ -4456,7 +4679,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1214",
@@ -4480,7 +4704,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "UWON"
           },
           {
             "id": "s1234",
@@ -4504,7 +4729,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1235",
@@ -4528,7 +4754,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           }
         ]
       }
@@ -4573,7 +4800,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1204",
@@ -4597,7 +4825,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1140",
@@ -4621,7 +4850,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1141",
@@ -4645,7 +4875,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1142",
@@ -4669,7 +4900,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1143",
@@ -4693,7 +4925,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1144",
@@ -4717,7 +4950,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Food Basics"
           },
           {
             "id": "s1145",
@@ -4741,7 +4975,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Wholesale"
           },
           {
             "id": "s1146",
@@ -4765,7 +5000,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1147",
@@ -4789,7 +5025,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1148",
@@ -4813,7 +5050,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1149",
@@ -4837,7 +5075,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1150",
@@ -4861,7 +5100,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1151",
@@ -4885,7 +5125,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1152",
@@ -4909,7 +5150,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1153",
@@ -4933,7 +5175,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1154",
@@ -4957,7 +5200,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1155",
@@ -4981,7 +5225,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1156",
@@ -5005,7 +5250,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1157",
@@ -5029,7 +5275,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1158",
@@ -5058,7 +5305,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           },
           {
             "id": "s1159",
@@ -5087,7 +5335,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1160",
@@ -5116,7 +5365,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1161",
@@ -5145,7 +5395,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "SYSCO"
           },
           {
             "id": "s1162",
@@ -5174,7 +5425,8 @@ window.STORE1_STATIONS = {
                 "status": "",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1203",
@@ -5198,7 +5450,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1163",
@@ -5222,7 +5475,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "야채아저씨"
           },
           {
             "id": "s1220",
@@ -5246,7 +5500,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1223",
@@ -5270,7 +5525,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "BNT"
           },
           {
             "id": "s1224",
@@ -5294,7 +5550,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "BNT"
           },
           {
             "id": "s1225",
@@ -5318,7 +5575,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Wholesale"
           },
           {
             "id": "s1226",
@@ -5342,7 +5600,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "BNT"
           }
         ]
       },
@@ -5373,7 +5632,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1165",
@@ -5397,7 +5657,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1166",
@@ -5421,7 +5682,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1167",
@@ -5445,7 +5707,8 @@ window.STORE1_STATIONS = {
                 "status": "ORDER",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1168",
@@ -5474,7 +5737,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "WISHMOTO"
           },
           {
             "id": "s1169",
@@ -5503,7 +5767,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "SYSCO"
           },
           {
             "id": "s1170",
@@ -5527,7 +5792,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Charliesmeat"
           },
           {
             "id": "s1171",
@@ -5551,7 +5817,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Charliesmeat"
           },
           {
             "id": "s1172",
@@ -5575,7 +5842,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Charliesmeat"
           },
           {
             "id": "s1173",
@@ -5599,7 +5867,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Charliesmeat"
           },
           {
             "id": "s1113",
@@ -5628,7 +5897,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1114",
@@ -5657,7 +5927,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1215",
@@ -5681,7 +5952,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "KFT"
           },
           {
             "id": "s1135",
@@ -5705,7 +5977,8 @@ window.STORE1_STATIONS = {
                 "status": "URGENT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           }
         ]
       },
@@ -5736,7 +6009,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1175",
@@ -5760,7 +6034,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1176",
@@ -5784,7 +6059,8 @@ window.STORE1_STATIONS = {
                 "status": "PREP",
                 "level": "order"
               }
-            ]
+            ],
+            "supplier": "Prep"
           }
         ]
       },
@@ -5815,7 +6091,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1188",
@@ -5839,7 +6116,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "동서"
           },
           {
             "id": "s1200",
@@ -5863,7 +6141,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "A1"
           },
           {
             "id": "s1216",
@@ -5887,7 +6166,8 @@ window.STORE1_STATIONS = {
                 "status": "OUT",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "COSTCO"
           }
         ]
       }

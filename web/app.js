@@ -1278,6 +1278,8 @@ async function loadOrders() {
   ORD.data = out;
 }
 const enPart = s => String(s || "").split(" / ")[0];
+const isPrep = n => /^prep$/i.test(n);
+const supLabel = n => isPrep(n) ? "Prep (make in-house) / 직접 프랩" : n;
 function orderGroups() {
   const sup = new Map();
   for (const { k, check } of ORD.data || []) {
@@ -1289,12 +1291,13 @@ function orderGroups() {
       sup.get(s).push({ ...a, station: KINDS[k].pick });
     }
   }
-  const names = [...sup.keys()].sort((x, y) => (x === NO_SUP) - (y === NO_SUP) || x.localeCompare(y));
+  const rank = n => n === NO_SUP ? 2 : isPrep(n) ? 1 : 0;
+  const names = [...sup.keys()].sort((x, y) => rank(x) - rank(y) || x.localeCompare(y));
   return names.map(n => [n, sup.get(n).sort((x, y) => (x.level === "urgent" ? 0 : 1) - (y.level === "urgent" ? 0 : 1))]);
 }
 function supplierText(name, list) {
   const d = parseKey(current).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  const parts = [`Store #1 Order${name === NO_SUP ? "" : " - " + name} - ${d}`, ""];
+  const parts = [`Store #1 ${isPrep(name) ? "Prep list" : "Order" + (name === NO_SUP ? "" : " - " + name)} - ${d}`, ""];
   list.forEach((a, i) => parts.push(`${i + 1}. ${a.name}`, `   → ${a.level === "urgent" ? "OUT – " : ""}${enPart(a.choice)}`));
   parts.push("", `Total: ${list.length} item${list.length === 1 ? "" : "s"}`, "", "Thank you!");
   return parts.join("\n");
@@ -1313,8 +1316,8 @@ function renderOrders() {
   el.innerHTML = `<p class="hint" style="margin-top:14px">Items marked <b>order</b> or <b>out</b> in the latest check of each station, grouped by supplier. 각 파트의 가장 최근 체크에서 주문 필요·재고 없음으로 고른 품목을 업체별로 모았어요.</p>
     <ul class="ordstations">${stations}</ul>
     ${!total && !extras.length ? `<div class="empty">Nothing to order right now. 지금 주문할 품목이 없어요.</div>` : ""}
-    ${groups.map(([name, list], gi) => `<section class="supcard${name === NO_SUP ? " nosup" : ""}">
-      <div class="suphead"><h2>${esc(name)}</h2><span class="chip lv-order">${list.length} item${list.length === 1 ? "" : "s"}</span>
+    ${groups.map(([name, list], gi) => `<section class="supcard${name === NO_SUP ? " nosup" : ""}${isPrep(name) ? " prep" : ""}">
+      <div class="suphead"><h2>${esc(supLabel(name))}</h2><span class="chip lv-order">${list.length} item${list.length === 1 ? "" : "s"}</span>
         <button type="button" class="btn" data-supcopy="${gi}">Copy</button></div>
       <ul class="sumlist">${list.map(a => `<li class="lv-${esc(a.level)}"><span class="dot"></span><span><span class="n">${esc(a.name)}${a.ko ? ` <span class="k">${esc(a.ko)}</span>` : ""}</span><span class="c">${esc(a.choice)} · ${esc(a.station)}</span></span></li>`).join("")}</ul>
     </section>`).join("")}
@@ -1325,7 +1328,7 @@ function renderOrders() {
 }
 $("s2Body").addEventListener("click", e => {
   const c = e.target.closest("[data-supcopy]");
-  if (c) { const [n, l] = ORD.groups[Number(c.dataset.supcopy)]; showTextSheet(`Order · ${enPart(n)}`, supplierText(n, l), `${l.length} item${l.length === 1 ? "" : "s"} · You can edit the text before copying.`); return; }
+  if (c) { const [n, l] = ORD.groups[Number(c.dataset.supcopy)]; showTextSheet(isPrep(n) ? "Prep list" : `Order · ${enPart(n)}`, supplierText(n, l), `${l.length} item${l.length === 1 ? "" : "s"} · You can edit the text before copying.`); return; }
   if (e.target.closest("[data-ordreload]")) { ORD.data = null; route(); }
 });
 $("s2Body").addEventListener("click", e => { const b = e.target.closest("[data-pick]"); if (b) location.hash = b.dataset.pick; });
