@@ -1733,7 +1733,8 @@ window.STORE1_STATIONS = {
                 "status": "Urgent Production",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1064",
@@ -1757,7 +1758,8 @@ window.STORE1_STATIONS = {
                 "status": "Urgent Production",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1065",
@@ -1781,7 +1783,8 @@ window.STORE1_STATIONS = {
                 "status": "Urgent Production",
                 "level": "urgent"
               }
-            ]
+            ],
+            "supplier": "Prep"
           },
           {
             "id": "s1066",
