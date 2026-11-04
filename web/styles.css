@@ -377,3 +377,9 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .pinbar label{font-size:.85rem;font-weight:600}
 .pinbar input{font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
 .undobar{margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-radius:12px;background:color-mix(in srgb, var(--tile-green) 10%, var(--surface))}
+.haverow{grid-area:have;display:grid;gap:4px;margin-top:10px}
+.haverow[hidden]{display:none}
+.haverow label{font-size:.82rem;font-weight:600;color:var(--short)}
+.haverow label small{font-weight:400;color:var(--muted)}
+.haverow input{font:inherit;font-size:16px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:260px}
+.s2row.s2choicerow{grid-template-areas:"name" "note" "chips" "have"}

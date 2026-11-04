@@ -888,7 +888,7 @@ const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", n
 function s2Draft() {
   if (!T.draft) { try { T.draft = JSON.parse(store.get(KINDS[K].key) || "null"); } catch (e) {} }
   if (!T.draft || T.draft.v !== 2) T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: (T.draft && T.draft.name) || "" };
-  for (const f of ["counts", "choice", "det"]) if (!T.draft[f]) T.draft[f] = {};
+  for (const f of ["counts", "choice", "det", "have"]) if (!T.draft[f]) T.draft[f] = {};
   return T.draft;
 }
 const s2Save = () => store.set(KINDS[K].key, JSON.stringify(T.draft));
@@ -935,7 +935,8 @@ function s2Answers(d) {
       const need = c == null ? 0 : cntNeed(it, c), lvl = c == null ? "none" : c <= 0 ? "urgent" : t != null && c < t ? "order" : "ok";
       return { ...base, count: c, target: t, need: lvl === "ok" || lvl === "none" ? null : need, unit: it.unit, unitKo: it.unitKo,
         choice: c == null ? "" : `${fmtFrac(c)} ${u}${t != null ? ` / target ${fmtFrac(t)}` : ""}`, level: lvl }; }
-    if (isChoice(it)) { const o = it.options[choiceIdx(d, it)] || {}; return { ...base, choice: o.label || "", status: o.status || "", level: o.level || "ok" }; }
+    if (isChoice(it)) { const o = it.options[choiceIdx(d, it)] || {}, lv = o.level || "ok", have = lv === "order" ? String(d.have[it.id] || "").trim().slice(0, 40) : "";
+      return { ...base, choice: (o.label || "") + (have ? ` · Have: ${have}` : ""), status: o.status || "", level: lv, ...(have ? { have } : {}) }; }
     if (isFlag(it)) { const on = !!d.flags[it.id]; return { ...base, choice: on ? "Need to order / 주문 필요" : "Enough / 충분함", level: on ? "order" : "ok", flag: true }; }
     const s = s2Short(d, it), t = Number(it.target);
     const level = s <= 0 ? "ok" : s >= t ? "urgent" : "order";
@@ -987,7 +988,8 @@ function s2Row(it, d) {
   const note = it.note ? `<div class="s2note">${isText(it) ? "" : "※ "}${esc(it.note).replace(/\n/g, "<br>")}</div>` : "";
   if (isChoice(it)) { const sel = choiceIdx(d, it), lv = (it.options[sel] || {}).level || "ok";
     return `<li class="row s2row s2choicerow${lv !== "ok" ? " short" : ""}" id="s2-${esc(it.id)}">${name}${note}
-      <div class="chips2" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `<button type="button" class="chip2 lv-${esc(o.level)}" role="radio" aria-checked="${k === sel}" data-ch="${esc(it.id)}" data-k="${k}"><span class="dot"></span><span>${esc(o.label)}</span></button>`).join("")}</div></li>`; }
+      <div class="chips2" role="radiogroup" aria-label="${esc(it.name)}">${it.options.map((o, k) => `<button type="button" class="chip2 lv-${esc(o.level)}" role="radio" aria-checked="${k === sel}" data-ch="${esc(it.id)}" data-k="${k}"><span class="dot"></span><span>${esc(o.label)}</span></button>`).join("")}</div>
+      <div class="haverow"${lv === "order" ? "" : " hidden"}><label for="have-${esc(it.id)}">Current qty / 현재 수량 <small>(optional)</small></label><input id="have-${esc(it.id)}" data-have="${esc(it.id)}" value="${esc(d.have[it.id] || "")}" placeholder="e.g. 2 / 예: 2박스" maxlength="40" autocomplete="off" enterkeyhint="done"></div></li>`; }
   if (isCount(it)) { const v = d.counts[it.id] ?? "";
     const low = cntLow(it, v), u = `${esc(it.unit)}${it.unitKo ? " (" + esc(it.unitKo) + ")" : ""}`;
     return `<li class="row s2row${low ? " short" : ""}" id="s2-${esc(it.id)}" data-cid="${esc(it.id)}">${name}
@@ -1039,7 +1041,10 @@ $("s2Body").addEventListener("click", e => {
   if (ch) {
     const d = s2Draft(), it = S2_ITEMS.find(x => x.id === ch.dataset.ch); d.choice[ch.dataset.ch] = Number(ch.dataset.k); s2Save();
     ch.parentElement.querySelectorAll(".chip2").forEach(b => b.setAttribute("aria-checked", b === ch ? "true" : "false"));
-    ch.closest(".row").classList.toggle("short", ((it.options[Number(ch.dataset.k)] || {}).level || "ok") !== "ok"); s2UpdateBar(); return;
+    const lvl = (it.options[Number(ch.dataset.k)] || {}).level || "ok", row = ch.closest(".row");
+    row.classList.toggle("short", lvl !== "ok");
+    const hr = row.querySelector(".haverow"); if (hr) { const was = hr.hidden; hr.hidden = lvl !== "order"; if (was && !hr.hidden) hr.querySelector("input").focus({ preventScroll: true }); }
+    s2UpdateBar(); return;
   }
   const sb = e.target.closest("[data-s2act]");
   if (sb) {
@@ -1077,6 +1082,7 @@ $("s2Body").addEventListener("input", e => {
     if (e.target.value.trim() !== "") r.classList.remove("missing"); s2UpdateBar();
   }
   if (e.target.dataset && e.target.dataset.det) { d.det[e.target.dataset.det] = e.target.value; s2Save(); }
+  if (e.target.dataset && e.target.dataset.have) { d.have[e.target.dataset.have] = e.target.value; s2Save(); }
   if (e.target.dataset && e.target.dataset.short) {
     d.short[e.target.dataset.short] = e.target.value; s2Save();
     const r = e.target.closest(".row"); r.classList.toggle("short", toNum(e.target.value) > 0); r.querySelector(".sfr").textContent = s2FracHint(e.target.value); s2UpdateBar();
@@ -1097,6 +1103,7 @@ $("s2Body").addEventListener("focusout", e => {
 });
 $("s2Body").addEventListener("keydown", e => {
   if (e.target.id === "s2Name" && e.key === "Enter") { e.preventDefault(); e.target.blur(); return; }
+  if (e.key === "Enter" && e.target.dataset && e.target.dataset.have) { e.preventDefault(); e.target.blur(); return; }
   if (e.key === "Enter" && e.target.dataset && (e.target.dataset.short || e.target.dataset.count)) {
     e.preventDefault();
     const inputs = [...$("s2Body").querySelectorAll("input[data-short], input[data-count]")]; const i = inputs.indexOf(e.target);
@@ -1132,7 +1139,7 @@ $("s2Submit").addEventListener("click", async () => {
     const id = await rpc("save_store_check", { p_pin: S.pin, p_store: K, p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
     T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: d.extra === "yes" ? d.extraText.trim() : null, created_at: new Date().toISOString() };
     T.detailId = id; T.list = null; T.last = T.detail;
-    T.draft = { v: 2, short: {}, flags: {}, texts: {}, counts: {}, choice: {}, det: {}, extra: null, extraText: "", name: d.name }; s2Save();
+    T.draft = { v: 2, short: {}, flags: {}, texts: {}, counts: {}, choice: {}, det: {}, have: {}, extra: null, extraText: "", name: d.name }; s2Save();
     T.view = "detail"; T.justSubmitted = true; location.hash = K + "-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
     toast("Check submitted. 제출 완료!");
   } catch (e) {
@@ -1304,7 +1311,8 @@ function orderGroups() {
 function supplierText(name, list) {
   const d = parseKey(current).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   const parts = [`Store #1 ${isPrep(name) ? "Prep list" : "Order" + (name === NO_SUP ? "" : " - " + name)} - ${d}`, ""];
-  list.forEach((a, i) => parts.push(`${i + 1}. ${a.name}`, `   → ${a.level === "urgent" ? "OUT – " : ""}${enPart(a.choice)}`));
+  list.forEach((a, i) => { const m = String(a.choice || "").match(/ · Have: (.+)$/);
+    parts.push(`${i + 1}. ${a.name}`, `   → ${a.level === "urgent" ? "OUT – " : ""}${enPart(String(a.choice || "").replace(/ · Have: .+$/, ""))}${m ? ` (have ${m[1]})` : ""}`); });
   parts.push("", `Total: ${list.length} item${list.length === 1 ? "" : "s"}`, "", "Thank you!");
   return parts.join("\n");
 }
