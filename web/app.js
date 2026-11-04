@@ -888,10 +888,46 @@ const LEVEL_NAME = { urgent: "URGENT", order: "ORDER", low: "LOW", ok: "SAFE", n
 function s2Draft() {
   if (!T.draft) { try { T.draft = JSON.parse(store.get(KINDS[K].key) || "null"); } catch (e) {} }
   if (!T.draft || T.draft.v !== 2) T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: (T.draft && T.draft.name) || "" };
+  if (T.draft.editId && T.draft.editDate !== current) T.draft = { v: 2, short: {}, flags: {}, texts: {}, extra: null, extraText: "", name: T.draft.name || "" };
   for (const f of ["counts", "choice", "det", "have"]) if (!T.draft[f]) T.draft[f] = {};
   return T.draft;
 }
 const s2Save = () => store.set(KINDS[K].key, JSON.stringify(T.draft));
+const s2Pristine = d => !d.editId && !d.extra && ["short", "flags", "texts", "counts", "choice", "det", "have"].every(f => !d[f] || !Object.keys(d[f]).length);
+function s2DraftFromCheck(c) {
+  const d = { v: 2, short: {}, flags: {}, texts: {}, counts: {}, choice: {}, det: {}, have: {}, extra: null, extraText: "", name: c.checked_by || "" };
+  const by = {}; for (const a of c.answers || []) if (a.id) by[a.id] = a;
+  for (const it of S2_ITEMS) {
+    const a = by[it.id]; if (!a) continue;
+    if (isChoice(it)) { const lab = String(a.choice || "").replace(/ · Have: .+$/, ""); const k = it.options.findIndex(o => o.label === lab); if (k > 0) d.choice[it.id] = k; if (a.have) d.have[it.id] = a.have; }
+    else if (isText(it)) { if (a.choice) d.texts[it.id] = a.choice; }
+    else if (isFlag(it)) { if (a.level === "order") d.flags[it.id] = true; }
+    else if (isCount(it)) { if (a.count != null) d.counts[it.id] = String(a.count); }
+    else if (Number(a.short) > 0) d.short[it.id] = String(a.short);
+  }
+  if (S2.extra) {
+    if (c.extra_request) {
+      d.extra = "yes"; d.extraText = c.extra_request;
+      if (S2.extra.details) for (const line of String(c.extra_request).split("\n")) {
+        const m = line.match(/^(Item|Quantity|Reason|Note): (.*)$/); if (m) d.det[{ Item: "item", Quantity: "qty", Reason: "reason", Note: "desc" }[m[1]]] = m[2];
+      }
+    } else d.extra = "no";
+  }
+  d.editId = c.id; d.editDate = String(c.check_date).slice(0, 10); d.editAt = c.created_at;
+  return d;
+}
+/* Opening a form: if this device has nothing typed yet and today's check was already submitted, show it so it can be fixed. */
+async function s2LoadToday(kind) {
+  if (kind !== K || T.view !== "form") return;
+  const d = s2Draft(); if (!s2Pristine(d)) return;
+  try {
+    const l = ((await rpc("list_store_checks", { p_pin: S.pin, p_store: kind, p_limit: 1 })) || [])[0];
+    if (!l || String(l.check_date).slice(0, 10) !== current) return;
+    const c = ((await rpc("get_store_check", { p_pin: S.pin, p_id: l.id })) || [])[0];
+    if (!c || kind !== K || T.view !== "form" || !s2Pristine(s2Draft())) return;
+    T.draft = s2DraftFromCheck(c); s2Save(); renderStore2();
+  } catch (e) { /* offline or not set up: keep the empty form */ }
+}
 const isText = it => it.input === "text";
 const isFlag = it => it.input === "flag";
 const isCount = it => it.input === "count";
@@ -958,6 +994,7 @@ function renderS2Form(el) {
   const d = s2Draft();
   el.innerHTML = `<div class="who"><label for="s2Name">Checked by</label>
       <input id="s2Name" type="text" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Your name" value="${esc(d.name)}" enterkeyhint="done"></div>
+    ${d.editId ? `<div class="editbar"><b>Already submitted today${d.editAt ? " at " + esc(timeOf(d.editAt)) : ""}.</b> Fix anything and tap <b>Update check</b>. 오늘 이미 제출했어요. 잘못된 부분을 고치고 Update를 누르면 바뀌어요.</div>` : ""}
     <p class="hint">${KINDS[K].group === "store1" ? "Tap the stock level for each item. Full stock is already selected. 각 품목의 재고 상태를 탭해서 골라주세요. 기본값은 ‘충분’이에요." : "Enter how much is short compared to the target. Leave 0 if it's full. 기준보다 부족한 수량만 입력하세요."}</p>
     ${S2.sections.map(sec => `<section class="s2sec"><h2>${esc(sec.en)} <small>${esc(sec.ko)}</small></h2>
       ${sec.note ? `<p class="secnote">${esc(sec.note)}</p>` : ""}
@@ -1015,7 +1052,7 @@ function s2Row(it, d) {
 }
 function s2UpdateBar() {
   const d = s2Draft(), n = s2ShortCount(d);
-  $("s2Submit").textContent = `Submit check${n ? ` (${n} short)` : ""}`;
+  $("s2Submit").textContent = `${d.editId ? "Update check" : "Submit check"}${n ? ` (${n} short)` : ""}`;
   const pill = $("s2Pill"); if (pill) { pill.textContent = n ? `${n} short` : "All full"; pill.classList.toggle("warn", !!n); pill.classList.remove("mute"); }
 }
 function s2FracHint(v) { const n = toNum(v); return n > 0 && fmtFrac(n) !== fmt(n) ? `short ${fmtFrac(n)}` : ""; }
@@ -1133,15 +1170,22 @@ $("s2Submit").addEventListener("click", async () => {
     d.extraText = detText(d.det);
   }
   if (d.extra === "yes" && !d.extraText.trim()) { const t = $("s2ExtraText"); if (t) t.focus(); toast("Write what needs to be ordered, or choose No.", true); return; }
-  const btn = $("s2Submit"); btn.disabled = true; btn.textContent = "Submitting…";
-  const answers = s2Answers(d);
+  const editing = !!(d.editId && d.editDate === current);
+  const btn = $("s2Submit"); btn.disabled = true; btn.textContent = editing ? "Updating…" : "Submitting…";
+  const answers = s2Answers(d), extra = d.extra === "yes" ? d.extraText.trim() : null;
   try {
-    const id = await rpc("save_store_check", { p_pin: S.pin, p_store: K, p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: d.extra === "yes" ? d.extraText.trim() : null });
-    T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: d.extra === "yes" ? d.extraText.trim() : null, created_at: new Date().toISOString() };
+    let id = null, updated = false;
+    if (editing) {
+      try { id = await rpc("update_store_check", { p_pin: S.pin, p_id: d.editId, p_name: d.name.trim(), p_answers: answers, p_extra: extra }); updated = true; }
+      catch (e) { if (!(missingFn(e, "update_store_check") || /not_found|too_old/.test(e.message || ""))) throw e; }
+    }
+    if (!updated) id = await rpc("save_store_check", { p_pin: S.pin, p_store: K, p_date: current, p_name: d.name.trim(), p_answers: answers, p_extra: extra });
+    const at = updated && d.editAt ? d.editAt : new Date().toISOString();
+    T.detail = { id, check_date: current, checked_by: d.name.trim(), answers, extra_request: extra, created_at: at };
     T.detailId = id; T.list = null; T.last = T.detail;
-    T.draft = { v: 2, short: {}, flags: {}, texts: {}, counts: {}, choice: {}, det: {}, have: {}, extra: null, extraText: "", name: d.name }; s2Save();
+    T.draft = { ...d, editId: id, editDate: current, editAt: at }; s2Save();   /* keep today's answers so they can be fixed later */
     T.view = "detail"; T.justSubmitted = true; location.hash = K + "-history"; T.view = "detail"; renderStore2(); window.scrollTo(0, 0);
-    toast("Check submitted. 제출 완료!");
+    toast(updated ? "Check updated. 수정 완료!" : "Check submitted. 제출 완료!");
   } catch (e) {
     if (handlePinError(e)) return;
     if (missingFn(e, "save_store_check") || /invalid_store/.test(e.message)) { T.notSetUp = true; renderStore2(); }
@@ -1424,6 +1468,7 @@ function route() {
     if (h === K + "-history") { if (T.view !== "detail" || !T.justSubmitted) { T.view = "history"; T.list = null; } }
     else { T.view = "form"; T.justSubmitted = false; }
     renderStore2(); window.scrollTo(0, 0);
+    if (T.view === "form") s2LoadToday(K);
     return;
   }
   for (const k in TS) TS[k].justSubmitted = false;
