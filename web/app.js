@@ -653,7 +653,7 @@ function renderModeHeader() {
   const hb = $("homeBtn"); let title = "", line = "";
   if (S.mode === "home") { hb.hidden = true; title = "Today"; line = longDate(current); }
   else if (S.mode === "store2" && S.s2pick) {
-    hb.hidden = false; hb.textContent = S.s2pick === "orders" ? "‹ Stations" : "‹ Home";
+    hb.hidden = false; hb.textContent = S.s2pick === "orders" ? "‹ Stations" : S.s2pick === "done" ? "‹ Orders" : "‹ Home";
     $("viewTitle").textContent = GROUPS[S.s2pick].title; $("dateLine").textContent = longDate(current); $("statusPills").innerHTML = ""; return;
   }
   else if (S.mode === "store2") {
@@ -879,7 +879,7 @@ for (const sid of ["server", "sushi", "middle", "cook"]) {
   KINDS["s1" + sid] = { cfg: st, group: "store1", title: `Store #1 ${st.name}`, pick: st.name, pko: `${st.ko} 파트`, icon: S1_ICONS[sid],
     hist: `Store #1 ${st.name} Checks`, order: `Store #1 ${st.name} Order`, sql: "007_store1_checks.sql", key: `s1${sid}-draft` };
 }
-const GROUPS = { orders: { title: "Orders by Supplier" }, store1: { title: "Store #1 Inventory", hint: "Pick your station. 오늘 담당 파트를 고르세요." }, store2: { title: "Store #2", hint: "Pick the check. 체크 종류를 고르세요." } };
+const GROUPS = { done: { title: "Done History" }, orders: { title: "Orders by Supplier" }, store1: { title: "Store #1 Inventory", hint: "Pick your station. 오늘 담당 파트를 고르세요." }, store2: { title: "Store #2", hint: "Pick the check. 체크 종류를 고르세요." } };
 for (const k in KINDS) TS[k] = { view: "form", draft: null, list: null, detail: null, detailId: null, last: null, notSetUp: false, confirmDelete: false, deleteErr: "" };
 let K = "store2", S2, S2_ITEMS, T;
 function useKind(k) { K = k; S2 = KINDS[k].cfg || { sections: [], extra: null }; S2_ITEMS = S2.sections.flatMap(s => s.items); T = TS[k]; }
@@ -1390,8 +1390,37 @@ function renderOrders() {
     </section>`).join("")}
     ${extras.length ? `<section class="supcard"><div class="suphead"><h2>Other requests / 기타 요청</h2></div>
       <ul class="sumlist ordlist">${extras.map(a => `<li class="lv-request"><span class="dot"></span><span><span class="n">${esc(KINDS[a.store] ? KINDS[a.store].pick : "")} · ${esc(shortDate(dayOf(a.check_date)))} · ${esc(a.checked_by || "")}</span><span class="c" style="white-space:pre-wrap">${esc(a.choice)}</span></span>${canDone ? `<button type="button" class="donebtn" data-done1="${esc(a.item_key)}" aria-label="Done">✓</button>` : ""}</li>`).join("")}</ul></section>` : ""}
-    <div class="linkrow"><button type="button" class="hist-btn" data-ordreload>Refresh</button></div>`;
+    <div class="linkrow"><button type="button" class="hist-btn" data-ordreload>Refresh</button>
+      ${canDone ? `<button type="button" class="hist-btn" data-donehist>${svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>')}Done history / 완료 기록</button>` : ""}</div>`;
   ORD.groups = groups;
+}
+/* ---------- Store #1: done history (what was marked ordered, last 60 days) ---------- */
+const DH = { data: null, missing: false };
+const localDay = iso => { const t = new Date(iso); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`; };
+function renderDoneHistory() {
+  setMode("store2"); renderModeHeader();
+  const el = $("s2Body");
+  if (!DH.data) { el.innerHTML = `<div class="empty">Loading done history…</div>`; return; }
+  if (DH.missing) { el.innerHTML = `<div class="banner">Done history isn't set up yet. Run <b>supabase/010_done_history.sql</b> once in Supabase (see README).</div>`; return; }
+  const intro = `<p class="hint" style="margin-top:14px">Everything marked <b>Done</b> in the last 60 days, newest first. 최근 60일 동안 완료를 누른 주문 기록이에요.</p>`;
+  if (!DH.data.length) { el.innerHTML = intro + `<div class="empty">Nothing marked done in the last 60 days. 최근 60일 완료 기록이 없어요.</div>`; return; }
+  const days = new Map();
+  for (const r of DH.data) { const k = localDay(r.done_at); if (!days.has(k)) days.set(k, []); days.get(k).push(r); }
+  el.innerHTML = intro + [...days.entries()].map(([day, rows]) => {
+    const sup = new Map();
+    for (const r of rows) {
+      const s = r.level === "request" ? "Other requests / 기타 요청" : (((S1_ITEM[r.item_key] || {}).supplier || "").trim() || NO_SUP);
+      if (!sup.has(s)) sup.set(s, []); sup.get(s).push(r);
+    }
+    return `<section class="dhday"><h2>${esc(parseKey(day).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" }))} <small>${rows.length} item${rows.length === 1 ? "" : "s"}</small></h2>
+      ${[...sup.entries()].sort(([x], [y]) => (x.startsWith("Other requests") - y.startsWith("Other requests")) || (isPrep(x) - isPrep(y)) || x.localeCompare(y)).map(([s, list]) => `<div class="supcard${isPrep(s) ? " prep" : ""}"><div class="suphead"><h3>${esc(supLabel(s))}</h3><span class="chip lv-ok">${list.length}</span></div>
+        <ul class="sumlist ordlist dh">${list.map(r => `<li class="lv-${esc(r.level || "order")}"><span class="dot"></span><span>
+          <span class="n">${r.level === "request" ? "Extra request / 추가 요청" : esc(r.name || r.item_key)}${r.ko ? ` <span class="k">${esc(r.ko)}</span>` : ""}</span>
+          <span class="c" style="white-space:pre-wrap">${esc(r.choice || "")}</span>
+          <span class="c t">Done ${esc(timeOf(r.done_at))}${r.done_by ? " by " + esc(r.done_by) : ""}${r.store && KINDS[r.store] ? ` · ${esc(KINDS[r.store].pick)}` : ""}${r.check_date ? ` · checked ${esc(shortDate(String(r.check_date).slice(0, 10)))}` : ""}</span>
+        </span></li>`).join("")}</ul></div>`).join("")}
+    </section>`;
+  }).join("");
 }
 async function markDone(keys) {
   if (ORD.busy || !keys.length) return;
@@ -1421,7 +1450,8 @@ $("s2Body").addEventListener("click", async e => {
     catch (err) { toast(errorText(err, "undo"), true); }
     return;
   }
-  if (e.target.closest("[data-ordreload]")) { ORD.data = null; ORD.undo = null; route(); }
+  if (e.target.closest("[data-ordreload]")) { ORD.data = null; ORD.undo = null; route(); return; }
+  if (e.target.closest("[data-donehist]")) { location.hash = "store1-done"; }
 });
 $("s2Body").addEventListener("click", e => { const b = e.target.closest("[data-pick]"); if (b) location.hash = b.dataset.pick; });
 function weeklyDue() {
@@ -1451,6 +1481,13 @@ function route() {
     });
     return;
   }
+  if (h === "store1-done") {
+    S.s2pick = "done"; DH.data = null; renderDoneHistory(); window.scrollTo(0, 0);
+    rpc("get_store1_done_history", { p_pin: S.pin, p_days: 60 })
+      .then(r => { DH.data = r || []; DH.missing = false; if (S.s2pick === "done") renderDoneHistory(); })
+      .catch(e => { if (handlePinError(e)) return; if (missingFn(e, "get_store1_done_history")) { DH.data = []; DH.missing = true; renderDoneHistory(); } else $("s2Body").innerHTML = `<div class="empty">${esc(e.message || "Could not load")}</div>`; });
+    return;
+  }
   if (h === "store1-orders") {
     S.s2pick = "orders"; ORD.data = null; ORD.undo = null; renderOrders(); window.scrollTo(0, 0);
     loadOrders().then(() => { if (S.s2pick === "orders") renderOrders(); }).catch(e => { if (!handlePinError(e)) { $("s2Body").innerHTML = `<div class="empty">${esc(e.message || "Could not load")}</div>`; } });
@@ -1478,6 +1515,7 @@ function route() {
 window.addEventListener("hashchange", route);
 $("homeBtn").addEventListener("click", () => {
   if (S.mode === "store2" && S.s2pick === "orders") { location.hash = "store1-pick"; return; }
+  if (S.mode === "store2" && S.s2pick === "done") { location.hash = "store1-orders"; return; }
   if (S.mode === "closing" && C.view !== "roles") location.hash = "closing";
   else if (S.mode === "store2" && !S.s2pick && T.view === "detail" && !T.justSubmitted) { T.view = "history"; renderStore2(); window.scrollTo(0, 0); }
   else if (S.mode === "store2" && !S.s2pick && !T.justSubmitted) location.hash = KINDS[K].group + "-pick";

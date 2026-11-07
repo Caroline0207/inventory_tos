@@ -384,3 +384,9 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .haverow input{font:inherit;font-size:16px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:260px}
 .s2row.s2choicerow{grid-template-areas:"name" "note" "chips" "have"}
 .editbar{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:.88rem;line-height:1.4;background:color-mix(in srgb, var(--tile-indigo) 10%, var(--surface));border:1px solid color-mix(in srgb, var(--tile-indigo) 35%, var(--line))}
+.dhday{margin-top:18px}
+.dhday > h2{font-size:1.05rem;margin:0 0 4px}
+.dhday > h2 small{font-weight:500;color:var(--muted);font-size:.85rem;margin-left:6px}
+.suphead h3{margin:0;font-size:1rem;flex:1}
+.ordlist.dh li{grid-template-columns:auto 1fr}
+.linkrow{flex-wrap:wrap;gap:8px}
