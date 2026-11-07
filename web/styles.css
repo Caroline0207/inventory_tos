@@ -390,3 +390,8 @@ details.allitems summary{cursor:pointer;font-weight:600;padding:8px 4px}
 .suphead h3{margin:0;font-size:1rem;flex:1}
 .ordlist.dh li{grid-template-columns:auto 1fr}
 .linkrow{flex-wrap:wrap;gap:8px}
+.daynav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px}
+.daynav b{font-size:1.05rem}
+.daynav .btn{min-width:48px;font-size:1.2rem}
+.daynav .btn[disabled]{opacity:.35}
+.ordlist li.isdone{opacity:.55}

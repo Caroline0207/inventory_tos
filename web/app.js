@@ -1318,7 +1318,7 @@ function renderStore2Pick() {
 const NO_SUP = "No supplier yet / 업체 미정";
 const S1_ITEM = {};
 for (const k in KINDS) if (KINDS[k].group === "store1") for (const sec of KINDS[k].cfg.sections) for (const it of sec.items) S1_ITEM[it.id] = it;
-const ORD = { data: null, stations: null, legacy: false, undo: null, busy: false };
+const ORD = { data: null, stations: null, legacy: false, undo: null, busy: false, mode: "pending", day: null, lists: {}, checks: {}, dayData: null };
 const enPart = s => String(s || "").split(" / ")[0];
 const isPrep = n => /^prep$/i.test(n);
 const supLabel = n => isPrep(n) ? "Prep (make in-house) / 직접 프랩" : n;
@@ -1352,8 +1352,8 @@ function orderGroups() {
   const names = [...sup.keys()].sort((x, y) => rank(x) - rank(y) || x.localeCompare(y));
   return names.map(n => [n, sup.get(n).sort((x, y) => (x.level === "urgent" ? 0 : 1) - (y.level === "urgent" ? 0 : 1) || String(x.name).localeCompare(String(y.name)))]);
 }
-function supplierText(name, list) {
-  const d = parseKey(current).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+function supplierText(name, list, day) {
+  const d = parseKey(day || current).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   const parts = [`Store #1 ${isPrep(name) ? "Prep list" : "Order" + (name === NO_SUP ? "" : " - " + name)} - ${d}`, ""];
   list.forEach((a, i) => { const m = String(a.choice || "").match(/ · Have: (.+)$/);
     parts.push(`${i + 1}. ${a.name}`, `   → ${a.level === "urgent" ? "OUT – " : ""}${enPart(String(a.choice || "").replace(/ · Have: .+$/, ""))}${m ? ` (have ${m[1]})` : ""}`); });
@@ -1361,9 +1361,61 @@ function supplierText(name, list) {
   return parts.join("\n");
 }
 const dayOf = v => String(v || "").slice(0, 10);
+const ordSeg = () => `<div class="seg" role="group" aria-label="Order view">
+    <button type="button" data-ordmode="pending" aria-pressed="${ORD.mode === "pending"}">To order</button>
+    <button type="button" data-ordmode="day" aria-pressed="${ORD.mode === "day"}">By day</button></div>`;
+/* By day: what each station flagged on one date (latest check per station that day), grouped by supplier. */
+async function loadOrderDay(day) {
+  const kinds = Object.keys(KINDS).filter(k => KINDS[k].group === "store1");
+  await Promise.all(kinds.map(async k => { if (!ORD.lists[k]) ORD.lists[k] = (await rpc("list_store_checks", { p_pin: S.pin, p_store: k, p_limit: 60 })) || []; }));
+  const out = await Promise.all(kinds.map(async k => {
+    const l = ORD.lists[k].find(x => dayOf(x.check_date) === day); if (!l) return { k, check: null };
+    if (!ORD.checks[l.id]) ORD.checks[l.id] = ((await rpc("get_store_check", { p_pin: S.pin, p_id: l.id })) || [])[0] || null;
+    return { k, check: ORD.checks[l.id] };
+  }));
+  if (ORD.day === day) ORD.dayData = out;
+}
+function renderOrdersDay(el) {
+  const day = ORD.day, d = ORD.dayData;
+  const nav = `<div class="daynav"><button type="button" class="btn" data-orddayshift="-1" aria-label="Previous day">‹</button>
+    <b>${esc(parseKey(day).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }))}${day === current ? " · Today" : ""}</b>
+    <button type="button" class="btn" data-orddayshift="1" aria-label="Next day"${day >= current ? " disabled" : ""}>›</button></div>`;
+  if (!d) { el.innerHTML = ordSeg() + nav + `<div class="empty">Loading…</div>`; return; }
+  const pending = new Set((ORD.data || []).map(a => a.item_key));
+  const stations = d.map(({ k, check }) => `<li class="${check ? "" : "old"}"><b>${esc(KINDS[k].pick)}</b><span>${check ? `${esc(timeOf(check.created_at))} · ${esc(check.checked_by)}` : "Not checked this day"}</span></li>`).join("");
+  const sup = new Map(), extras = [];
+  for (const { k, check } of d) {
+    if (!check) continue;
+    for (const a of check.answers || []) {
+      if (a.level !== "order" && a.level !== "urgent") continue;
+      const s = (((S1_ITEM[a.id] || {}).supplier) || "").trim() || NO_SUP;
+      if (!sup.has(s)) sup.set(s, []);
+      sup.get(s).push({ ...a, item_key: a.id, store: k, check_date: check.check_date });
+    }
+    if (check.extra_request) extras.push({ k, check });
+  }
+  const rank = n => n === NO_SUP ? 2 : isPrep(n) ? 1 : 0;
+  const groups = [...sup.keys()].sort((x, y) => rank(x) - rank(y) || x.localeCompare(y)).map(n => [n, sup.get(n).sort((x, y) => (x.level === "urgent" ? 0 : 1) - (y.level === "urgent" ? 0 : 1) || String(x.name).localeCompare(String(y.name)))]);
+  ORD.dayGroups = groups;
+  const canDone = !ORD.legacy;
+  const row = a => { const open = pending.has(a.item_key);
+    return `<li class="lv-${esc(a.level)}${open || !canDone ? "" : " isdone"}"><span class="dot"></span><span><span class="n">${esc(a.name)}${a.ko ? ` <span class="k">${esc(a.ko)}</span>` : ""}</span><span class="c">${esc(a.choice)}</span><span class="c t">${esc(KINDS[a.store].pick)}${canDone && !open ? " · <b>ordered</b>" : ""}</span></span>${canDone && open ? `<button type="button" class="donebtn" data-done1="${esc(a.item_key)}" aria-label="Done: ${esc(a.name)}">✓</button>` : ""}</li>`; };
+  const total = groups.reduce((n, [, l]) => n + l.length, 0);
+  el.innerHTML = ordSeg() + nav + `<p class="hint">What each station marked <b>order</b> or <b>out</b> on this day, done or not. 이날 각 파트가 주문 필요·재고 없음으로 체크한 품목이에요 (완료 여부와 상관없이).</p>
+    <ul class="ordstations">${stations}</ul>
+    ${canDone && !S.adminPin && groups.some(([, l]) => l.some(x => pending.has(x.item_key))) ? `<div class="pinbar"><label for="ordPin">Manager PIN to mark orders done</label><input id="ordPin" type="password" inputmode="numeric" autocomplete="off"></div>` : ""}
+    ${!total && !extras.length ? `<div class="empty">${d.some(x => x.check) ? "Nothing was short this day. 이날 부족한 품목이 없었어요." : "No checks this day. 이날 체크 기록이 없어요."}</div>` : ""}
+    ${groups.map(([name, list], gi) => `<section class="supcard${name === NO_SUP ? " nosup" : ""}${isPrep(name) ? " prep" : ""}">
+      <div class="suphead"><h2>${esc(supLabel(name))}</h2><span class="chip lv-order">${list.length}</span>
+        <button type="button" class="btn" data-daycopy="${gi}">Copy</button></div>
+      <ul class="sumlist ordlist">${list.map(row).join("")}</ul></section>`).join("")}
+    ${extras.length ? `<section class="supcard"><div class="suphead"><h2>Other requests / 기타 요청</h2></div>
+      <ul class="sumlist ordlist dh">${extras.map(({ k, check }) => `<li class="lv-request"><span class="dot"></span><span><span class="n">${esc(KINDS[k].pick)} · ${esc(check.checked_by)}</span><span class="c" style="white-space:pre-wrap">${esc(check.extra_request)}</span></span></li>`).join("")}</ul></section>` : ""}`;
+}
 function renderOrders() {
   setMode("store2"); renderModeHeader();
   const el = $("s2Body");
+  if (ORD.mode === "day") return renderOrdersDay(el);
   if (!ORD.data) { el.innerHTML = `<div class="empty">Loading orders…</div>`; return; }
   const stations = (ORD.stations || []).map(({ k, last }) => {
     const day = last ? dayOf(last.check_date) : null, old = !day || day !== current;
@@ -1376,7 +1428,7 @@ function renderOrders() {
     const tag = `${esc(KINDS[a.store] ? KINDS[a.store].pick : "")} · ${esc(shortDate(dayOf(a.check_date)))}${a.last_done ? ` · <b>ordered ${esc(shortDate(dayOf(a.last_done)))}, still short</b>` : ""}`;
     return `<li class="lv-${esc(a.level)}"><span class="dot"></span><span><span class="n">${esc(a.name)}${a.ko ? ` <span class="k">${esc(a.ko)}</span>` : ""}</span><span class="c">${esc(a.choice)}</span><span class="c t">${tag}</span></span>${canDone ? `<button type="button" class="donebtn" data-done1="${esc(a.item_key)}" aria-label="Done: ${esc(a.name)}">✓</button>` : ""}</li>`;
   };
-  el.innerHTML = `${ORD.legacy ? `<div class="banner">The Done button isn't set up yet. Run <b>supabase/008_order_done.sql</b> once in Supabase (see README). Showing the latest check of each station for now.</div>` : ""}
+  el.innerHTML = ordSeg() + `${ORD.legacy ? `<div class="banner">The Done button isn't set up yet. Run <b>supabase/008_order_done.sql</b> once in Supabase (see README). Showing the latest check of each station for now.</div>` : ""}
     <p class="hint" style="margin-top:14px">Items marked <b>order</b> or <b>out</b> stay here until you tap <b>Done</b>. 주문 필요·재고 없음 품목은 완료를 누를 때까지 남아 있어요.</p>
     <ul class="ordstations">${stations}</ul>
     ${canDone && !S.adminPin ? `<div class="pinbar"><label for="ordPin">Manager PIN to mark orders done</label><input id="ordPin" type="password" inputmode="numeric" autocomplete="off"></div>` : ""}
@@ -1441,6 +1493,12 @@ $("s2Body").addEventListener("click", async e => {
   if (S.s2pick !== "orders") return;
   const c = e.target.closest("[data-supcopy]");
   if (c) { const [n, l] = ORD.groups[Number(c.dataset.supcopy)]; showTextSheet(isPrep(n) ? "Prep list" : `Order · ${enPart(n)}`, supplierText(n, l), `${l.length} item${l.length === 1 ? "" : "s"} · You can edit the text before copying.`); return; }
+  const md = e.target.closest("[data-ordmode]");
+  if (md) { ORD.mode = md.dataset.ordmode; if (ORD.mode === "day" && !ORD.day) { ORD.day = current; } if (ORD.mode === "day" && !ORD.dayData) loadOrderDay(ORD.day).then(renderOrders).catch(err => { if (!handlePinError(err)) toast(errorText(err, "load that day"), true); }); renderOrders(); return; }
+  const sh = e.target.closest("[data-orddayshift]");
+  if (sh) { const t = parseKey(ORD.day); t.setDate(t.getDate() + Number(sh.dataset.orddayshift)); const nd = keyOf(t); if (nd > current) return; ORD.day = nd; ORD.dayData = null; renderOrders(); loadOrderDay(nd).then(() => { if (ORD.day === nd) renderOrders(); }).catch(err => { if (!handlePinError(err)) toast(errorText(err, "load that day"), true); }); return; }
+  const dc = e.target.closest("[data-daycopy]");
+  if (dc) { const [n, l] = ORD.dayGroups[Number(dc.dataset.daycopy)]; showTextSheet(isPrep(n) ? "Prep list" : `Order · ${enPart(n)}`, supplierText(n, l, ORD.day), `${l.length} item${l.length === 1 ? "" : "s"} · You can edit the text before copying.`); return; }
   const all = e.target.closest("[data-doneall]");
   if (all) { const [, l] = ORD.groups[Number(all.dataset.doneall)]; markDone(l.map(a => a.item_key)); return; }
   const one = e.target.closest("[data-done1]");
@@ -1489,7 +1547,8 @@ function route() {
     return;
   }
   if (h === "store1-orders") {
-    S.s2pick = "orders"; ORD.data = null; ORD.undo = null; renderOrders(); window.scrollTo(0, 0);
+    S.s2pick = "orders"; ORD.data = null; ORD.undo = null; ORD.lists = {}; ORD.checks = {}; ORD.dayData = null; if (!ORD.day) ORD.day = current; renderOrders(); window.scrollTo(0, 0);
+    if (ORD.mode === "day") loadOrderDay(ORD.day).then(() => { if (S.s2pick === "orders") renderOrders(); }).catch(() => {});
     loadOrders().then(() => { if (S.s2pick === "orders") renderOrders(); }).catch(e => { if (!handlePinError(e)) { $("s2Body").innerHTML = `<div class="empty">${esc(e.message || "Could not load")}</div>`; } });
     return;
   }
